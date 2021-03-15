@@ -1,0 +1,125 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 757665502b6ddf94785c402f8731f9fb, type: 3}
+  m_Name: Knight Data
+  m_EditorClassIdentifier: 
+  StatList:
+  - Level: 1
+    MaxExp: 100
+    MaxHp: 50
+    MaxStamina: 1
+    PlusStamina: 0.2
+    ad: 30
+    adRange: 500
+    adDistance: 100
+    adSpeed: 1.5
+    sp: 300
+    JnmpPower: 350
+  - Level: 2
+    MaxExp: 200
+    MaxHp: 60
+    MaxStamina: 2
+    PlusStamina: 0.2
+    ad: 40
+    adRange: 500
+    adDistance: 100
+    adSpeed: 1.53
+    sp: 324
+    JnmpPower: 350
+  - Level: 3
+    MaxExp: 300
+    MaxHp: 72
+    MaxStamina: 3
+    PlusStamina: 0.2
+    ad: 50
+    adRange: 500
+    adDistance: 100
+    adSpeed: 1.56
+    sp: 350
+    JnmpPower: 350
+  - Level: 4
+    MaxExp: 400
+    MaxHp: 86
+    MaxStamina: 4
+    PlusStamina: 0.2
+    ad: 60
+    adRange: 500
+    adDistance: 100
+    adSpeed: 1.59
+    sp: 378
+    JnmpPower: 350
+  - Level: 5
+    MaxExp: 500
+    MaxHp: 103
+    MaxStamina: 5
+    PlusStamina: 0.2
+    ad: 70
+    adRange: 500
+    adDistance: 100
+    adSpeed: 1.62
+    sp: 408
+    JnmpPower: 350
+  - Level: 6
+    MaxExp: 600
+    MaxHp: 124
+    MaxStamina: 6
+    PlusStamina: 0.2
+    ad: 80
+    adRange: 500
+    adDistance: 100
+    adSpeed: 1.65
+    sp: 441
+    JnmpPower: 350
+  - Level: 7
+    MaxExp: 700
+    MaxHp: 149
+    MaxStamina: 7
+    PlusStamina: 0.2
+    ad: 90
+    adRange: 500
+    adDistance: 100
+    adSpeed: 1.68
+    sp: 476
+    JnmpPower: 350
+  - Level: 8
+    MaxExp: 800
+    MaxHp: 179
+    MaxStamina: 8
+    PlusStamina: 0.2
+    ad: 100
+    adRange: 500
+    adDistance: 100
+    adSpeed: 1.71
+    sp: 514
+    JnmpPower: 350
+  - Level: 9
+    MaxExp: 900
+    MaxHp: 215
+    MaxStamina: 9
+    PlusStamina: 0.2
+    ad: 110
+    adRange: 500
+    adDistance: 100
+    adSpeed: 1.74
+    sp: 555
+    JnmpPower: 350
+  - Level: 10
+    MaxExp: 999999
+    MaxHp: 258
+    MaxStamina: 10
+    PlusStamina: 0.2
+    ad: 120
+    adRange: 500
+    adDistance: 100
+    adSpeed: 1.77
+    sp: 599
+    JnmpPower: 350

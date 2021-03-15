@@ -4,6 +4,39 @@
     using System.Collections.Generic;
     using UnityEngine;
 
+    [System.Serializable]
+    public class CharactorStat
+    {
+        [Header("레벨")]
+        [Tooltip("레벨")]public int Level;
+        [Tooltip("레벨업 필요 경험치")] public float MaxExp;
+        //public float NowExp; //현재 경험치
+
+        [Header("체력")]
+        [Tooltip("최대 체력")] public float MaxHp;
+        //public float NowHp; //현재 체력
+
+        [Header("스태미나")]
+        [Tooltip("최대 스태미나")] public float MaxStamina;
+        //public float NowStamina; //현재 스태미나
+        [Tooltip("초당 회복 수치")] public float PlusStamina;
+
+        [Header("공격")]
+        [Tooltip("공격력")]public float ad;
+        [Tooltip("공격 발동 사거리")]public float adRange;
+        [Tooltip("발동 후 몬스터와의 거리")]public float adDistance;
+        [Tooltip("초에 때릴 수 있는 속도")] public float adSpeed;
+
+        [Header("이동")]
+        [Tooltip("초당 이동속도")] public float sp;
+        [Tooltip("점프력")] public float JnmpPower;
+
+
+        [Header("스킬")]
+        [Tooltip("특수공격 A")]public Skill skKnightA;
+        [Tooltip("특수공격 K")] public Skill skKnightK;
+    }
+
     //public class PLAYER
     //{
     //    public const int DEFAULT_MONEY = 5000000;

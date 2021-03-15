@@ -17,18 +17,21 @@ public class BackGround : MonoBehaviour
 
     void Update()
     {
-        Offset += Time.deltaTime * Speed;
+        if (!GameManager.Instance.IsGamePlay)
+            return;
+
+        Offset += Time.deltaTime * (Speed / 2000);
         Renderer.material.SetTextureOffset("_MainTex", new Vector2(Offset, 0));
     }
 
-    public void Setsp(int sp)
+    public void Setsp(float sp)
     {
         Speed = sp;
     }
 
-    public void Move()
+    public void Move(float duration)
     {
-        Speed = 3;
-        DOTween.To(() => Speed, x => Speed = x, 0.8f, 0.3f);
+        Speed = 400f * 1.7f;
+        DOTween.To(() => Speed, x => Speed = x, 400f, duration);
     }
 }

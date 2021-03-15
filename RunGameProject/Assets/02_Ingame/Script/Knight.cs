@@ -53,8 +53,8 @@ public class Knight : Singleton<Knight>
         sp = 300f;
 
         //키다운 중인 '지속시간' 동안 무적, '지속시간' 중 대미지를 입으면 해당 대미지만큼 반격한다
-        skKnightA = new Skill(5f, 0, 1f);
+        skKnightA = new Skill(5f, 0, 1f, 0.1f);
         //'지속시간' 동안 무적, 1초마다 '사거리'만큼 돌진(이동), 닿는 적에겐 틱 1초마다 '대미지'만큼 입힌다
-        skKnightK = new Skill(13f, 300 + sp / 2, 3f);
+        skKnightK = new Skill(13f, 300 + sp / 2, 1f, 3f);
     }
 }

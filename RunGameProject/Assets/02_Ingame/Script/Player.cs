@@ -9,12 +9,14 @@ public class Skill
     public float Distance;
     public float Delay;
     public float CoolTime;
+    public float Time;
 
-    public Skill(float coolTime, float distance, float delay)
+    public Skill(float coolTime, float distance, float delay, float time)
     {
         CoolTime = coolTime;
         Distance = distance;
         Delay = delay;
+        Time = time;
     }
 }
 
@@ -23,13 +25,14 @@ public class Player : MonoBehaviour
     public BackGround BG;
 
     Vector3 StandardPosition;
-
-    public Skill skDash = new Skill(0f, 100f, 0.3f);
-
     private Rigidbody2D myRigid;
-    public int JumpPower;
 
+    public int JumpPower;
     public bool IsJumping = false;
+
+    public Skill skDash = new Skill(0f, 100f, 0.3f, 0f);
+
+    float skDelay = 0f;
 
     void Start()
     {
@@ -41,7 +44,10 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.Space))
+        if (!GameManager.Instance.IsGamePlay) 
+            return;
+
+        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.Space))
             Jump();
         if (Input.GetKeyDown(KeyCode.A))
             Shild();
@@ -49,6 +55,8 @@ public class Player : MonoBehaviour
             Bottom();
         if (Input.GetKeyDown(KeyCode.D))
             Dash();
+        if (Input.GetKeyUp(KeyCode.D))
+            Dash_Quit();
         if (Input.GetKeyDown(KeyCode.J))
             Attack();
         if (Input.GetKeyDown(KeyCode.K))
@@ -57,23 +65,16 @@ public class Player : MonoBehaviour
         { }
         if (Input.GetKeyDown(KeyCode.Escape))
         { }
-
-        //if (IsJumping && transform.position.y >= 37.5)
-        //{
-        //    myRigid.mass
-        //}
-
     }
 
+    #region Skills
     public void Jump() //점프
     {
         if (!IsJumping)
             return;
 
-        Debug.Log("Jump");
-
         myRigid.velocity = Vector2.zero;
-        Vector2 JumpVelocity = new Vector2(0, JumpPower);
+        Vector2 JumpVelocity = new Vector2(0, JumpPower * 140);
         myRigid.AddForce(JumpVelocity, ForceMode2D.Impulse);
         IsJumping = false;
     } 
@@ -90,17 +91,11 @@ public class Player : MonoBehaviour
 
     public void Dash() //대쉬
     {
-        if (!skDash.IsPractice)
-        {
-            Debug.Log("Dash");
-            skDash.IsPractice = true;
-            transform.position += new Vector3(skDash.Distance, 0);
-            BG.Move();
-
-            transform.DOMoveX(StandardPosition.x, skDash.Delay).OnComplete(() => {
-                skDash.IsPractice = false;
-            });
-        }
+        BG.Setsp(400f * 2.3f);
+    }
+    public void Dash_Quit() //대쉬
+    {
+        BG.Setsp(400f);
     }
 
     public void Attack() //공격, 상호작용키
@@ -110,7 +105,32 @@ public class Player : MonoBehaviour
 
     public void SpecialSkill() //캐릭터 특수기
     {
+        if (!IsJumping)
+            return;
+        //if (Knight.Instance.skKnightK.IsPractice)
+        //    return;
+
         Debug.Log("skSpecial");
+
+        if (skDelay <= 0f && !Knight.Instance.skKnightK.IsPractice) //처음 시작
+        {
+            skDelay = Knight.Instance.skKnightK.Time;
+            Knight.Instance.skKnightK.IsPractice = true;
+        }
+        else if (skDelay <= 0f && Knight.Instance.skKnightK.IsPractice) //끝
+        {
+            skDelay = 0f;
+            Knight.Instance.skKnightK.IsPractice = false;
+            return;
+        }
+
+        Sequence skSeq = DOTween.Sequence();
+
+        skSeq.AppendCallback(() => BG.Move(0.3f));
+        skSeq.Append(transform.DOMoveX(transform.position.x + Knight.Instance.skKnightK.Distance, 0.3f).From());
+        skSeq.AppendInterval(Knight.Instance.skKnightK.Delay - 0.3f);
+        skSeq.AppendCallback(() => skDelay -= 1f);
+        skSeq.AppendCallback(() => SpecialSkill());
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -118,4 +138,6 @@ public class Player : MonoBehaviour
         if (other.gameObject.CompareTag("Ground"))
             IsJumping = true;
     }
+
+    #endregion
 }

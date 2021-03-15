@@ -6,6 +6,10 @@ using System.Linq;
 
 public class GameManager : Singleton<GameManager>
 {
+    public int CharactorCode = 0;
+
+    public bool IsGamePlay = false;
+
 //    // 연극의 3가지 점수 요소
 //    public float Play_Quality { get; private set; }
 //    public float Play_Marketing { get; private set; }
