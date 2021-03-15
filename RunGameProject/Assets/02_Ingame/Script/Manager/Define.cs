@@ -10,15 +10,12 @@
         [Header("레벨")]
         [Tooltip("레벨")]public int Level;
         [Tooltip("레벨업 필요 경험치")] public float MaxExp;
-        //public float NowExp; //현재 경험치
 
         [Header("체력")]
         [Tooltip("최대 체력")] public float MaxHp;
-        //public float NowHp; //현재 체력
 
         [Header("스태미나")]
         [Tooltip("최대 스태미나")] public float MaxStamina;
-        //public float NowStamina; //현재 스태미나
         [Tooltip("초당 회복 수치")] public float PlusStamina;
 
         [Header("공격")]
@@ -37,6 +34,22 @@
         [Tooltip("특수공격 K")] public Skill skKnightK;
     }
 
+    public class Skill
+    {
+        public bool IsPractice = false;
+        public float Distance;
+        public float Delay;
+        public float CoolTime;
+        public float Time;
+
+        public Skill(float coolTime, float distance, float delay, float time)
+        {
+            CoolTime = coolTime;
+            Distance = distance;
+            Delay = delay;
+            Time = time;
+        }
+    }
     //public class PLAYER
     //{
     //    public const int DEFAULT_MONEY = 5000000;

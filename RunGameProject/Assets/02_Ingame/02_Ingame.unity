@@ -282,6 +282,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9702ba7270b0f04b816cadedae174d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  charactorDatas:
+  - {fileID: 11400000, guid: 7cdf8a142b2fa984ea7984924c649670, type: 2}
+  - {fileID: 11400000, guid: 0f00494c80d10984f93f34576a99b8d1, type: 2}
+  CharactorObj: {fileID: 906033840}
   CharactorSelect: {fileID: 1471903091}
 --- !u!4 &99071342
 Transform:
@@ -634,9 +638,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc0cef0bc3dd07f4585ad15da37e98f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BG: {fileID: 1744384464}
+  charactorData:
+    Level: 0
+    MaxExp: 0
+    MaxHp: 0
+    MaxStamina: 0
+    PlusStamina: 0
+    ad: 0
+    adRange: 0
+    adDistance: 0
+    adSpeed: 0
+    sp: 0
+    JnmpPower: 0
+  NowExp: 0
+  NowHp: 0
+  NowStamina: 0
   JumpPower: 350
   IsJumping: 0
+  BG: {fileID: 1744384464}
 --- !u!212 &906033842
 SpriteRenderer:
   m_ObjectHideFlags: 0

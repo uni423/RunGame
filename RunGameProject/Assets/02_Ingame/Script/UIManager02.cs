@@ -2,8 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum CharactorType { Knight = 1, Gunner }
+
 public class UIManager02 : MonoBehaviour
 {
+    [SerializeField]
+    private List<CharactorData> charactorDatas;
+
+    [SerializeField]
+    private GameObject CharactorObj;
     public GameObject CharactorSelect;
 
     void Start()
@@ -18,9 +25,9 @@ public class UIManager02 : MonoBehaviour
         Time.timeScale = 0;
     }
 
-    public void CharactorSelect_BT(int value)
+    public void CharactorSelect_BT(int type)
     {
-        GameManager.Instance.CharactorCode = value;
+        CharactorObj.GetComponent<Player>().CharactorData = charactorDatas[type].StatList[0];
         CharactorSelect.SetActive(false);
         GameManager.Instance.IsGamePlay = true;
     }

@@ -1,34 +1,28 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Define;
 using DG.Tweening;
 
-public class Skill
-{
-    public bool IsPractice = false;
-    public float Distance;
-    public float Delay;
-    public float CoolTime;
-    public float Time;
 
-    public Skill(float coolTime, float distance, float delay, float time)
-    {
-        CoolTime = coolTime;
-        Distance = distance;
-        Delay = delay;
-        Time = time;
-    }
-}
 
 public class Player : MonoBehaviour
 {
+    [SerializeField]
+
+    private CharactorStat charactorData;
+    public CharactorStat CharactorData { set { charactorData = value; } }
+
+    public float NowExp; //현재 경험치
+    public float NowHp; //현재 체력
+    public float NowStamina; //현재 스태미나
+    public int JumpPower;
+    public bool IsJumping = false;
+
     public BackGround BG;
 
     Vector3 StandardPosition;
     private Rigidbody2D myRigid;
-
-    public int JumpPower;
-    public bool IsJumping = false;
 
     public Skill skDash = new Skill(0f, 100f, 0.3f, 0f);
 
