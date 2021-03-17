@@ -29,9 +29,8 @@ public class BackGround : MonoBehaviour
         Speed = sp;
     }
 
-    public void Move(float duration)
+    public void Move(float sp, float duration)
     {
-        Speed = 400f * 1.7f;
-        DOTween.To(() => Speed, x => Speed = x, 400f, duration);
+        DOTween.To(() => Speed, x => Speed = x, sp, duration).From();
     }
 }
