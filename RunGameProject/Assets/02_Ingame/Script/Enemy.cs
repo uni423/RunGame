@@ -5,19 +5,13 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     public float Hp;
-    public float Ad;
-    public float Exp;
-    public float Speed;
+    public EnemyData stat;
 
     public bool IsDead;
 
     public void Start()
     {
         Hp = 10;
-        Ad = 3;
-        Exp = 100;
-        Speed = 1;
-
         IsDead = false;
     }
 
@@ -25,7 +19,7 @@ public class Enemy : MonoBehaviour
     {
         if (!GameManager.Instance.IsGamePlay)
             return;
-        transform.position -= new Vector3(Speed, 0);
+        transform.position -= new Vector3(stat.Speed, 0);
     }
 
     public float Damage(float damage)
@@ -34,9 +28,8 @@ public class Enemy : MonoBehaviour
         if (Hp <= 0)
         {
             IsDead = true;
-            Debug.Log("IsDead");
             Destroy(gameObject);
-            return Exp;
+            return stat.Exp;
         }
 
         return 0;

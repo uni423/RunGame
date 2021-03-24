@@ -7,35 +7,24 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
-    public CharStat Char;
+    public PlayerStat Stat;
 
-    public int Level = 0; //현재 레벨
-    public float NowExp; //현재 경험치
-    public float NowHp; //현재 체력
-    public float NowSp; //현재 스태미나
+    private float skDelay = 0f;
 
-    public bool IsJumping = false; //점프 가능이면 true
+    private bool IsJumping = false; //점프 가능이면 true
 
-    public bool IsAttackRange = false; //공격 발동 사거리 안에 몬스터가 있으면 true
-    public float RangeDistance = 1000f;
-    public Enemy RangeEnemyObj; //공격 발동 사거리 안에 있는 몬스터
+    private bool IsAttackRange = false; //공격 발동 사거리 안에 몬스터가 있으면 true
+    private float RangeDistance = 1000f;
+    private Enemy RangeEnemyObj; //공격 발동 사거리 안에 있는 몬스터
 
     public Skill skDash = new Skill(0f, 100f, 0.3f, 0f);
 
-    float skDelay = 0f;
-
+    [Space(10f)]
     public BackGround BG;
-    public Enemy enemy;
+    public EnemyData Enemy;
     public UIManager02 UIM_2;
-    public Image UI_hp;
-    public Image UI_sp;
 
-    private Rigidbody2D myRigid;
-
-    void Start()
-    {
-        myRigid = GetComponent<Rigidbody2D>();
-    }
+    public Rigidbody2D myRigid;
 
     void Update()
     {
@@ -66,36 +55,34 @@ public class Player : MonoBehaviour
 
     public void StatUpdate()
     {
-        if (NowExp >= Char.MaxExp && Level < 10)
+        if (Stat.NowExp >= Stat.MaxExp && Stat.Level < 10)
         {
             StatUpgrade();
         }
 
-        UI_hp.fillAmount = NowHp / Char.MaxHp;
-        UI_sp.fillAmount = NowSp / Char.MaxSp;
     }
 
     public void StatUpgrade()
     {
-        if (Level <= 0)
+        if (Stat.Level <= 0)
         {
-            NowExp = 0f;
-            NowHp = Char.MaxHp;
-            NowSp = Char.MaxSp;
-            BG.Setsp(Char.speed);
-            Level = 1;
+            Stat.NowExp = 0f;
+            Stat.NowHp = Stat.MaxHp;
+            Stat.NowSp = Stat.MaxSp;
+            BG.Setsp(Stat.Speed);
+            Stat.Level = 1;
             return;
         }
 
-        NowExp -= Char.MaxExp;
-        Char.MaxExp += Char.AddExp; //+100
-        Char.MaxHp += Mathf.Round(Char.MaxHp * Char.AddHp); //+0.2%
-        Char.MaxSp += Char.AddSp; //+1
-        Char.ad += Char.Addad; //+10
-        Char.speed += Mathf.Round(Char.speed * Char.Addspeed); //+ 0.05%
-        Char.adSpeed += Mathf.Round(Char.adSpeed * Char.AddadSpeed); //+ 0.02%
-        Level++;
-        BG.Setsp(Char.speed);
+        Stat.NowExp -= Stat.MaxExp;
+        Stat.MaxExp += Stat.AddExp; //+100
+        Stat.MaxHp += Mathf.Round(Stat.MaxHp * Stat.AddHp); //+0.2%
+        Stat.MaxSp += Stat.AddSp; //+1
+        Stat.Ad += Stat.Addad; //+10
+        Stat.Speed += Mathf.Round(Stat.Speed * Stat.Addspeed); //+ 0.05%
+        Stat.AdSpeed += Mathf.Round(Stat.AdSpeed * Stat.AddadSpeed); //+ 0.02%
+        Stat.Level++;
+        BG.Setsp(Stat.Speed);
     }
 
     #region Skills
@@ -105,7 +92,7 @@ public class Player : MonoBehaviour
             return;
 
         myRigid.velocity = Vector2.zero;
-        Vector2 JumpVelocity = new Vector2(0, Char.JumpPower * 140);
+        Vector2 JumpVelocity = new Vector2(0, Stat.JumpPower * 140);
         myRigid.AddForce(JumpVelocity, ForceMode2D.Impulse);
         IsJumping = false;
     } 
@@ -122,13 +109,13 @@ public class Player : MonoBehaviour
 
     public void Dash() //대쉬
     {
-        BG.Setsp(Char.speed * 2.3f);
-        enemy.Speed = 2.3f;
+        BG.Setsp(Stat.Speed * 2.3f);
+        Enemy.Speed = 2.3f;
     }
     public void Dash_Quit() //대쉬
     {
-        BG.Setsp(Char.speed);
-        enemy.Speed = 1f;
+        BG.Setsp(Stat.Speed);
+        Enemy.Speed = 1f;
     }
 
     public void Attack() //공격, 상호작용키
@@ -139,9 +126,9 @@ public class Player : MonoBehaviour
 
         //100px 당 0.02추가
         //BG.Offset += RangeDistance / 100f * 0.02f;
-        BG.Move(Char.speed * 5f, RangeDistance / 200f * 0.2f);
+        BG.Move(Stat.Speed * 5f, RangeDistance / 200f * 0.3f);
         RangeEnemyObj.gameObject.transform.position += new Vector3(RangeDistance, 0);
-        RangeEnemyObj.Damage(Char.ad);
+        Stat.NowExp += RangeEnemyObj.Damage(Stat.Ad);
     }
 
     public void SpecialSkill() //캐릭터 특수기
@@ -171,7 +158,7 @@ public class Player : MonoBehaviour
 
         Sequence skSeq = DOTween.Sequence();
 
-        skSeq.AppendCallback(() => BG.Move(Char.speed, 0.3f));
+        skSeq.AppendCallback(() => BG.Move(Stat.Speed, 0.3f));
         //skSeq.Append(transform.DOMoveX(transform.position.x + Knight.Instance.skKnightK.Distance, 0.3f).From());
         //skSeq.AppendInterval(Knight.Instance.skKnightK.Delay - 0.3f);
         skSeq.AppendCallback(() => skDelay -= 1f);
@@ -191,7 +178,6 @@ public class Player : MonoBehaviour
             IsAttackRange = true;
             if (RangeDistance > 600 + other.gameObject.transform.localPosition.x)
             {
-                Debug.Log("콜라이더");
                 RangeDistance = 600 + other.gameObject.transform.localPosition.x;
                 RangeEnemyObj = other.gameObject.GetComponent<Enemy>();
             }

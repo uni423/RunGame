@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd7d1ff461abbf840870c0528e1f1dd7, type: 3}
+  m_Name: KnightStat
+  m_EditorClassIdentifier: 
+  level: 0
+  maxExp: 100
+  addExp: 100
+  nowExp: 0
+  maxHp: 50
+  addHp: 0.2
+  nowHp: 0
+  maxSp: 1
+  addSp: 1
+  nowSp: 0
+  plusSp: 0.2
+  ad: 30
+  addad: 10
+  adRange: 500
+  adDistance: 100
+  adSpeed: 1.5
+  addadSpeed: 0.02
+  speed: 500
+  addspeed: 0.05
+  jumpPower: 350

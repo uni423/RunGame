@@ -5,7 +5,6 @@ using System.Collections;
 public class BackGround : MonoBehaviour
 {
     Renderer Renderer;
-    public Player Player;
 
     public float Speed;
     public float Offset;

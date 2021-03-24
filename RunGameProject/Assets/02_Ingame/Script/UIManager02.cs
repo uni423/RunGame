@@ -1,28 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Define;
 
 
 public class UIManager02 : MonoBehaviour
 {
-    public CharDatas charDataObj;
+    public PlayerManager PlayerMgr;
 
-    [SerializeField]
-    private GameObject CharactorObj;
-    public GameObject CharactorSelect;
+    public Image UI_hp;
+    public Image UI_sp;
 
-    void Start()
+    private void Update()
     {
-        GameManager.Instance.IsGamePlay = false;
-    }
-
-    public void CharactorSelect_BT(int type)
-    {
-        GameManager.Instance.CharactorCode = (CharType)type;
-        CharactorObj.GetComponent<Player>().Char = charDataObj.GetStat((CharType)type);
-        CharactorObj.GetComponent<Player>().StatUpgrade();
-        CharactorSelect.SetActive(false);
-        GameManager.Instance.IsGamePlay = true;
+        UI_hp.fillAmount = 
+            PlayerMgr.statSaves[(int)GameManager.Instance.CharactorCode].NowHp
+            / PlayerMgr.statSaves[(int)GameManager.Instance.CharactorCode].MaxHp;
+        UI_sp.fillAmount = 
+            PlayerMgr.statSaves[(int)GameManager.Instance.CharactorCode].NowSp
+            / PlayerMgr.statSaves[(int)GameManager.Instance.CharactorCode].MaxSp;
     }
 }
