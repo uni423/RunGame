@@ -13,15 +13,13 @@ MonoBehaviour:
   m_Name: Spring
   m_EditorClassIdentifier: 
   m_DefaultSprite: {fileID: 21300000, guid: 0ca22b74d58659c438cd630b98174fb3, type: 3}
-  m_DefaultGameObject: {fileID: 136102202922857056, guid: 8914ff43f0034d74d91476f2f7211124,
-    type: 3}
+  m_DefaultGameObject: {fileID: 0}
   m_DefaultColliderType: 1
   m_TilingRules:
   - m_Id: 9
     m_Sprites:
     - {fileID: 21300000, guid: d3400777b23b54143a1b71d432f5791c, type: 3}
-    m_GameObject: {fileID: 136102202922857056, guid: 8914ff43f0034d74d91476f2f7211124,
-      type: 3}
+    m_GameObject: {fileID: 0}
     m_MinAnimationSpeed: 1
     m_MaxAnimationSpeed: 1
     m_PerlinScale: 0.5
@@ -38,8 +36,7 @@ MonoBehaviour:
   - m_Id: 1
     m_Sprites:
     - {fileID: 21300000, guid: 548cae4b4e579864caaba7b922bfe4d8, type: 3}
-    m_GameObject: {fileID: 136102202922857056, guid: 8914ff43f0034d74d91476f2f7211124,
-      type: 3}
+    m_GameObject: {fileID: 0}
     m_MinAnimationSpeed: 1
     m_MaxAnimationSpeed: 1
     m_PerlinScale: 0.5
