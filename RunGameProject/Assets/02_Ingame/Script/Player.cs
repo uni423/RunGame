@@ -11,16 +11,16 @@ public class Player : MonoBehaviour
 
     private float skDelay = 0f;
 
-    private bool IsJumping = false; //점프 가능이면 true
+    public bool IsJumping = false; //점프 가능이면 true
 
-    private bool IsAttackRange = false; //공격 발동 사거리 안에 몬스터가 있으면 true
-    private float RangeDistance = 1000f;
-    private Enemy RangeEnemyObj; //공격 발동 사거리 안에 있는 몬스터
+    public bool IsAttackRange = false; //공격 발동 사거리 안에 몬스터가 있으면 true
+    public float RangeDistance = 1000f;
+    public Enemy RangeEnemyObj; //공격 발동 사거리 안에 있는 몬스터
 
     public Skill skDash = new Skill(0f, 100f, 0.3f, 0f);
 
     [Space(10f)]
-    public BackGround BG;
+    public BGManager BG;
     public EnemyData Enemy;
     public UIManager02 UIM_2;
 
@@ -28,7 +28,7 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        if (!GameManager.Instance.IsGamePlay) 
+        if (!GameManager.Instance.IsGamePlay)
             return;
 
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.Space))
@@ -51,6 +51,11 @@ public class Player : MonoBehaviour
         { }
 
         StatUpdate();
+
+        if (myRigid.velocity.y < 0)
+        {
+            myRigid.velocity += Vector2.up * Physics2D.gravity.y * (2.5f - 1) * Time.deltaTime;
+        }
     }
 
     public void StatUpdate()
@@ -59,7 +64,6 @@ public class Player : MonoBehaviour
         {
             StatUpgrade();
         }
-
     }
 
     public void StatUpgrade()
@@ -69,7 +73,7 @@ public class Player : MonoBehaviour
             Stat.NowExp = 0f;
             Stat.NowHp = Stat.MaxHp;
             Stat.NowSp = Stat.MaxSp;
-            BG.Setsp(Stat.Speed);
+            BG.In_Speed(Stat.Speed);
             Stat.Level = 1;
             return;
         }
@@ -82,7 +86,7 @@ public class Player : MonoBehaviour
         Stat.Speed += Mathf.Round(Stat.Speed * Stat.Addspeed); //+ 0.05%
         Stat.AdSpeed += Mathf.Round(Stat.AdSpeed * Stat.AddadSpeed); //+ 0.02%
         Stat.Level++;
-        BG.Setsp(Stat.Speed);
+        BG.In_Speed(Stat.Speed);
     }
 
     #region Skills
@@ -92,8 +96,9 @@ public class Player : MonoBehaviour
             return;
 
         myRigid.velocity = Vector2.zero;
-        Vector2 JumpVelocity = new Vector2(0, Stat.JumpPower * 140);
-        myRigid.AddForce(JumpVelocity, ForceMode2D.Impulse);
+        Vector2 JumpVelocity = new Vector2(0, Stat.JumpPower * 5f);
+        //myRigid.AddForce(JumpVelocity, ForceMode2D.Impulse);
+        myRigid.velocity = Vector2.up * JumpVelocity;
         IsJumping = false;
     } 
 
@@ -109,12 +114,12 @@ public class Player : MonoBehaviour
 
     public void Dash() //대쉬
     {
-        BG.Setsp(Stat.Speed * 2.3f);
+        BG.In_Speed(Stat.Speed * 2.3f);
         Enemy.Speed = 2.3f;
     }
     public void Dash_Quit() //대쉬
     {
-        BG.Setsp(Stat.Speed);
+        BG.In_Speed(Stat.Speed);
         Enemy.Speed = 1f;
     }
 
@@ -126,7 +131,7 @@ public class Player : MonoBehaviour
 
         //100px 당 0.02추가
         //BG.Offset += RangeDistance / 100f * 0.02f;
-        BG.Move(Stat.Speed * 5f, RangeDistance / 200f * 0.3f);
+        BG.Move(Stat.Speed * 5f, (RangeDistance / 200f) * 0.3f);
         RangeEnemyObj.gameObject.transform.position += new Vector3(RangeDistance, 0);
         Stat.NowExp += RangeEnemyObj.Damage(Stat.Ad);
     }
@@ -165,11 +170,17 @@ public class Player : MonoBehaviour
         skSeq.AppendCallback(() => SpecialSkill());
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (other.gameObject.CompareTag("Ground"))
+        if (collision.gameObject.CompareTag("Ground"))
             IsJumping = true;
     }
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+            IsJumping = false;
+    }
+
     private void OnTriggerStay2D(Collider2D other)
     {
         IsAttackRange = false;
@@ -178,6 +189,7 @@ public class Player : MonoBehaviour
             IsAttackRange = true;
             if (RangeDistance > 600 + other.gameObject.transform.localPosition.x)
             {
+                Debug.Log("충동체 연결 완료");
                 RangeDistance = 600 + other.gameObject.transform.localPosition.x;
                 RangeEnemyObj = other.gameObject.GetComponent<Enemy>();
             }
