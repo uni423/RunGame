@@ -19,8 +19,8 @@ MonoBehaviour:
   maxHp: 50
   addHp: 0.2
   nowHp: 0
-  maxSp: 1
-  addSp: 1
+  maxSp: 5
+  addSp: 5
   nowSp: 0
   plusSp: 0.2
   ad: 30

@@ -13,9 +13,13 @@ public class Player : MonoBehaviour
 
     public bool IsJumping = false; //점프 가능이면 true
 
+    public bool IsDash = false;
+
     public bool IsAttackRange = false; //공격 발동 사거리 안에 몬스터가 있으면 true
+    public bool Is_Psb_Attack = true; //공격 가능하면 true
     public float RangeDistance = 1000f;
     public Enemy RangeEnemyObj; //공격 발동 사거리 안에 있는 몬스터
+    public Transform HurdleGrid;
 
     public Skill skDash = new Skill(0f, 100f, 0.3f, 0f);
 
@@ -56,6 +60,16 @@ public class Player : MonoBehaviour
         {
             myRigid.velocity += Vector2.up * Physics2D.gravity.y * (2.5f - 1) * Time.deltaTime;
         }
+
+        if (IsDash)
+        {
+            Stat.NowSp -= Time.deltaTime;
+            if (Stat.NowSp <= 0)
+                Dash_Quit();
+        }
+
+        if (Stat.NowSp < Stat.MaxSp)
+            Stat.NowSp += Time.deltaTime * Stat.PlusSp;
     }
 
     public void StatUpdate()
@@ -89,6 +103,18 @@ public class Player : MonoBehaviour
         BG.In_Speed(Stat.Speed);
     }
 
+    public void Damage(float damage)
+    {
+        //Stat.NowHp -= damage;
+        DOTween.To(() => Stat.NowHp, x => Stat.NowHp = x, Stat.NowHp - damage, 0.2f);
+        Camera.main.DOShakePosition(0.3f, 100);
+        BG.Move(Stat.Speed * 0.5f, 2f, 0);
+        if (Stat.NowHp <= 0)
+        {
+            //죽음
+        }
+    }
+
     #region Skills
     public void Jump() //점프
     {
@@ -116,24 +142,33 @@ public class Player : MonoBehaviour
     {
         BG.In_Speed(Stat.Speed * 2.3f);
         Enemy.Speed = 2.3f;
+        IsDash = true;
     }
     public void Dash_Quit() //대쉬
     {
         BG.In_Speed(Stat.Speed);
         Enemy.Speed = 1f;
+        IsDash = false;
     }
 
     public void Attack() //공격, 상호작용키
     {
-        if (!IsAttackRange) 
+        if (!IsAttackRange || !IsJumping || !Is_Psb_Attack) 
             return;
         Debug.Log("Attack");
 
-        //100px 당 0.02추가
-        //BG.Offset += RangeDistance / 100f * 0.02f;
-        BG.Move(Stat.Speed * 5f, (RangeDistance / 200f) * 0.3f);
-        RangeEnemyObj.gameObject.transform.position += new Vector3(RangeDistance, 0);
+        Is_Psb_Attack = false;
+        transform.DOMoveX(RangeEnemyObj.gameObject.transform.position.x - 100, 1 / Stat.AdSpeed)
+            .From()
+            .OnComplete(() => Is_Psb_Attack = true);
+
+        //BG.Move(Stat.Speed, 0.1f, RangeDistance * 0.4f);
+        Camera.main.DOShakePosition(0.3f, 10)
+            .OnComplete(() => Camera.main.transform.position = new Vector3(0, 0, -10));
+        //BG.Move(0, (RangeDistance / 200f) * 0.3f, (RangeDistance - 100));
+        //RangeEnemyObj.gameObject.transform.position += new Vector3(RangeDistance, 0);
         Stat.NowExp += RangeEnemyObj.Damage(Stat.Ad);
+        RangeDistance = 10000;
     }
 
     public void SpecialSkill() //캐릭터 특수기
@@ -161,13 +196,13 @@ public class Player : MonoBehaviour
         //    return;
         //}
 
-        Sequence skSeq = DOTween.Sequence();
+        //Sequence skSeq = DOTween.Sequence();
 
-        skSeq.AppendCallback(() => BG.Move(Stat.Speed, 0.3f));
+        //skSeq.AppendCallback(() => BG.Move(Stat.Speed, 0.3f, 1f));
         //skSeq.Append(transform.DOMoveX(transform.position.x + Knight.Instance.skKnightK.Distance, 0.3f).From());
         //skSeq.AppendInterval(Knight.Instance.skKnightK.Delay - 0.3f);
-        skSeq.AppendCallback(() => skDelay -= 1f);
-        skSeq.AppendCallback(() => SpecialSkill());
+        //skSeq.AppendCallback(() => skDelay -= 1f);
+        //skSeq.AppendCallback(() => SpecialSkill());
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -187,14 +222,17 @@ public class Player : MonoBehaviour
         if (other.gameObject.CompareTag("Enemy"))
         {
             IsAttackRange = true;
-            if (RangeDistance > 600 + other.gameObject.transform.localPosition.x)
+            if (RangeDistance > other.gameObject.transform.position.x + 600)
             {
-                Debug.Log("충동체 연결 완료");
-                RangeDistance = 600 + other.gameObject.transform.localPosition.x;
+                RangeDistance = other.gameObject.transform.position.x + 600;
                 RangeEnemyObj = other.gameObject.GetComponent<Enemy>();
+                if (RangeDistance < 0 || RangeEnemyObj.transform.GetComponent<Enemy>().IsDead)
+                {
+                    RangeDistance = 10000f;
+                    RangeEnemyObj = null;
+                }
             }
         }
     }
-
     #endregion
 }

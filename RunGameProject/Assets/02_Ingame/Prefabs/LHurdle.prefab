@@ -97,6 +97,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Hp: 0
   stat: {fileID: 11400000, guid: ce301ea8bfe286b47bd8d3a523c0b3c4, type: 2}
+  dead: {fileID: 21300000, guid: 4cfcd36c1d3d17a47b8d8fb58eaee34d, type: 3}
   IsDead: 0
 --- !u!61 &5754191586211619721
 BoxCollider2D:
@@ -108,7 +109,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 3.0542908, y: -113.11255}

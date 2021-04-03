@@ -14,7 +14,7 @@ public class BGManager : MonoBehaviour
 
     public Transform BackGround;
 
-    public List<Middleground> MiddleGound = new List<Middleground>();
+    public List<Middleground> MiddleGround = new List<Middleground>();
 
     public List<Grid> Tile = new List<Grid>();
 
@@ -22,15 +22,24 @@ public class BGManager : MonoBehaviour
     {
         Speed = speed;
         BSpeed = (10000 / Tile[0].transform.Find("Ground").GetComponent<TilemapCollider2D>().bounds.size.x) * Speed;
-        foreach (var MG in MiddleGound)
+        foreach (var MG in MiddleGround)
         {
             MG.Setsp(speed);
         }
     }
 
-    public void Move(float sp, float duration)
+    public void Move(float sp, float duration, float offset)
     {
         Is_InSpeed = true;
+
+        Offset += offset;
+        BOffset += offset;
+
+        foreach (var MG in MiddleGround)
+        {
+            MG.Offset += (offset * 0.0005f);
+        }
+
         DOTween.To(() => Speed, x => Speed = x, sp, duration)
             .From()
             .OnComplete(() => Is_InSpeed = false);

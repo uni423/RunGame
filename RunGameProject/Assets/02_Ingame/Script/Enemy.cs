@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class Enemy : MonoBehaviour
 {
     public float Hp;
     public EnemyData stat;
+    public Sprite dead;
 
     public bool IsDead;
 
@@ -19,16 +21,16 @@ public class Enemy : MonoBehaviour
     {
         if (!GameManager.Instance.IsGamePlay)
             return;
-        transform.position -= new Vector3(stat.Speed, 0);
+        //transform.position -= new Vector3(stat.Speed, 0);
     }
 
     public float Damage(float damage)
     {
         Hp -= damage;
+        transform.DOMoveX(transform.position.x + 100, 0.2f);
         if (Hp <= 0)
         {
-            IsDead = true;
-            Destroy(gameObject);
+            StartCoroutine(Dead());
             return stat.Exp;
         }
 
@@ -38,5 +40,22 @@ public class Enemy : MonoBehaviour
     public void PlayerAattack(float value)
     {
         transform.position += new Vector3(value, 0);
-    }    
+    }
+
+    public IEnumerator Dead()
+    {
+        IsDead = true;
+        transform.GetComponent<SpriteRenderer>().sprite = dead;
+        yield return new WaitForSeconds(0.5f);
+        Destroy(gameObject);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {
+            if (!IsDead)
+                collision.GetComponent<Player>().Damage(stat.Ad);
+        }
+    }
 }
