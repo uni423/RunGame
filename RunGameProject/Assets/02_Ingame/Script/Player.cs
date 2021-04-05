@@ -118,12 +118,11 @@ public class Player : MonoBehaviour
     #region Skills
     public void Jump() //점프
     {
-        if (!IsJumping)
+        if (!IsJumping || !Is_Psb_Attack)
             return;
 
         myRigid.velocity = Vector2.zero;
         Vector2 JumpVelocity = new Vector2(0, Stat.JumpPower * 5f);
-        //myRigid.AddForce(JumpVelocity, ForceMode2D.Impulse);
         myRigid.velocity = Vector2.up * JumpVelocity;
         IsJumping = false;
     } 
@@ -144,6 +143,7 @@ public class Player : MonoBehaviour
         Enemy.Speed = 2.3f;
         IsDash = true;
     }
+
     public void Dash_Quit() //대쉬
     {
         BG.In_Speed(Stat.Speed);
@@ -162,11 +162,9 @@ public class Player : MonoBehaviour
             .From()
             .OnComplete(() => Is_Psb_Attack = true);
 
-        //BG.Move(Stat.Speed, 0.1f, RangeDistance * 0.4f);
         Camera.main.DOShakePosition(0.3f, 10)
             .OnComplete(() => Camera.main.transform.position = new Vector3(0, 0, -10));
-        //BG.Move(0, (RangeDistance / 200f) * 0.3f, (RangeDistance - 100));
-        //RangeEnemyObj.gameObject.transform.position += new Vector3(RangeDistance, 0);
+
         Stat.NowExp += RangeEnemyObj.Damage(Stat.Ad);
         RangeDistance = 10000;
     }
