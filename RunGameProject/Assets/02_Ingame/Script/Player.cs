@@ -23,13 +23,15 @@ public class Player : MonoBehaviour
 
     public Skill skDash = new Skill(0f, 100f, 0.3f, 0f);
 
+    public IEnumerator Lerp;
+
     [Space(10f)]
     public BGManager BG;
     public EnemyData Enemy;
     public UIManager02 UIM_2;
 
     public Rigidbody2D myRigid;
-
+    
     void Update()
     {
         if (!GameManager.Instance.IsGamePlay)
@@ -55,10 +57,14 @@ public class Player : MonoBehaviour
         { }
 
         StatUpdate();
+        PositionUpdata();
+    }
 
-        if (myRigid.velocity.y < 0)
+    public void StatUpdate()
+    {
+        if (Stat.NowExp >= Stat.MaxExp && Stat.Level < 10)
         {
-            myRigid.velocity += Vector2.up * Physics2D.gravity.y * (2.5f - 1) * Time.deltaTime;
+            StatUpgrade();
         }
 
         if (IsDash)
@@ -70,14 +76,6 @@ public class Player : MonoBehaviour
 
         if (Stat.NowSp < Stat.MaxSp)
             Stat.NowSp += Time.deltaTime * Stat.PlusSp;
-    }
-
-    public void StatUpdate()
-    {
-        if (Stat.NowExp >= Stat.MaxExp && Stat.Level < 10)
-        {
-            StatUpgrade();
-        }
     }
 
     public void StatUpgrade()
@@ -103,6 +101,14 @@ public class Player : MonoBehaviour
         BG.In_Speed(Stat.Speed);
     }
 
+    public void PositionUpdata()
+    {
+        if (myRigid.velocity.y < 0)
+        {
+            myRigid.velocity += Vector2.up * Physics2D.gravity.y * (2.5f - 1) * Time.deltaTime;
+        }
+    }
+
     public void Damage(float damage)
     {
         //Stat.NowHp -= damage;
@@ -118,14 +124,29 @@ public class Player : MonoBehaviour
     #region Skills
     public void Jump() //점프
     {
-        if (!IsJumping || !Is_Psb_Attack)
+        if (!IsJumping)
             return;
 
-        myRigid.velocity = Vector2.zero;
-        Vector2 JumpVelocity = new Vector2(0, Stat.JumpPower * 5f);
-        myRigid.velocity = Vector2.up * JumpVelocity;
+        if (!Is_Psb_Attack)
+            StopCoroutine(Lerp);
+            //transform.DOKill();
+
+        //Vector2 JumpVelocity = new Vector2(0, Stat.JumpPower * 5f);
+        myRigid.velocity = Vector2.up * Stat.JumpPower * 5f;
         IsJumping = false;
-    } 
+
+        if (!Is_Psb_Attack)
+        {
+            StartCoroutine(lerp(transform.position.x, 0.2f));
+            //transform.DOMoveX(-600, 0.2f)
+            //    .SetDelay(0.3f)
+            //    .OnComplete(() =>
+            //    {
+            //        Is_Psb_Attack = true;
+            //        RangeDistance = 10000;
+            //    });
+        }
+    }
 
     public void Shild() //캐릭터 방어기
     {
@@ -158,15 +179,18 @@ public class Player : MonoBehaviour
         Debug.Log("Attack");
 
         Is_Psb_Attack = false;
-        transform.DOMoveX(RangeEnemyObj.gameObject.transform.position.x - 100, 1 / Stat.AdSpeed)
-            .From()
-            .OnComplete(() => Is_Psb_Attack = true);
+        Lerp = lerp(RangeEnemyObj.gameObject.transform.position.x - 100, 1 / Stat.AdSpeed);
+        StartCoroutine(Lerp);
+        //transform.DOMoveX(RangeEnemyObj.gameObject.transform.position.x - 100, 1 / Stat.AdSpeed)
+        //    .From()
+        //    .OnComplete(() => {
+        //        Is_Psb_Attack = true;
+        //        RangeDistance = 10000; } );
 
         Camera.main.DOShakePosition(0.3f, 10)
             .OnComplete(() => Camera.main.transform.position = new Vector3(0, 0, -10));
 
         Stat.NowExp += RangeEnemyObj.Damage(Stat.Ad);
-        RangeDistance = 10000;
     }
 
     public void SpecialSkill() //캐릭터 특수기
@@ -203,7 +227,7 @@ public class Player : MonoBehaviour
         //skSeq.AppendCallback(() => SpecialSkill());
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionStay2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
             IsJumping = true;
@@ -233,4 +257,20 @@ public class Player : MonoBehaviour
         }
     }
     #endregion
+
+    IEnumerator lerp(float startvalue, float duration)
+    {
+        transform.position = new Vector3(startvalue, transform.position.y);
+
+        myRigid.velocity += Vector2.left * 1500f;
+        while (transform.position.x > -590)
+        {
+            yield return null;
+        }
+
+        myRigid.velocity = new Vector2(0, myRigid.velocity.y);
+        transform.position = new Vector3(-600, transform.position.y);
+        Is_Psb_Attack = true;
+        RangeDistance = 10000;
+    }
 }
