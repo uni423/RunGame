@@ -9,19 +9,22 @@ public class Player : MonoBehaviour
 {
     public PlayerStat Stat;
 
-    private float skDelay = 0f;
+    //private float skDelay = 0f;
 
+    [Header("점프")] 
     public bool IsJumping = false; //점프 가능이면 true
+    public bool IsDown = false;
 
+    [Header("대쉬")]
     public bool IsDash = false;
 
+    [Header("공격")] 
     public bool IsAttackRange = false; //공격 발동 사거리 안에 몬스터가 있으면 true
     public bool Is_Psb_Attack = true; //공격 가능하면 true
     public float RangeDistance = 1000f;
     public Enemy RangeEnemyObj; //공격 발동 사거리 안에 있는 몬스터
-    public Transform HurdleGrid;
 
-    public Skill skDash = new Skill(0f, 100f, 0.3f, 0f);
+    //public Skill skDash = new Skill(0f, 100f, 0.3f, 0f);
 
     public IEnumerator Lerp;
 
@@ -103,9 +106,10 @@ public class Player : MonoBehaviour
 
     public void PositionUpdata()
     {
-        if (myRigid.velocity.y < 0)
+        if (!IsJumping && myRigid.velocity.y < 10 && IsDown)
         {
-            myRigid.velocity += Vector2.up * Physics2D.gravity.y * (2.5f - 1) * Time.deltaTime;
+            myRigid.velocity = Vector2.up * Physics2D.gravity.y * 8f;
+            IsDown = false;
         }
     }
 
@@ -129,23 +133,14 @@ public class Player : MonoBehaviour
 
         if (!Is_Psb_Attack)
             StopCoroutine(Lerp);
-            //transform.DOKill();
 
         //Vector2 JumpVelocity = new Vector2(0, Stat.JumpPower * 5f);
-        myRigid.velocity = Vector2.up * Stat.JumpPower * 5f;
+        myRigid.velocity = Vector2.up * Stat.JumpPower * 5.5f;
         IsJumping = false;
+        IsDown = true;
 
         if (!Is_Psb_Attack)
-        {
             StartCoroutine(lerp(transform.position.x, 0.2f));
-            //transform.DOMoveX(-600, 0.2f)
-            //    .SetDelay(0.3f)
-            //    .OnComplete(() =>
-            //    {
-            //        Is_Psb_Attack = true;
-            //        RangeDistance = 10000;
-            //    });
-        }
     }
 
     public void Shild() //캐릭터 방어기
@@ -165,7 +160,7 @@ public class Player : MonoBehaviour
         IsDash = true;
     }
 
-    public void Dash_Quit() //대쉬
+    public void Dash_Quit() //대쉬 끝
     {
         BG.In_Speed(Stat.Speed);
         Enemy.Speed = 1f;
@@ -174,23 +169,19 @@ public class Player : MonoBehaviour
 
     public void Attack() //공격, 상호작용키
     {
-        if (!IsAttackRange || !IsJumping || !Is_Psb_Attack) 
+        if (!IsAttackRange || !IsJumping || !Is_Psb_Attack)
             return;
         Debug.Log("Attack");
 
         Is_Psb_Attack = false;
         Lerp = lerp(RangeEnemyObj.gameObject.transform.position.x - 100, 1 / Stat.AdSpeed);
         StartCoroutine(Lerp);
-        //transform.DOMoveX(RangeEnemyObj.gameObject.transform.position.x - 100, 1 / Stat.AdSpeed)
-        //    .From()
-        //    .OnComplete(() => {
-        //        Is_Psb_Attack = true;
-        //        RangeDistance = 10000; } );
 
         Camera.main.DOShakePosition(0.3f, 10)
             .OnComplete(() => Camera.main.transform.position = new Vector3(0, 0, -10));
 
         Stat.NowExp += RangeEnemyObj.Damage(Stat.Ad);
+        //Is_Psb_Attack = true;
     }
 
     public void SpecialSkill() //캐릭터 특수기
@@ -240,9 +231,9 @@ public class Player : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D other)
     {
-        IsAttackRange = false;
         if (other.gameObject.CompareTag("Enemy"))
         {
+            Debug.Log("true");
             IsAttackRange = true;
             if (RangeDistance > other.gameObject.transform.position.x + 600)
             {
@@ -255,6 +246,8 @@ public class Player : MonoBehaviour
                 }
             }
         }
+        else if (RangeDistance >= 10000f)
+            IsAttackRange = false;
     }
     #endregion
 
@@ -270,7 +263,9 @@ public class Player : MonoBehaviour
 
         myRigid.velocity = new Vector2(0, myRigid.velocity.y);
         transform.position = new Vector3(-600, transform.position.y);
+
         Is_Psb_Attack = true;
         RangeDistance = 10000;
+        RangeEnemyObj = null;
     }
 }

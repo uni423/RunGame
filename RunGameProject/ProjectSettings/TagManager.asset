@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Ground
   - Enemy
+  - Hurdle
   layers:
   - Default
   - TransparentFX
