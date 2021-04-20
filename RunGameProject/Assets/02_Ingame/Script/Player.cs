@@ -8,17 +8,17 @@ using UnityEngine.UI;
 public class Player : MonoBehaviour
 {
     public PlayerStat Stat;
-
+    public bool IsDamage; //공격 받은 상태인가?
     //private float skDelay = 0f;
 
-    [Header("점프")] 
+    [Header("점프")]
     public bool IsJumping = false; //점프 가능이면 true
     public bool IsDown = false;
 
     [Header("대쉬")]
     public bool IsDash = false;
 
-    [Header("공격")] 
+    [Header("공격")]
     public bool IsAttackRange = false; //공격 발동 사거리 안에 몬스터가 있으면 true
     public bool Is_Psb_Attack = true; //공격 가능하면 true
     public float RangeDistance = 1000f;
@@ -27,6 +27,7 @@ public class Player : MonoBehaviour
     //public Skill skDash = new Skill(0f, 100f, 0.3f, 0f);
 
     public IEnumerator Lerp;
+    public delegate void Delegate();
 
     [Space(10f)]
     public BGManager BG;
@@ -34,11 +35,14 @@ public class Player : MonoBehaviour
     public UIManager02 UIM_2;
 
     public Rigidbody2D myRigid;
-    
+
     void Update()
     {
         if (!GameManager.Instance.IsGamePlay)
             return;
+
+        if (transform.localPosition.x != -600)
+            lerp(transform.localPosition.x, 0.1f);
 
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.Space))
             Jump();
@@ -115,8 +119,11 @@ public class Player : MonoBehaviour
 
     public void Damage(float damage)
     {
-        //Stat.NowHp -= damage;
-        DOTween.To(() => Stat.NowHp, x => Stat.NowHp = x, Stat.NowHp - damage, 0.2f);
+        IsDamage = true;
+        StartCoroutine(Timer(2, () => { IsDamage = false; } ) );
+
+        Dash_Quit();
+        DOTween.To(() => Stat.NowHp, x => Stat.NowHp = x, Stat.NowHp - damage, 0.2f).OnComplete(() => { });
         Camera.main.DOShakePosition(0.3f, 100);
         BG.Move(Stat.Speed * 0.5f, 2f, 0);
         if (Stat.NowHp <= 0)
@@ -140,7 +147,13 @@ public class Player : MonoBehaviour
         IsDown = true;
 
         if (!Is_Psb_Attack)
-            StartCoroutine(lerp(transform.position.x, 0.2f));
+            StartCoroutine(lerp(transform.position.x, 0.2f,
+                () =>
+                {
+                    Is_Psb_Attack = true;
+                    RangeDistance = 10000;
+                    RangeEnemyObj = null;
+                } ) );
     }
 
     public void Shild() //캐릭터 방어기
@@ -155,15 +168,16 @@ public class Player : MonoBehaviour
 
     public void Dash() //대쉬
     {
+        if (IsDamage)
+            return;
+
         BG.In_Speed(Stat.Speed * 2.3f);
-        Enemy.Speed = 2.3f;
         IsDash = true;
     }
 
     public void Dash_Quit() //대쉬 끝
     {
         BG.In_Speed(Stat.Speed);
-        Enemy.Speed = 1f;
         IsDash = false;
     }
 
@@ -174,7 +188,13 @@ public class Player : MonoBehaviour
         Debug.Log("Attack");
 
         Is_Psb_Attack = false;
-        Lerp = lerp(RangeEnemyObj.gameObject.transform.position.x - 100, 1 / Stat.AdSpeed);
+        Lerp = lerp(RangeEnemyObj.gameObject.transform.position.x - 100, 1 / Stat.AdSpeed,
+            () =>
+            {
+                Is_Psb_Attack = true;
+                RangeDistance = 10000;
+                RangeEnemyObj = null;
+            } );
         StartCoroutine(Lerp);
 
         Camera.main.DOShakePosition(0.3f, 10)
@@ -233,7 +253,6 @@ public class Player : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Enemy"))
         {
-            Debug.Log("true");
             IsAttackRange = true;
             if (RangeDistance > other.gameObject.transform.position.x + 600)
             {
@@ -251,7 +270,7 @@ public class Player : MonoBehaviour
     }
     #endregion
 
-    IEnumerator lerp(float startvalue, float duration)
+    IEnumerator lerp(float startvalue, float duration, Delegate dele = null)
     {
         transform.position = new Vector3(startvalue, transform.position.y);
 
@@ -264,8 +283,12 @@ public class Player : MonoBehaviour
         myRigid.velocity = new Vector2(0, myRigid.velocity.y);
         transform.position = new Vector3(-600, transform.position.y);
 
-        Is_Psb_Attack = true;
-        RangeDistance = 10000;
-        RangeEnemyObj = null;
+        if (dele != null) StartCoroutine(Timer(duration, dele));
+    }
+
+    IEnumerator Timer(float time, Delegate dele)
+    {
+        yield return new WaitForSeconds(time);
+        dele();
     }
 }
