@@ -26,6 +26,8 @@ public class Enemy : MonoBehaviour
     public float Damage(float damage)
     {
         Hp -= damage;
+        transform.DOKill();
+        transform.position = new Vector3(transform.position.x, -256);
         transform.DOMoveX(transform.position.x + 100, 0.2f);
         if (Hp <= 0)
         {

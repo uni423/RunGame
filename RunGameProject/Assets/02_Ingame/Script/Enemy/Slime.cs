@@ -25,10 +25,11 @@ public class Slime : MonoBehaviour
         if (!GameManager.Instance.IsGamePlay)
             return;
 
-        if (!IsAttack && transform.position.x <= -500)
+        if (!IsAttack && transform.position.x <= 0 && !gameObject.GetComponent<Enemy>().IsDead)
         {
             IsAttack = true;
-            transform.DOLocalJump(new Vector3(transform.localPosition.x, transform.localPosition.y), 300f, 1, 1 / 0.78f)
+            //transform.DOLocalJump(new Vector3(transform.localPosition.x, transform.localPosition.y), 300f, 1, 1 / 0.78f)
+            transform.DOLocalJump(new Vector3(transform.localPosition.x, transform.localPosition.y), 300f, 1, 0.7f)
                 .SetEase(Ease.Linear);
         }
     }

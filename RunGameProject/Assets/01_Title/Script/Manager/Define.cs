@@ -8,16 +8,17 @@
     {
         public bool IsPractice = false;
         public float Distance;
-        public float Delay;
-        public float CoolTime;
+        public float Damage;
+        public float MaxCoolTime;
+        public float NowCoolTime = 0;
         public float Time;
 
-        public Skill(float coolTime, float distance, float delay, float time)
+        public Skill(float time, float damage, float distance, float coolTime)
         {
-            CoolTime = coolTime;
-            Distance = distance;
-            Delay = delay;
             Time = time;
+            Damage = damage;
+            Distance = distance;
+            MaxCoolTime = coolTime;
         }
     }
 

@@ -9,7 +9,6 @@ public class Player : MonoBehaviour
 {
     public PlayerStat Stat;
     public bool IsDamage; //공격 받은 상태인가?
-    //private float skDelay = 0f;
 
     [Header("점프")]
     public bool IsJumping = false; //점프 가능이면 true
@@ -24,7 +23,9 @@ public class Player : MonoBehaviour
     public float RangeDistance = 1000f;
     public Enemy RangeEnemyObj; //공격 발동 사거리 안에 있는 몬스터
 
-    //public Skill skDash = new Skill(0f, 100f, 0.3f, 0f);
+    [Header("스킬")]
+    public Skill skKnightA = new Skill(1f, 0, 0, 5f);
+    public bool Is_Shild = false;
 
     public IEnumerator Lerp;
     public delegate void Delegate();
@@ -48,6 +49,8 @@ public class Player : MonoBehaviour
             Jump();
         if (Input.GetKeyDown(KeyCode.A))
             Shild();
+        if (Input.GetKeyUp(KeyCode.A))
+            if (Is_Shild) Shild_Quit();
         if (Input.GetKeyDown(KeyCode.S))
             Bottom();
         if (Input.GetKeyDown(KeyCode.D))
@@ -119,6 +122,13 @@ public class Player : MonoBehaviour
 
     public void Damage(float damage)
     {
+        if(Is_Shild)
+        {
+            Debug.Log("방어!");
+            Shild_Quit(true);
+            return;
+        }
+
         IsDamage = true;
         StartCoroutine(Timer(2, () => { IsDamage = false; } ) );
 
@@ -158,7 +168,23 @@ public class Player : MonoBehaviour
 
     public void Shild() //캐릭터 방어기
     {
+        if (skKnightA.NowCoolTime > 0)
+            return;
+
         Debug.Log("Shild");
+        Is_Shild = true;
+        StartCoroutine(Timer(1, (() => { if (Is_Shild) Shild_Quit(); }) ));
+        //키다운 중인 '지속시간' 동안 무적, '지속시간' 중 대미지를 입으면 해당 대미지만큼 반격한다
+    }
+
+    public void Shild_Quit(bool Is_damage = false) //방어기 종료
+    {
+        Is_Shild = false;
+        if (Is_damage)
+        {
+            skKnightA.NowCoolTime = skKnightA.MaxCoolTime;
+            DOTween.To(() => skKnightA.NowCoolTime, x => skKnightA.NowCoolTime = x, 0, skKnightA.MaxCoolTime);
+        }
     }
 
     public void Bottom() //하단키
@@ -206,9 +232,7 @@ public class Player : MonoBehaviour
 
     public void SpecialSkill() //캐릭터 특수기
     {
-        ////키다운 중인 '지속시간' 동안 무적, '지속시간' 중 대미지를 입으면 해당 대미지만큼 반격한다
-        //skKnightA = new Skill(5f, 0, 1f, 0.1f);
-        ////'지속시간' 동안 무적, 1초마다 '사거리'만큼 돌진(이동), 닿는 적에겐 틱 1초마다 '대미지'만큼 입힌다
+        //'지속시간' 동안 무적, 1초마다 '사거리'만큼 돌진(이동), 닿는 적에겐 틱 1초마다 '대미지'만큼 입힌다
         //skKnightK = new Skill(13f, 300 + sp / 2, 1f, 3f);
         if (!IsJumping)
             return;

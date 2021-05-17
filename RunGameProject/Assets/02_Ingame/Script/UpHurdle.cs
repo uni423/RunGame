@@ -7,11 +7,12 @@ public class UpHurdle : MonoBehaviour
 {
     public EnemyData stat;
     public bool IsUp;
-    private Vector2 vector;
+    private float vector;
 
     private void Start()
     {
-        transform.GetComponent<SpriteRenderer>().color = new Color(255, 255, 255, 0);
+        if (IsUp)
+            transform.GetComponent<SpriteRenderer>().color = new Color(255, 255, 255, 0);
     }
 
 
@@ -19,13 +20,13 @@ public class UpHurdle : MonoBehaviour
     {
         if (!GameManager.Instance.IsGamePlay)
             return;
-        if (transform.position.x <= 550 && IsUp)
+        if (transform.position.x <= 700 && IsUp)
         {
-            vector = transform.localPosition;
+            vector = transform.localPosition.y;
             IsUp = false;
             transform.GetComponent<SpriteRenderer>().color = new Color(255, 255, 255, 255);
-            transform.position = new Vector3(transform.position.x, -500);
-            transform.DOLocalJump(vector, 300f, 1, 0.7f);
+            //transform.position = new Vector3(transform.position.x, -1000);
+            transform.DOMoveY(-1000, 0.4f).From();
         }
     }
 
