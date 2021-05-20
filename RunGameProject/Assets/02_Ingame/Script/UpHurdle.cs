@@ -15,7 +15,6 @@ public class UpHurdle : MonoBehaviour
             transform.GetComponent<SpriteRenderer>().color = new Color(255, 255, 255, 0);
     }
 
-
     public void Update()
     {
         if (!GameManager.Instance.IsGamePlay)
