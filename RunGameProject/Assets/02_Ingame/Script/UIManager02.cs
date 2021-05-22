@@ -36,6 +36,10 @@ public class UIManager02 : MonoBehaviour
         UI_Skill2.fillAmount =
             (PlayerMgr.Player.GetComponent<Player>().skKnightA.MaxCoolTime - PlayerMgr.Player.GetComponent<Player>().skKnightA.NowCoolTime)
             / PlayerMgr.Player.GetComponent<Player>().skKnightA.MaxCoolTime;
+
+        UI_Skill3.fillAmount =
+            (PlayerMgr.Player.GetComponent<Player>().skKnightK.MaxCoolTime - PlayerMgr.Player.GetComponent<Player>().skKnightK.NowCoolTime)
+            / PlayerMgr.Player.GetComponent<Player>().skKnightK.MaxCoolTime;
     }
 
     public void UI_Shiny(int num, bool IsPlay = true)

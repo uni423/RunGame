@@ -18,42 +18,14 @@ public class BGManager : MonoBehaviour
 
     public List<Grid> Tile = new List<Grid>();
 
-    public void In_Speed(float speed)
-    {
-        Speed = speed;
-        BSpeed = (10000 / Tile[0].transform.Find("Ground").GetComponent<TilemapCollider2D>().bounds.size.x) * Speed;
-        foreach (var MG in MiddleGround)
-        {
-            MG.Setsp(speed);
-        }
-    }
-
-    public void Move(float sp, float duration, float offset)
-    {
-        Is_InSpeed = true;
-
-        Offset += offset;
-        BOffset += offset;
-
-        foreach (var MG in MiddleGround)
-        {
-            MG.Offset += (offset * 0.0005f);
-        }
-
-        DOTween.To(() => Speed, x => Speed = x, sp, duration)
-            .From()
-            .OnComplete(() => Is_InSpeed = false);
-    }
-
     private void Start()
     {
         BSpeed = (10000 / Tile[0].transform.Find("Ground").GetComponent<TilemapCollider2D>().bounds.size.x) * Speed;
-        //BSpeed = (10000 / Tile[0].transform.Find("Ground").GetComponent<CompositeCollider2D>().bounds.size.x) * Speed;
     }
 
     private void Update()
     {
-        if (Is_InSpeed == true)
+        if (Is_InSpeed)
             In_Speed(Speed);
 
         Offset += Time.deltaTime * (Speed * 1.5f);
@@ -61,7 +33,36 @@ public class BGManager : MonoBehaviour
 
         BackGround.position = new Vector3(-1 * BOffset, 0);
 
-        foreach(var grid in Tile)
+        foreach (var grid in Tile)
             grid.transform.position = new Vector3(-1 * Offset, 0);
+    }
+
+    public void In_Speed(float speed, bool DOKill = false)
+    {
+        if (DOKill)
+        {
+            DOTween.Kill("MoveTW");
+            Is_InSpeed = false;
+        }
+
+        Speed = speed;
+        BSpeed = (10000 / Tile[0].transform.Find("Ground").GetComponent<TilemapCollider2D>().bounds.size.x) * Speed;
+        foreach (var MG in MiddleGround)
+        {
+            MG.Setsp(Speed);
+        }
+    }
+
+    public void Move(float sp, float duration)
+    {
+        Is_InSpeed = true;
+
+        DOTween.To(() => Speed, x => Speed = x, sp, duration)
+            .From()
+            .SetId("MoveTW")
+            .OnComplete(() =>
+            {
+                Is_InSpeed = false;
+            });
     }
 }

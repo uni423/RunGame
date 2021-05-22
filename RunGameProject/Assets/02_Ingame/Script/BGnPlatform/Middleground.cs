@@ -27,9 +27,4 @@ public class Middleground: MonoBehaviour
     {
         Speed = sp;
     }
-
-    public void Move(float sp, float duration)
-    {
-        DOTween.To(() => Speed, x => Speed = x, sp, duration).From();
-    }
 }

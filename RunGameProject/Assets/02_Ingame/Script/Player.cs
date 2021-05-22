@@ -39,6 +39,8 @@ public class Player : MonoBehaviour
     public UIManager02 UIM_2;
 
     private Rigidbody2D myRigid;
+    public GameObject JumpColli;
+    public GameObject RangeColli;
 
     #endregion
 
@@ -48,6 +50,9 @@ public class Player : MonoBehaviour
 
         skKnightA = new Skill(1f, 0, 0, 5f);
         skKnightK = new Skill(3f, 100, 300 + (0.5f * Stat.Speed), 20f);
+
+        JumpColli.SetActive(true);
+        RangeColli.SetActive(true);
     }
 
     void Update()
@@ -73,9 +78,9 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.K))
             SpecialSkill();
         if (Input.GetKeyDown(KeyCode.L))
-            { }
+        { }
         if (Input.GetKeyDown(KeyCode.Escape))
-            { }
+        { }
 
         StatUpdate();
         PositionUpdate();
@@ -138,20 +143,25 @@ public class Player : MonoBehaviour
 
     public void Damage(float damage)
     {
-        if(Is_Shild)
+        if (Is_Shild)
         {
             Debug.Log("방어!");
             Shild_Quit(true);
             return;
         }
+        if (Is_Carge)
+        {
+            Debug.Log("스페셜 방어!");
+            return;
+        }
 
         Is_Damage = true;
-        StartCoroutine(Timer(2, () => { Is_Damage = false; } ) );
+        StartCoroutine(Timer(2, () => { Is_Damage = false; }));
 
         Dash_Quit();
         DOTween.To(() => Stat.NowHp, x => Stat.NowHp = x, Stat.NowHp - damage, 0.2f).OnComplete(() => { });
         Camera.main.DOShakePosition(0.3f, 100);
-        BG.Move(Stat.Speed * 0.5f, 2f, 0);
+        BG.Move(Stat.Speed * 0.5f, 2f);
         if (Stat.NowHp <= 0)
         {
             //Game Over
@@ -178,36 +188,7 @@ public class Player : MonoBehaviour
                     Is_Attack = true;
                     RangeDistance = 10000;
                     RangeEnemyObj = null;
-                } ) );
-    }
-
-    public void Shild() //캐릭터 방어기
-    {
-        //키다운 중인 '지속시간' 동안 무적, '지속시간' 중 대미지를 입으면 해당 대미지만큼 반격한다
-
-        if (skKnightA.NowCoolTime > 0)
-            return;
-
-        Debug.Log("Shild");
-        Is_Shild = true;
-        StartCoroutine(Timer(1, (() => { if (Is_Shild) Shild_Quit(); }) ));
-    }
-
-    public void Shild_Quit(bool Is_damage = false) //방어기 종료
-    {
-        Is_Shild = false;
-        if (Is_damage)
-        {
-            skKnightA.NowCoolTime = skKnightA.MaxCoolTime;
-            UIM_2.UI_Shiny(1, false);
-            DOTween.To(() => skKnightA.NowCoolTime, x => skKnightA.NowCoolTime = x, 0, skKnightA.MaxCoolTime)
-                .SetEase(Ease.Linear)
-                .OnComplete(() =>
-                {
-                    UIM_2.UI_Shiny(1);
-                    Debug.Log("어ㅏ미");
-                });
-        }
+                }));
     }
 
     public void Bottom() //하단키
@@ -217,7 +198,7 @@ public class Player : MonoBehaviour
 
     public void Dash() //대쉬
     {
-        if (Is_Damage)
+        if (Is_Damage || Is_Carge)
             return;
 
         BG.In_Speed(Stat.Speed * 2.3f);
@@ -243,7 +224,7 @@ public class Player : MonoBehaviour
                 Is_Attack = true;
                 RangeDistance = 10000;
                 RangeEnemyObj = null;
-            } );
+            });
         StartCoroutine(Lerp);
 
         Camera.main.DOShakePosition(0.3f, 10)
@@ -252,36 +233,66 @@ public class Player : MonoBehaviour
         Stat.NowExp += RangeEnemyObj.Damage(Stat.Ad);
     }
 
+    public void Shild() //캐릭터 방어기
+    {
+        //키다운 중인 '지속시간' 동안 무적, '지속시간' 중 대미지를 입으면 해당 대미지만큼 반격한다
+
+        if (skKnightA.NowCoolTime > 0)
+            return;
+
+        Debug.Log("Shild");
+        Is_Shild = true;
+        StartCoroutine(Timer(skKnightA.Time, (() => { if (Is_Shild) Shild_Quit(); })));
+    }
+
+    public void Shild_Quit(bool Is_damage = false) //방어기 종료
+    {
+        Is_Shild = false;
+        if (Is_damage)
+        {
+            skKnightA.NowCoolTime = skKnightA.MaxCoolTime;
+            UIM_2.UI_Shiny(1, false);
+            DOTween.To(() => skKnightA.NowCoolTime, x => skKnightA.NowCoolTime = x, 0, skKnightA.MaxCoolTime)
+                .SetEase(Ease.Linear)
+                .OnComplete(() =>
+                {
+                    UIM_2.UI_Shiny(1);
+                });
+        }
+    }
+
     public void SpecialSkill() //캐릭터 특수기
     {
-        //'지속시간' 동안 무적, 1초마다 '사거리'만큼 돌진(이동), 닿는 적에겐 틱 1초마다 '대미지'만큼 입힌다
-        //skKnightK = new Skill(13f, 300 + sp / 2, 1f, 3f);
-        if (!Is_Jumping)
+        if (Is_Carge || skKnightK.NowCoolTime > 0)
             return;
-        //if (Knight.Instance.skKnightK.IsPractice)
-        //    return;
+        if (Is_Dash)
+            Dash_Quit();
 
+        //'지속시간' 동안 무적, 1초마다 '사거리'만큼 돌진(이동), 닿는 적에겐 틱 1초마다 '대미지'만큼 입힌다
         Debug.Log("skSpecial");
 
-        //if (skDelay <= 0f && !Knight.Instance.skKnightK.IsPractice) //처음 시작
-        //{
-        //    skDelay = Knight.Instance.skKnightK.Time;
-        //    Knight.Instance.skKnightK.IsPractice = true;
-        //}
-        //else if (skDelay <= 0f && Knight.Instance.skKnightK.IsPractice) //끝
-        //{
-        //    skDelay = 0f;
-        //    Knight.Instance.skKnightK.IsPractice = false;
-        //    return;
-        //}
+        Is_Carge = true;
+        StartCoroutine(Timer(skKnightK.Time,
+            (() =>
+            {
+                Is_Carge = false;
+                BG.In_Speed(Stat.Speed);
+                RangeColli.SetActive(true);
 
-        //Sequence skSeq = DOTween.Sequence();
+                skKnightK.NowCoolTime = skKnightK.MaxCoolTime;
+                UIM_2.UI_Shiny(2, false);
+                DOTween.To(() => skKnightK.NowCoolTime, x => skKnightK.NowCoolTime = x, 0, skKnightK.MaxCoolTime)
+                    .SetEase(Ease.Linear)
+                    .OnComplete(() =>
+                    {
+                        UIM_2.UI_Shiny(2);
+                    });
+            })
+            ));
 
-        //skSeq.AppendCallback(() => BG.Move(Stat.Speed, 0.3f, 1f));
-        //skSeq.Append(transform.DOMoveX(transform.position.x + Knight.Instance.skKnightK.Distance, 0.3f).From());
-        //skSeq.AppendInterval(Knight.Instance.skKnightK.Delay - 0.3f);
-        //skSeq.AppendCallback(() => skDelay -= 1f);
-        //skSeq.AppendCallback(() => SpecialSkill());
+        RangeColli.SetActive(false);
+        BG.In_Speed(skKnightK.Distance, true);
+        Debug.Log(skKnightK.Distance);
     }
 
     private void OnCollisionStay2D(Collision2D collision)
@@ -289,6 +300,7 @@ public class Player : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground"))
             Is_Jumping = true;
     }
+
     private void OnCollisionExit2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
@@ -297,6 +309,12 @@ public class Player : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D other)
     {
+        if (Is_Carge && other.gameObject.CompareTag("Enemy") && !other.transform.GetComponent<Enemy>().IsDead)
+        {
+            Stat.NowExp += other.transform.GetComponent<Enemy>().Damage(skKnightK.Damage);
+            Debug.Log("스페셜 공격!");
+        }
+
         if (other.gameObject.CompareTag("Enemy"))
         {
             Is_AttackRange = true;

@@ -57,7 +57,6 @@ public class Enemy : MonoBehaviour
         {
             if (!IsDead)
                 collision.GetComponent<Player>().Damage(stat.Ad);
-                //Debug.Log(collision.gameObject.name);
         }
     }
 }
