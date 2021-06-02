@@ -141,19 +141,15 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void Damage(float damage)
+    public void Damage(float damage, string Enemy)
     {
         if (Is_Shild)
         {
-            Debug.Log("방어!");
             Shild_Quit(true);
             return;
         }
-        if (Is_Carge)
-        {
-            Debug.Log("스페셜 방어!");
+        if (Is_Carge && !Is_Attack)
             return;
-        }
 
         Is_Damage = true;
         StartCoroutine(Timer(2, () => { Is_Damage = false; }));
@@ -161,10 +157,12 @@ public class Player : MonoBehaviour
         Dash_Quit();
         DOTween.To(() => Stat.NowHp, x => Stat.NowHp = x, Stat.NowHp - damage, 0.2f).OnComplete(() => { });
         Camera.main.DOShakePosition(0.3f, 100);
+        Camera.main.transform.DOMove(new Vector3(0, 0, -10), 0.1f).SetDelay(0.3f);
         BG.Move(Stat.Speed * 0.5f, 2f);
         if (Stat.NowHp <= 0)
         {
-            //Game Over
+            GameManager.Instance.IsGamePlay = false;
+            UIM_2.Game_Over(Enemy);
         }
     }
 
@@ -215,7 +213,9 @@ public class Player : MonoBehaviour
     {
         if (!Is_AttackRange || !Is_Jumping || !Is_Attack)
             return;
-        Debug.Log("Attack");
+        Debug.Log("Attack" + Stat.Ad);
+
+        Stat.NowExp += RangeEnemyObj.Damage(Stat.Ad);
 
         Is_Attack = false;
         Lerp = lerp(RangeEnemyObj.gameObject.transform.position.x - 100, 1 / Stat.AdSpeed,
@@ -229,8 +229,6 @@ public class Player : MonoBehaviour
 
         Camera.main.DOShakePosition(0.3f, 10)
             .OnComplete(() => Camera.main.transform.position = new Vector3(0, 0, -10));
-
-        Stat.NowExp += RangeEnemyObj.Damage(Stat.Ad);
     }
 
     public void Shild() //캐릭터 방어기
@@ -289,7 +287,6 @@ public class Player : MonoBehaviour
                     });
             })
             ));
-
         RangeColli.SetActive(false);
         BG.In_Speed(skKnightK.Distance, true);
         Debug.Log(skKnightK.Distance);
@@ -310,10 +307,7 @@ public class Player : MonoBehaviour
     private void OnTriggerStay2D(Collider2D other)
     {
         if (Is_Carge && other.gameObject.CompareTag("Enemy") && !other.transform.GetComponent<Enemy>().IsDead)
-        {
             Stat.NowExp += other.transform.GetComponent<Enemy>().Damage(skKnightK.Damage);
-            Debug.Log("스페셜 공격!");
-        }
 
         if (other.gameObject.CompareTag("Enemy"))
         {

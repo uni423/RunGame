@@ -25,6 +25,8 @@ public class BGManager : MonoBehaviour
 
     private void Update()
     {
+        if (!GameManager.Instance.IsGamePlay)
+            return;
         if (Is_InSpeed)
             In_Speed(Speed);
 

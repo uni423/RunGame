@@ -12,5 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb70dcbec3eeb3b4490834dad138cd1d, type: 3}
   m_Name: Hurdle Data
   m_EditorClassIdentifier: 
-  Ad: 5
-  Exp: 0
+  maxHp: 999
+  ad: 0
+  adRange: 0
+  adSpeed: 0
+  triAd: 5
+  exp: 0

@@ -5,44 +5,32 @@ using DG.Tweening;
 
 public class Enemy : MonoBehaviour
 {
-    public float Hp;
     public EnemyData stat;
+    public float NowHp;
     public Sprite dead;
 
     public bool IsDead;
 
     public void Start()
     {
-        Hp = 10;
+        NowHp = stat.MaxHp;
         IsDead = false;
-    }
-
-    public void Update()
-    {
-        if (!GameManager.Instance.IsGamePlay)
-            return;
     }
 
     public float Damage(float damage)
     {
-        Hp -= damage;
-        transform.DOKill();
+        NowHp -= damage;
+        DOTween.Kill(this);
         transform.position = new Vector3(transform.position.x, -256);
         transform.DOMoveX(transform.position.x + 100, 0.2f);
-        if (Hp <= 0)
+        if (NowHp <= 0)
         {
             StartCoroutine(Dead());
             return stat.Exp;
         }
-
         return 0;
     }
     
-    public void PlayerAattack(float value)
-    {
-        transform.position += new Vector3(value, 0);
-    }
-
     public IEnumerator Dead()
     {
         IsDead = true;
@@ -56,7 +44,7 @@ public class Enemy : MonoBehaviour
         if (collision.gameObject.tag == "Player")
         {
             if (!IsDead)
-                collision.GetComponent<Player>().Damage(stat.Ad);
+                collision.GetComponent<Player>().Damage(stat.Ad, this.name);
         }
     }
 }
