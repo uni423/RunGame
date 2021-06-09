@@ -10,6 +10,8 @@ public class BGManager : MonoBehaviour
     public float BSpeed = 0f;
     public float Offset = 0f;
     public float BOffset = 0f;
+    public float Diff = 0f;
+
     public bool Is_InSpeed = false;
 
     public Transform BackGround;
@@ -41,6 +43,8 @@ public class BGManager : MonoBehaviour
 
     public void In_Speed(float speed, bool DOKill = false)
     {
+        int i = 0; 
+
         if (DOKill)
         {
             DOTween.Kill("MoveTW");
@@ -51,7 +55,8 @@ public class BGManager : MonoBehaviour
         BSpeed = (10000 / Tile[0].transform.Find("Ground").GetComponent<TilemapCollider2D>().bounds.size.x) * Speed;
         foreach (var MG in MiddleGround)
         {
-            MG.Setsp(Speed);
+            i++;
+            MG.Setsp(Speed - Diff * i);
         }
     }
 
