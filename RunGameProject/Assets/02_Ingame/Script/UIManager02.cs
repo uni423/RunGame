@@ -106,7 +106,7 @@ public class UIManager02 : MonoBehaviour
                 enemyName = "원인불명"; break;
         }
 
-        Over_UIs.Find("Over Reason").GetChild(3).GetComponent<Text>().text = enemyName;
+        Over_UIs.Find("Over Reason").GetChild(2).GetComponent<Text>().text = enemyName;
 
         StartCoroutine(Game_Over_Anim());
     }
