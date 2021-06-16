@@ -155,15 +155,15 @@ public class Player : MonoBehaviour
         StartCoroutine(Timer(2, () => { Is_Damage = false; }));
 
         Dash_Quit();
-        DOTween.To(() => Stat.NowHp, x => Stat.NowHp = x, Stat.NowHp - damage, 0.2f).OnComplete(() => { });
-        Camera.main.DOShakePosition(0.3f, 100);
-        Camera.main.transform.DOMove(new Vector3(0, 0, -10), 0.1f).SetDelay(0.3f);
-        BG.Move(Stat.Speed * 0.5f, 2f);
-        if (Stat.NowHp <= 0)
+        if (Stat.NowHp - damage <= 0)
         {
             GameManager.Instance.IsGamePlay = false;
             UIM_2.Game_Over(Enemy);
         }
+        DOTween.To(() => Stat.NowHp, x => Stat.NowHp = x, Stat.NowHp - damage, 0.2f).OnComplete(() => { });
+        Camera.main.DOShakePosition(0.3f, 100);
+        Camera.main.transform.DOMove(new Vector3(0, 0, -10), 0.1f).SetDelay(0.3f);
+        BG.Move(Stat.Speed * 0.5f, 2f);
     }
 
     #region Skills

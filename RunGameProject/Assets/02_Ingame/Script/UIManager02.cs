@@ -14,9 +14,8 @@ public class UIManager02 : MonoBehaviour
     public Image UI_sp;
 
     public GameObject Skill;
-    public Image UI_Skill1;
-    public Image UI_Skill2;
-    public Image UI_Skill3;
+    public Transform UI_Skill1;
+    public Transform UI_Skill2;
 
     [Header("GameOver UI")]
     public Transform Over_Obj;
@@ -42,11 +41,11 @@ public class UIManager02 : MonoBehaviour
             / PlayerMgr.statSaves[(int)GameManager.Instance.CharactorCode].MaxSp;
 
         //Skill
-        UI_Skill2.fillAmount =
+        UI_Skill1.Find("Filed").GetComponent<Image>().fillAmount =
             (PlayerMgr.Player.GetComponent<Player>().skKnightA.MaxCoolTime - PlayerMgr.Player.GetComponent<Player>().skKnightA.NowCoolTime)
             / PlayerMgr.Player.GetComponent<Player>().skKnightA.MaxCoolTime;
 
-        UI_Skill3.fillAmount =
+        UI_Skill2.Find("Filed").GetComponent<Image>().fillAmount =
             (PlayerMgr.Player.GetComponent<Player>().skKnightK.MaxCoolTime - PlayerMgr.Player.GetComponent<Player>().skKnightK.NowCoolTime)
             / PlayerMgr.Player.GetComponent<Player>().skKnightK.MaxCoolTime;
     }
@@ -59,13 +58,13 @@ public class UIManager02 : MonoBehaviour
         {
             if (IsPlay)
             {
-                UI_Skill2.transform.GetComponent<UIShiny>().Play();
-                UI_Skill2.color = new Color(170 / 255f, 1f, 182 / 255f);
+                UI_Skill1.Find("SkillUI_1").transform.GetComponent<UIShiny>().Play();
+                UI_Skill1.Find("Filed").gameObject.SetActive(false);
             }
             else
             {
-                UI_Skill2.transform.GetComponent<UIShiny>().Stop();
-                UI_Skill2.color = new Color(100 / 255f, 150 / 255f, 100 / 255f);
+                UI_Skill1.Find("SkillUI_1").transform.GetComponent<UIShiny>().Stop();
+                UI_Skill1.Find("Filed").gameObject.SetActive(true);
             }
         }
 
@@ -73,13 +72,13 @@ public class UIManager02 : MonoBehaviour
         {
             if (IsPlay)
             {
-                UI_Skill3.transform.GetComponent<UIShiny>().Play();
-                UI_Skill3.color = new Color(170 / 255f, 1f, 182 / 255f);
+                UI_Skill2.Find("SkillUI_2").transform.GetComponent<UIShiny>().Play();
+                UI_Skill2.Find("Filed").gameObject.SetActive(false);
             }
             else
             {
-                UI_Skill3.transform.GetComponent<UIShiny>().Stop();
-                UI_Skill3.color = new Color(100 / 255f, 150 / 255f, 100 / 255f);
+                UI_Skill2.Find("SkillUI_2").transform.GetComponent<UIShiny>().Stop();
+                UI_Skill2.Find("Filed").gameObject.SetActive(true);
             }
         }
     }
@@ -129,16 +128,17 @@ public class UIManager02 : MonoBehaviour
     {
         //Active 켜주기, 탐험종료 이미지 위치 조정, UI투명
         Over_Obj.gameObject.SetActive(true);
+        Over_Obj.position = new Vector3(0, 0);
+        Over_Obj.localScale = new Vector3(0, 0);
         Over_Image.position = new Vector3(0, 0);
         Over_UIs.GetComponent<CanvasGroup>().alpha = 0;
-        Over_Obj.GetComponent<Image>().color = new Color(28 / 255f, 36 / 255f, 55 / 255f, 0f);
-        Over_Obj.GetComponent<Image>().DOFade(150 / 255f, 0.3f).SetEase(Ease.OutSine);
+        DOTween.To(() => new Vector3(0, 0), x => Over_Obj.GetComponent<RectTransform>().sizeDelta = x, new Vector3(1920, 1080), 0.3f);
 
         //탐험종료 이미지,텍스트 나타나기
         Over_Image.GetComponent<Image>().color = new Color(200 / 255f, 200 / 255f, 200 / 255f, 0f);
         Over_Image.GetComponent<Image>().DOFade(1f, 0.2f).SetEase(Ease.Linear);
-        Over_Image.GetChild(0).GetComponent<Text>().color = new Color(42 / 255f, 42 / 255f, 42 / 255f, 0f);
-        Over_Image.GetChild(0).GetComponent<Text>().DOFade(1f, 0.2f).SetEase(Ease.Linear);
+        Over_Obj.GetChild(1).GetComponent<Text>().color = new Color(42 / 255f, 42 / 255f, 42 / 255f, 0f);
+        Over_Obj.GetChild(1).GetComponent<Text>().DOFade(1f, 0.2f).SetEase(Ease.Linear);
         yield return new WaitForSeconds(1f);
 
         DOTween.To(() => HPnSP.GetComponent<CanvasGroup>().alpha
@@ -147,7 +147,7 @@ public class UIManager02 : MonoBehaviour
         , x => Skill.GetComponent<CanvasGroup>().alpha = x, 0, 0.3f);
 
         //탐험종료 이미지 올라가기, UI 나타나기
-        Over_Image.DOMoveY(420f, 0.3f).SetEase(Ease.OutSine);
+        //Over_Image.DOMoveY(420f, 0.3f).SetEase(Ease.OutSine);
         yield return new WaitForSeconds(0.2f);
 
         DOTween.To(() => Over_UIs.GetComponent<CanvasGroup>().alpha
