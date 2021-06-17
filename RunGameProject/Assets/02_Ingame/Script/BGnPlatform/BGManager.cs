@@ -9,6 +9,7 @@ public class BGManager : MonoBehaviour
     public float Speed = 0f;
     public float BSpeed = 0f;
     public float Offset = 0f;
+    public float[] TreeOffset = new float[3];
     public float BOffset = 0f;
     public float Diff = 0f;
 
@@ -16,8 +17,9 @@ public class BGManager : MonoBehaviour
 
     public Transform BackGround;
 
-    public List<Middleground> MiddleGround = new List<Middleground>();
+    //public List<Middleground> MiddleGround = new List<Middleground>();
 
+    public List<Tilemap> Trees = new List<Tilemap>();
     public List<Grid> Tile = new List<Grid>();
 
     private void Start()
@@ -39,6 +41,14 @@ public class BGManager : MonoBehaviour
 
         foreach (var grid in Tile)
             grid.transform.position = new Vector3(-1 * Offset, 0);
+
+        int i = 0;
+        foreach (var tree in Trees)
+        {
+            TreeOffset[i] += Time.deltaTime * (Speed * (1.5f - (Diff * i)));
+            tree.transform.position = new Vector3(-1 * TreeOffset[i], 0);
+            i++;
+        }
     }
 
     public void In_Speed(float speed, bool DOKill = false)
@@ -53,11 +63,12 @@ public class BGManager : MonoBehaviour
 
         Speed = speed;
         BSpeed = (10000 / Tile[0].transform.Find("Ground").GetComponent<TilemapCollider2D>().bounds.size.x) * Speed;
-        foreach (var MG in MiddleGround)
-        {
-            i++;
-            MG.Setsp(Speed - Diff * i);
-        }
+
+        //foreach (var MG in MiddleGround)
+        //{
+        //    i++;
+        //    MG.Setsp(Speed - Diff * i);
+        //}
     }
 
     public void Move(float sp, float duration)

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb70dcbec3eeb3b4490834dad138cd1d, type: 3}
   m_Name: Slime Data
   m_EditorClassIdentifier: 
-  maxHp: 35
+  maxHp: 1
   ad: 20
   adRange: 300
   adSpeed: 0.78

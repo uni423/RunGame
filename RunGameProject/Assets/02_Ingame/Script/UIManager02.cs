@@ -8,6 +8,8 @@ using Coffee.UIExtensions;
 public class UIManager02 : MonoBehaviour
 {
     public PlayerManager PlayerMgr;
+    float time_Start;
+    float time_Current;
 
     public GameObject HPnSP;
     public Image UI_hp;
@@ -24,6 +26,9 @@ public class UIManager02 : MonoBehaviour
 
     public void Start()
     {
+        time_Start = Time.time;
+        time_Current = 0f;
+
         Over_Obj.gameObject.SetActive(false);
 
         UI_Shiny(1);
@@ -32,6 +37,9 @@ public class UIManager02 : MonoBehaviour
 
     private void Update()
     {
+        if (GameManager.Instance.IsGamePlay)
+            time_Current = Time.time - time_Start;
+
         //Hp, Sp
         UI_hp.fillAmount =
             PlayerMgr.statSaves[(int)GameManager.Instance.CharactorCode].NowHp
@@ -106,7 +114,7 @@ public class UIManager02 : MonoBehaviour
         }
 
         Over_UIs.Find("Over Reason").GetChild(2).GetComponent<Text>().text = enemyName;
-
+        Over_UIs.Find("Time").GetChild(2).GetComponent<Text>().text = time_Current.ToString("N2") + "초";
         StartCoroutine(Game_Over_Anim());
     }
 
@@ -126,15 +134,12 @@ public class UIManager02 : MonoBehaviour
 
     public IEnumerator Game_Over_Anim()
     {
-        //Active 켜주기, 탐험종료 이미지 위치 조정, UI투명
+        //Active 켜주기, UI투명
         Over_Obj.gameObject.SetActive(true);
-        Over_Obj.position = new Vector3(0, 0);
-        Over_Obj.localScale = new Vector3(0, 0);
-        Over_Image.position = new Vector3(0, 0);
         Over_UIs.GetComponent<CanvasGroup>().alpha = 0;
-        DOTween.To(() => new Vector3(0, 0), x => Over_Obj.GetComponent<RectTransform>().sizeDelta = x, new Vector3(1920, 1080), 0.3f);
 
         //탐험종료 이미지,텍스트 나타나기
+        DOTween.To(() => new Vector3(1920, 0, 0), x => Over_Image.GetComponent<RectTransform>().sizeDelta = x, new Vector3(1920, 300, 0), 0.3f);
         Over_Image.GetComponent<Image>().color = new Color(200 / 255f, 200 / 255f, 200 / 255f, 0f);
         Over_Image.GetComponent<Image>().DOFade(1f, 0.2f).SetEase(Ease.Linear);
         Over_Obj.GetChild(1).GetComponent<Text>().color = new Color(42 / 255f, 42 / 255f, 42 / 255f, 0f);
@@ -147,7 +152,11 @@ public class UIManager02 : MonoBehaviour
         , x => Skill.GetComponent<CanvasGroup>().alpha = x, 0, 0.3f);
 
         //탐험종료 이미지 올라가기, UI 나타나기
-        //Over_Image.DOMoveY(420f, 0.3f).SetEase(Ease.OutSine);
+        DOTween.To(() => new Vector3(1920, 300, 0), x => Over_Image.GetComponent<RectTransform>().sizeDelta = x, new Vector3(1920, 1080, 0), 0.2f)
+            .SetEase(Ease.OutSine);
+        Over_Obj.GetChild(1).DOMoveY(430, 0.2f)
+            .SetEase(Ease.OutSine);
+
         yield return new WaitForSeconds(0.2f);
 
         DOTween.To(() => Over_UIs.GetComponent<CanvasGroup>().alpha

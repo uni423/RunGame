@@ -48,8 +48,8 @@ public class Player : MonoBehaviour
     {
         myRigid = this.GetComponent<Rigidbody2D>();
 
-        skKnightA = new Skill(1f, 0, 0, 5f);
-        skKnightK = new Skill(3f, 100, 300 + (0.5f * Stat.Speed), 20f);
+        skKnightA = new Skill(1f, 0, 0, 3.5f);
+        skKnightK = new Skill(3f, 100, 300 + (2f * Stat.Speed), 20f);
 
         JumpColli.SetActive(true);
         RangeColli.SetActive(true);
@@ -148,7 +148,7 @@ public class Player : MonoBehaviour
             Shild_Quit(true);
             return;
         }
-        if (Is_Carge && !Is_Attack)
+        if (Is_Carge /*&& !Is_Attack*/)
             return;
 
         Is_Damage = true;
