@@ -109,6 +109,8 @@ public class UIManager02 : MonoBehaviour
                 enemyName = "그루터기"; break;
             case "LHurdle":
                 enemyName = "나무"; break;
+            case "Drop":
+                enemyName = "낙사"; break;
             default :
                 enemyName = "원인불명"; break;
         }

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Hurdle Data
   m_EditorClassIdentifier: 
   maxHp: 999
-  ad: 0
+  ad: 5
   adRange: 0
   adSpeed: 0
   triAd: 5

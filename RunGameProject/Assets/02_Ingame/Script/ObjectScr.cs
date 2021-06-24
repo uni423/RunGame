@@ -15,7 +15,10 @@ public class ObjectScr : MonoBehaviour
     public void CheckRender()
     {
         Vector2 vMy = transform.position;
-        vMy.y = 0;
+        if (vMy.y < -1500)
+            Destroy(gameObject);
+        else
+            vMy.y = 0;
 
         Vector2 vPlayer = m_Player.transform.position;
         vPlayer.y = 0;

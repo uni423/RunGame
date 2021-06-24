@@ -17,8 +17,6 @@ public class BGManager : MonoBehaviour
 
     public Transform BackGround;
 
-    //public List<Middleground> MiddleGround = new List<Middleground>();
-
     public List<Tilemap> Trees = new List<Tilemap>();
     public List<Grid> Tile = new List<Grid>();
 

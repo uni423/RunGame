@@ -37,8 +37,8 @@ MonoBehaviour:
   m_Sprites:
   - {fileID: 21300000, guid: 0fe8ba5c305045743b01530176eb2053, type: 3}
   - {fileID: 21300000, guid: a6952050161af46469bb739d84d8c196, type: 3}
-  - {fileID: 21300000, guid: b7f5124d0a361734d85ce1dae653888f, type: 3}
-  - {fileID: 21300000, guid: 9fffc9b0795b9694faaf0af28e8a661d, type: 3}
+  - {fileID: 21300000, guid: fc8bb156c198af243971d0036f1921ad, type: 3}
+  - {fileID: 21300000, guid: fc8bb156c198af243971d0036f1921ad, type: 3}
   - {fileID: 21300000, guid: fc8bb156c198af243971d0036f1921ad, type: 3}
   - {fileID: 21300000, guid: fc8bb156c198af243971d0036f1921ad, type: 3}
   - {fileID: 21300000, guid: fc8bb156c198af243971d0036f1921ad, type: 3}

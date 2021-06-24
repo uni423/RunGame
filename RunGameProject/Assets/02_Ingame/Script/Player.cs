@@ -233,7 +233,7 @@ public class Player : MonoBehaviour
 
     public void Shild() //캐릭터 방어기
     {
-        //키다운 중인 '지속시간' 동안 무적, '지속시간' 중 대미지를 입으면 해당 대미지만큼 반격한다
+        //키다운 중인 '지속시간' 동안 무적
 
         if (skKnightA.NowCoolTime > 0)
             return;
@@ -306,6 +306,13 @@ public class Player : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D other)
     {
+        if (other.gameObject.CompareTag("Drop"))
+        {
+            Damage(99999, "Drop");
+            other.gameObject.SetActive(false);
+            this.gameObject.SetActive(false);
+        }
+
         if (Is_Carge && other.gameObject.CompareTag("Enemy") && !other.transform.GetComponent<Enemy>().IsDead)
             Stat.NowExp += other.transform.GetComponent<Enemy>().Damage(skKnightK.Damage);
 
