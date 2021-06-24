@@ -50,6 +50,10 @@ public class Player : MonoBehaviour
 
         skKnightA = new Skill(1f, 0, 0, 3.5f);
         skKnightK = new Skill(3f, 100, 300 + (2f * Stat.Speed), 20f);
+        //skKnightK = new Skill(3f, 100, 300 + (2f * Stat.AdRange), 20f);
+        //skKnightK = new Skill(3f, 100, 300 + (2f * 200), 20f);
+
+        //Debug.LogError(GameManager.Instance.CharacterCode);
 
         JumpColli.SetActive(true);
         RangeColli.SetActive(true);
@@ -289,7 +293,6 @@ public class Player : MonoBehaviour
             ));
         RangeColli.SetActive(false);
         BG.In_Speed(skKnightK.Distance, true);
-        Debug.Log(skKnightK.Distance);
     }
 
     private void OnCollisionStay2D(Collision2D collision)

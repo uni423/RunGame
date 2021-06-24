@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ObjectScr : MonoBehaviour
 {
-    GameObject m_Player;
+    public GameObject m_Player;
     void Start()
     {
         m_Player = GameObject.FindGameObjectWithTag("Player");

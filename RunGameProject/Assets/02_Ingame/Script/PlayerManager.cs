@@ -16,7 +16,7 @@ public class PlayerManager : MonoBehaviour
 
     public GameObject Player;
 
-    public void Start()
+    public void Init()
     {
         for(int i = 0; i < StatDatas.Count; i++)
         {
@@ -30,8 +30,8 @@ public class PlayerManager : MonoBehaviour
             Chars[i].GetComponent<Player>().StatUpgrade();
         }
 
-        GameManager.Instance.CharactorCode = CharType.Knight;
-        Player = Chars[(int)CharType.Knight];
+        GameManager.Instance.CharacterCode = CharType.Gunner;
+        Player = Chars[(int)GameManager.Instance.CharacterCode];
         Player.SetActive(true);
 
         GameManager.Instance.IsGamePlay = true;

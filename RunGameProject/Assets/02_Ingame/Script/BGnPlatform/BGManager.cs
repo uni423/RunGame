@@ -51,7 +51,7 @@ public class BGManager : MonoBehaviour
 
     public void In_Speed(float speed, bool DOKill = false)
     {
-        int i = 0; 
+        //int i = 0; 
 
         if (DOKill)
         {

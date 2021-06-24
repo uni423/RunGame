@@ -24,8 +24,10 @@ public class UIManager02 : MonoBehaviour
     public Transform Over_Image;
     public Transform Over_UIs;
 
-    public void Start()
+    public void Init()
     {
+        DOTween.Init(false, true, LogBehaviour.ErrorsOnly);
+
         time_Start = Time.time;
         time_Current = 0f;
 
@@ -42,11 +44,11 @@ public class UIManager02 : MonoBehaviour
 
         //Hp, Sp
         UI_hp.fillAmount =
-            PlayerMgr.statSaves[(int)GameManager.Instance.CharactorCode].NowHp
-            / PlayerMgr.statSaves[(int)GameManager.Instance.CharactorCode].MaxHp;
+            PlayerMgr.statSaves[(int)GameManager.Instance.CharacterCode].NowHp
+            / PlayerMgr.statSaves[(int)GameManager.Instance.CharacterCode].MaxHp;
         UI_sp.fillAmount =
-            PlayerMgr.statSaves[(int)GameManager.Instance.CharactorCode].NowSp
-            / PlayerMgr.statSaves[(int)GameManager.Instance.CharactorCode].MaxSp;
+            PlayerMgr.statSaves[(int)GameManager.Instance.CharacterCode].NowSp
+            / PlayerMgr.statSaves[(int)GameManager.Instance.CharacterCode].MaxSp;
 
         //Skill
         UI_Skill1.Find("Filed").GetComponent<Image>().fillAmount =
