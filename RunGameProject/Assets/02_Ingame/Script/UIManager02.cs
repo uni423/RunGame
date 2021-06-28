@@ -51,13 +51,23 @@ public class UIManager02 : MonoBehaviour
             / PlayerMgr.statSaves[(int)GameManager.Instance.CharacterCode].MaxSp;
 
         //Skill
-        UI_Skill1.Find("Filed").GetComponent<Image>().fillAmount =
-            (PlayerMgr.Player.GetComponent<Player>().skKnightA.MaxCoolTime - PlayerMgr.Player.GetComponent<Player>().skKnightA.NowCoolTime)
-            / PlayerMgr.Player.GetComponent<Player>().skKnightA.MaxCoolTime;
+        switch (GameManager.Instance.CharacterCode)
+        {
+            case Define.CharType.Knight:
 
-        UI_Skill2.Find("Filed").GetComponent<Image>().fillAmount =
-            (PlayerMgr.Player.GetComponent<Player>().skKnightK.MaxCoolTime - PlayerMgr.Player.GetComponent<Player>().skKnightK.NowCoolTime)
-            / PlayerMgr.Player.GetComponent<Player>().skKnightK.MaxCoolTime;
+                UI_Skill1.Find("Filed").GetComponent<Image>().fillAmount =
+                    (PlayerMgr.Player.GetComponent<Player_Knight>().skKnightA.MaxCoolTime - PlayerMgr.Player.GetComponent<Player_Knight>().skKnightA.NowCoolTime)
+                    / PlayerMgr.Player.GetComponent<Player_Knight>().skKnightA.MaxCoolTime;
+
+                UI_Skill2.Find("Filed").GetComponent<Image>().fillAmount =
+                    (PlayerMgr.Player.GetComponent<Player_Knight>().skKnightK.MaxCoolTime - PlayerMgr.Player.GetComponent<Player_Knight>().skKnightK.NowCoolTime)
+                    / PlayerMgr.Player.GetComponent<Player_Knight>().skKnightK.MaxCoolTime;
+                break;
+            case Define.CharType.Gunner:
+                break;
+        }
+
+
     }
 
     public void UI_Shiny(int num, bool IsPlay = true)
@@ -103,7 +113,7 @@ public class UIManager02 : MonoBehaviour
     {
         string enemyName;
 
-        switch(Enemy)
+        switch (Enemy)
         {
             case "Slime":
                 enemyName = "슬라임"; break;
@@ -113,7 +123,7 @@ public class UIManager02 : MonoBehaviour
                 enemyName = "나무"; break;
             case "Drop":
                 enemyName = "낙사"; break;
-            default :
+            default:
                 enemyName = "원인불명"; break;
         }
 

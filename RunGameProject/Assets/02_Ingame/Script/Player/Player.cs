@@ -24,14 +24,8 @@ public class Player : MonoBehaviour
     [Tooltip("최단 사거리")] public float RangeDistance = 1000f;
     [Tooltip("사거리 안에 있는 몬스터 오브젝트")] public Enemy RangeEnemyObj;
 
-    [Header("스킬")]
-    [Tooltip("나이트 A 스킬")] public Skill skKnightA;
-    [Tooltip("방어스킬 상태인가?")] public bool Is_Shild = false;
-    [Tooltip("나이트 K 스킬")] public Skill skKnightK;
-    [Tooltip("돌격스킬 상태인가?")] public bool Is_Carge = false;
-
     private IEnumerator Lerp;
-    private delegate void Delegate();
+    public delegate void Delegate();
 
     [Space(10f)]
     public BGManager BG;
@@ -44,50 +38,18 @@ public class Player : MonoBehaviour
 
     #endregion
 
-    private void Start()
+    public void Start()
     {
         myRigid = this.GetComponent<Rigidbody2D>();
-
-        skKnightA = new Skill(1f, 0, 0, 3.5f);
-        skKnightK = new Skill(3f, 100, 300 + (2f * Stat.Speed), 20f);
-        //skKnightK = new Skill(3f, 100, 300 + (2f * Stat.AdRange), 20f);
-        //skKnightK = new Skill(3f, 100, 300 + (2f * 200), 20f);
-
-        //Debug.LogError(GameManager.Instance.CharacterCode);
 
         JumpColli.SetActive(true);
         RangeColli.SetActive(true);
     }
 
-    void Update()
+    public void Update()
     {
         if (!GameManager.Instance.IsGamePlay)
             return;
-
-        //스킬 입력 확인
-        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.Space))
-            Jump();
-        if (Input.GetKeyDown(KeyCode.A))
-            Shild();
-        if (Input.GetKeyUp(KeyCode.A))
-            if (Is_Shild) Shild_Quit();
-        if (Input.GetKeyDown(KeyCode.S))
-            Bottom();
-        if (Input.GetKeyDown(KeyCode.D))
-            Dash();
-        if (Input.GetKeyUp(KeyCode.D))
-            Dash_Quit();
-        if (Input.GetKeyDown(KeyCode.J))
-            Attack();
-        if (Input.GetKeyDown(KeyCode.K))
-            SpecialSkill();
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            
-            //Character_Swich();
-        }
-        if (Input.GetKeyDown(KeyCode.Escape))
-        { }
 
         StatUpdate();
         PositionUpdate();
@@ -150,14 +112,6 @@ public class Player : MonoBehaviour
 
     public void Damage(float damage, string Enemy)
     {
-        if (Is_Shild)
-        {
-            Shild_Quit(true);
-            return;
-        }
-        if (Is_Carge /*&& !Is_Attack*/)
-            return;
-
         Is_Damage = true;
         StartCoroutine(Timer(2, () => { Is_Damage = false; }));
 
@@ -196,14 +150,9 @@ public class Player : MonoBehaviour
                 }));
     }
 
-    public void Bottom() //하단키
-    {
-        Debug.Log("Bottom");
-    }
-
     public void Dash() //대쉬
     {
-        if (Is_Damage || Is_Carge)
+        if (Is_Damage)
             return;
 
         BG.In_Speed(Stat.Speed * 2.3f);
@@ -238,65 +187,7 @@ public class Player : MonoBehaviour
             .OnComplete(() => Camera.main.transform.position = new Vector3(0, 0, -10));
     }
 
-    public void Shild() //캐릭터 방어기
-    {
-        //키다운 중인 '지속시간' 동안 무적
-
-        if (skKnightA.NowCoolTime > 0)
-            return;
-
-        Debug.Log("Shild");
-        Is_Shild = true;
-        StartCoroutine(Timer(skKnightA.Time, (() => { if (Is_Shild) Shild_Quit(); })));
-    }
-
-    public void Shild_Quit(bool Is_damage = false) //방어기 종료
-    {
-        Is_Shild = false;
-        if (Is_damage)
-        {
-            skKnightA.NowCoolTime = skKnightA.MaxCoolTime;
-            UIM_2.UI_Shiny(1, false);
-            DOTween.To(() => skKnightA.NowCoolTime, x => skKnightA.NowCoolTime = x, 0, skKnightA.MaxCoolTime)
-                .SetEase(Ease.Linear)
-                .OnComplete(() =>
-                {
-                    UIM_2.UI_Shiny(1);
-                });
-        }
-    }
-
-    public void SpecialSkill() //캐릭터 특수기
-    {
-        if (Is_Carge || skKnightK.NowCoolTime > 0)
-            return;
-        if (Is_Dash)
-            Dash_Quit();
-
-        //'지속시간' 동안 무적, 1초마다 '사거리'만큼 돌진(이동), 닿는 적에겐 틱 1초마다 '대미지'만큼 입힌다
-        Debug.Log("skSpecial");
-
-        Is_Carge = true;
-        StartCoroutine(Timer(skKnightK.Time,
-            (() =>
-            {
-                Is_Carge = false;
-                BG.In_Speed(Stat.Speed);
-                RangeColli.SetActive(true);
-
-                skKnightK.NowCoolTime = skKnightK.MaxCoolTime;
-                UIM_2.UI_Shiny(2, false);
-                DOTween.To(() => skKnightK.NowCoolTime, x => skKnightK.NowCoolTime = x, 0, skKnightK.MaxCoolTime)
-                    .SetEase(Ease.Linear)
-                    .OnComplete(() =>
-                    {
-                        UIM_2.UI_Shiny(2);
-                    });
-            })
-            ));
-        RangeColli.SetActive(false);
-        BG.In_Speed(skKnightK.Distance, true);
-    }
+    
 
     private void OnCollisionStay2D(Collision2D collision)
     {
@@ -310,17 +201,14 @@ public class Player : MonoBehaviour
             Is_Jumping = false;
     }
 
-    private void OnTriggerStay2D(Collider2D other)
+    public virtual void OnTriggerStay2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("Drop"))
         {
-            Damage(99999, "Drop");
+            PlayerManager.Instance.Damage(99999, "Drop");
             other.gameObject.SetActive(false);
             this.gameObject.SetActive(false);
         }
-
-        if (Is_Carge && other.gameObject.CompareTag("Enemy") && !other.transform.GetComponent<Enemy>().IsDead)
-            Stat.NowExp += other.transform.GetComponent<Enemy>().Damage(skKnightK.Damage);
 
         if (other.gameObject.CompareTag("Enemy"))
         {
@@ -357,7 +245,7 @@ public class Player : MonoBehaviour
         if (dele != null) StartCoroutine(Timer(duration, dele));
     }
 
-    IEnumerator Timer(float time, Delegate dele)
+    protected virtual IEnumerator Timer(float time, Delegate dele)
     {
         yield return new WaitForSeconds(time);
         dele();

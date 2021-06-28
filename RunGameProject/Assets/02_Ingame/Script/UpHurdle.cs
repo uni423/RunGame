@@ -33,7 +33,7 @@ public class UpHurdle : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-                collision.GetComponent<Player>().Damage(stat.Ad, this.name);
+            PlayerManager.Instance.Damage(stat.Ad, this.name);
         }
     }
 }

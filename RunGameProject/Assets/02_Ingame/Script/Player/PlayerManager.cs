@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Define;
 
-public class PlayerManager : MonoBehaviour
+public class PlayerManager : Singleton<PlayerManager>
 {
     [SerializeField]
     private List<GameObject> Chars = new List<GameObject>();
@@ -26,11 +26,14 @@ public class PlayerManager : MonoBehaviour
 
             StatSaves.Add(ScriptableObject.CreateInstance<PlayerStat>());
             InitStat((CharType)i);
+
             Chars[i].GetComponent<Player>().Stat = StatSaves[i];
             Chars[i].GetComponent<Player>().StatUpgrade();
         }
 
         Player = Chars[(int)GameManager.Instance.CharacterCode];
+        Debug.Log("PlayerManager Init 완료");
+
         Player.SetActive(true);
 
         GameManager.Instance.IsGamePlay = true;
@@ -68,5 +71,33 @@ public class PlayerManager : MonoBehaviour
     {
         if (type == GameManager.Instance.CharacterCode)
             return;
+    }
+
+    public void Damage(float damage, string Enemy)
+    {
+        switch(GameManager.Instance.CharacterCode)
+        {
+            case CharType.Knight:
+                if (Player.GetComponent<Player_Knight>().Is_Shild)
+                {
+                    Player.GetComponent<Player_Knight>().Shild_Quit(true);
+                    return;
+                }
+                else if (Player.GetComponent<Player_Knight>().Is_Carge)
+                    return;
+                Player.GetComponent<Player>().Damage(damage, Enemy);
+
+                break;
+            case CharType.Gunner:
+                if (Player.GetComponent<Player_Gunner>().Is_Shild)
+                {
+                    Player.GetComponent<Player_Gunner>().Shild_Quit(true);
+                    return;
+                }
+                else if (Player.GetComponent<Player_Gunner>().Is_Carge)
+                    return;
+                Player.GetComponent<Player>().Damage(damage, Enemy);
+                break;
+        }
     }
 }

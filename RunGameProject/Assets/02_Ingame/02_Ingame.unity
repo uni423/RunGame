@@ -12872,7 +12872,7 @@ GameObject:
   - component: {fileID: 175595466}
   - component: {fileID: 175595465}
   - component: {fileID: 175595464}
-  - component: {fileID: 175595463}
+  - component: {fileID: 175595469}
   m_Layer: 8
   m_Name: Spine GameObject (Gunner)
   m_TagString: Player
@@ -12896,34 +12896,6 @@ Transform:
   m_Father: {fileID: 622363743}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &175595463
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 175595461}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc0cef0bc3dd07f4585ad15da37e98f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Stat: {fileID: 0}
-  Is_Damage: 0
-  Is_Jumping: 0
-  Is_Down: 0
-  Is_Dash: 0
-  Is_AttackRange: 0
-  Is_Attack: 1
-  RangeDistance: 10000
-  RangeEnemyObj: {fileID: 0}
-  Is_Shild: 0
-  Is_Carge: 0
-  BG: {fileID: 1070519108}
-  Enemy: {fileID: 0}
-  UIM_2: {fileID: 99071341}
-  JumpColli: {fileID: 319395182}
-  RangeColli: {fileID: 835665265}
 --- !u!70 &175595464
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -13045,6 +13017,34 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 175595461}
   m_Mesh: {fileID: 0}
+--- !u!114 &175595469
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 175595461}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38badbd08a5528347bab36f5a1e66cbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Stat: {fileID: 0}
+  Is_Damage: 0
+  Is_Jumping: 0
+  Is_Down: 0
+  Is_Dash: 0
+  Is_AttackRange: 0
+  Is_Attack: 1
+  RangeDistance: 1000
+  RangeEnemyObj: {fileID: 0}
+  BG: {fileID: 1070519108}
+  Enemy: {fileID: 0}
+  UIM_2: {fileID: 99071341}
+  JumpColli: {fileID: 319395182}
+  RangeColli: {fileID: 835665265}
+  Is_Shild: 0
+  Is_Carge: 0
 --- !u!1 &176481614
 GameObject:
   m_ObjectHideFlags: 0
@@ -22674,7 +22674,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3279cbc978f99d40b522a942aebdd56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CharacterCode: 0
+  CharacterCode: 1
   uiMG: {fileID: 99071341}
   playerMG: {fileID: 622363744}
   IsGamePlay: 0
@@ -23413,8 +23413,6 @@ MonoBehaviour:
   Is_Attack: 1
   RangeDistance: 1000
   RangeEnemyObj: {fileID: 0}
-  Is_Shild: 0
-  Is_Carge: 0
   BG: {fileID: 1070519108}
   Enemy: {fileID: 0}
   UIM_2: {fileID: 99071341}
@@ -28515,34 +28513,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
---- !u!114 &4232251792288629308
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4232251792288629309}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc0cef0bc3dd07f4585ad15da37e98f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Stat: {fileID: 0}
-  Is_Damage: 0
-  Is_Jumping: 0
-  Is_Down: 0
-  Is_Dash: 0
-  Is_AttackRange: 0
-  Is_Attack: 1
-  RangeDistance: 10000
-  RangeEnemyObj: {fileID: 0}
-  Is_Shild: 0
-  Is_Carge: 0
-  BG: {fileID: 1070519108}
-  Enemy: {fileID: 0}
-  UIM_2: {fileID: 99071341}
-  JumpColli: {fileID: 4232251790903092472}
-  RangeColli: {fileID: 4232251790737201685}
 --- !u!1 &4232251792288629309
 GameObject:
   m_ObjectHideFlags: 0
@@ -28555,7 +28525,7 @@ GameObject:
   - component: {fileID: 4232251792288629311}
   - component: {fileID: 4232251792288629305}
   - component: {fileID: 4232251792288629304}
-  - component: {fileID: 4232251792288629308}
+  - component: {fileID: 4232251792288629312}
   m_Layer: 8
   m_Name: Player - Knight
   m_TagString: Player
@@ -28629,3 +28599,31 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &4232251792288629312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4232251792288629309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f395008307d99f84bac0897660f987c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Stat: {fileID: 0}
+  Is_Damage: 0
+  Is_Jumping: 0
+  Is_Down: 0
+  Is_Dash: 0
+  Is_AttackRange: 0
+  Is_Attack: 1
+  RangeDistance: 1000
+  RangeEnemyObj: {fileID: 0}
+  BG: {fileID: 1070519108}
+  Enemy: {fileID: 0}
+  UIM_2: {fileID: 99071341}
+  JumpColli: {fileID: 4232251790903092472}
+  RangeColli: {fileID: 4232251790737201685}
+  Is_Shild: 0
+  Is_Carge: 0
