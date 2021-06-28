@@ -30,7 +30,6 @@ public class PlayerManager : MonoBehaviour
             Chars[i].GetComponent<Player>().StatUpgrade();
         }
 
-        GameManager.Instance.CharacterCode = CharType.Gunner;
         Player = Chars[(int)GameManager.Instance.CharacterCode];
         Player.SetActive(true);
 
@@ -63,5 +62,11 @@ public class PlayerManager : MonoBehaviour
         StatSaves[(int)type].Speed = StatDatas[(int)type].Speed;
         StatSaves[(int)type].Addspeed = StatDatas[(int)type].Addspeed;
         StatSaves[(int)type].JumpPower = StatDatas[(int)type].JumpPower;
+    }
+
+    public void Character_Swich(CharType type)
+    {
+        if (type == GameManager.Instance.CharacterCode)
+            return;
     }
 }

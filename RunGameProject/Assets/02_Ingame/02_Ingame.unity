@@ -12995,7 +12995,7 @@ MonoBehaviour:
     materialsInsideMask: []
     materialsOutsideMask: []
   disableRenderingOnOverride: 1
-  _animationName: 
+  _animationName: RUN
   loop: 1
   timeScale: 1
 --- !u!23 &175595467
@@ -22675,8 +22675,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CharacterCode: 0
-  playerMG: {fileID: 622363744}
   uiMG: {fileID: 99071341}
+  playerMG: {fileID: 622363744}
   IsGamePlay: 0
 --- !u!4 &441238125
 Transform:

@@ -82,7 +82,10 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.K))
             SpecialSkill();
         if (Input.GetKeyDown(KeyCode.L))
-        { }
+        {
+            
+            //Character_Swich();
+        }
         if (Input.GetKeyDown(KeyCode.Escape))
         { }
 
