@@ -56,12 +56,12 @@ public class UIManager02 : MonoBehaviour
             case Define.CharType.Knight:
 
                 UI_Skill1.Find("Filed").GetComponent<Image>().fillAmount =
-                    (PlayerMgr.Player.GetComponent<Player_Knight>().skKnightA.MaxCoolTime - PlayerMgr.Player.GetComponent<Player_Knight>().skKnightA.NowCoolTime)
-                    / PlayerMgr.Player.GetComponent<Player_Knight>().skKnightA.MaxCoolTime;
+                    (PlayerMgr.Player.GetComponent<Player_Knight>().skA.MaxCoolTime - PlayerMgr.Player.GetComponent<Player_Knight>().skA.NowCoolTime)
+                    / PlayerMgr.Player.GetComponent<Player_Knight>().skA.MaxCoolTime;
 
                 UI_Skill2.Find("Filed").GetComponent<Image>().fillAmount =
-                    (PlayerMgr.Player.GetComponent<Player_Knight>().skKnightK.MaxCoolTime - PlayerMgr.Player.GetComponent<Player_Knight>().skKnightK.NowCoolTime)
-                    / PlayerMgr.Player.GetComponent<Player_Knight>().skKnightK.MaxCoolTime;
+                    (PlayerMgr.Player.GetComponent<Player_Knight>().skK.MaxCoolTime - PlayerMgr.Player.GetComponent<Player_Knight>().skK.NowCoolTime)
+                    / PlayerMgr.Player.GetComponent<Player_Knight>().skK.MaxCoolTime;
                 break;
             case Define.CharType.Gunner:
                 break;

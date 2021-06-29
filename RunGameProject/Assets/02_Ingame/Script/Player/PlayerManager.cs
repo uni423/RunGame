@@ -16,6 +16,9 @@ public class PlayerManager : Singleton<PlayerManager>
 
     public GameObject Player;
 
+    public float swith_MaxCollTime;
+    public float swith_NowCollTime;
+
     public void Init()
     {
         for(int i = 0; i < StatDatas.Count; i++)
@@ -78,26 +81,27 @@ public class PlayerManager : Singleton<PlayerManager>
         switch(GameManager.Instance.CharacterCode)
         {
             case CharType.Knight:
-                if (Player.GetComponent<Player_Knight>().Is_Shild)
+                if (Player.GetComponent<Player_Knight>().Is_SkillA)
                 {
                     Player.GetComponent<Player_Knight>().Shild_Quit(true);
                     return;
                 }
-                else if (Player.GetComponent<Player_Knight>().Is_Carge)
+                else if (Player.GetComponent<Player_Knight>().Is_SkillK)
                     return;
                 Player.GetComponent<Player>().Damage(damage, Enemy);
-
                 break;
+
             case CharType.Gunner:
-                if (Player.GetComponent<Player_Gunner>().Is_Shild)
+                if (Player.GetComponent<Player_Knight>().Is_SkillA)
                 {
-                    Player.GetComponent<Player_Gunner>().Shild_Quit(true);
+                    Player.GetComponent<Player_Knight>().Shild_Quit(true);
                     return;
                 }
-                else if (Player.GetComponent<Player_Gunner>().Is_Carge)
+                else if (Player.GetComponent<Player_Knight>().Is_SkillK)
                     return;
                 Player.GetComponent<Player>().Damage(damage, Enemy);
                 break;
+
         }
     }
 }

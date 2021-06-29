@@ -74,10 +74,4 @@ public class PlayerStat : ScriptableObject
     [SerializeField] [Tooltip("점프력")] 
     private float jumpPower;
     public float JumpPower { get { return jumpPower; } set { jumpPower = value; } }
-
-
-    //[Header("스킬")]
-    //[Tooltip("특수공격 A")] public Skill skKnightA;
-    //[Tooltip("특수공격 K")] public Skill skKnightK;
-
 }

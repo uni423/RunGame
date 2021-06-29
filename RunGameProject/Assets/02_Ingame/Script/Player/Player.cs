@@ -24,6 +24,12 @@ public class Player : MonoBehaviour
     [Tooltip("최단 사거리")] public float RangeDistance = 1000f;
     [Tooltip("사거리 안에 있는 몬스터 오브젝트")] public Enemy RangeEnemyObj;
 
+    [Header("스킬")]
+    [Tooltip("나이트 A 스킬")] public Skill skA;
+    [Tooltip("방어스킬 상태인가?")] public bool Is_SkillA = false;
+    [Tooltip("나이트 K 스킬")] public Skill skK;
+    [Tooltip("돌격스킬 상태인가?")] public bool Is_SkillK = false;
+
     private IEnumerator Lerp;
     public delegate void Delegate();
 
@@ -50,6 +56,15 @@ public class Player : MonoBehaviour
     {
         if (!GameManager.Instance.IsGamePlay)
             return;
+
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.Space))
+            Jump();
+        if (Input.GetKeyDown(KeyCode.D))
+            if (!Is_SkillK) Dash();
+        if (Input.GetKeyUp(KeyCode.D))
+            Dash_Quit();
+        if (Input.GetKeyDown(KeyCode.L))
+            Character_Swich();
 
         StatUpdate();
         PositionUpdate();
@@ -187,7 +202,11 @@ public class Player : MonoBehaviour
             .OnComplete(() => Camera.main.transform.position = new Vector3(0, 0, -10));
     }
 
-    
+    private void Character_Swich()
+    {
+        //if (GameManager.Instance.CharacterCode == CharType.Knight)
+            
+    }
 
     private void OnCollisionStay2D(Collision2D collision)
     {
