@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Define;
+using DG.Tweening;
 
 public class PlayerManager : Singleton<PlayerManager>
 {
@@ -17,7 +18,10 @@ public class PlayerManager : Singleton<PlayerManager>
     public GameObject Player;
 
     public float swith_MaxCollTime;
-    public float swith_NowCollTime;
+    public float swith_NowCollTime = 0;
+    public bool Is_Invincibility = false;
+
+    public delegate void Delegate();
 
     public void Init()
     {
@@ -72,13 +76,36 @@ public class PlayerManager : Singleton<PlayerManager>
 
     public void Character_Swich(CharType type)
     {
-        if (type == GameManager.Instance.CharacterCode)
+        if (swith_NowCollTime > 0)
             return;
+
+        Player.SetActive(false);
+        Vector3 vector = Player.transform.position;
+
+        GameManager.Instance.CharacterCode = type;
+        Player = Chars[(int)type];
+        Player.transform.position = vector;
+
+        Player.SetActive(true);
+
+        //쿨타임
+        swith_NowCollTime = swith_MaxCollTime;
+        DOTween.To(() => swith_NowCollTime, x => swith_NowCollTime = x, 0, swith_MaxCollTime)
+                     .SetEase(Ease.Linear);
+        //무적
+        Is_Invincibility = true;
+        StartCoroutine(Timer(0.5f, () => { Is_Invincibility = false; }));
+
+        //점프
+        Player.GetComponent<Player>().Jump(true);
     }
 
     public void Damage(float damage, string Enemy)
     {
-        switch(GameManager.Instance.CharacterCode)
+        if (Is_Invincibility)
+            return;
+
+        switch (GameManager.Instance.CharacterCode)
         {
             case CharType.Knight:
                 if (Player.GetComponent<Player_Knight>().Is_SkillA)
@@ -92,16 +119,21 @@ public class PlayerManager : Singleton<PlayerManager>
                 break;
 
             case CharType.Gunner:
-                if (Player.GetComponent<Player_Knight>().Is_SkillA)
+                if (Player.GetComponent<Player_Gunner>().Is_SkillA)
                 {
-                    Player.GetComponent<Player_Knight>().Shild_Quit(true);
+                    Player.GetComponent<Player_Gunner>().Shild_Quit(true);
                     return;
                 }
-                else if (Player.GetComponent<Player_Knight>().Is_SkillK)
+                else if (Player.GetComponent<Player_Gunner>().Is_SkillK)
                     return;
                 Player.GetComponent<Player>().Damage(damage, Enemy);
                 break;
 
         }
+    }
+    IEnumerator Timer(float time, Delegate dele)
+    {
+        yield return new WaitForSeconds(time);
+        dele();
     }
 }

@@ -143,15 +143,19 @@ public class Player : MonoBehaviour
     }
 
     #region Skills
-    public void Jump() //점프
+    public void Jump(bool swich = false) //점프
     {
-        if (!Is_Jumping)
+        if (!Is_Jumping && !swich)
             return;
 
         if (!Is_Attack)
             StopCoroutine(Lerp);
 
-        myRigid.velocity = Vector2.up * Stat.JumpPower * 5.5f;
+        if (swich)
+            myRigid.velocity = Vector2.up * (Stat.JumpPower * 0.5f) * 5.5f;
+        else
+            myRigid.velocity = Vector2.up * Stat.JumpPower * 5.5f;
+
         Is_Jumping = false;
         Is_Down = true;
 
@@ -204,8 +208,10 @@ public class Player : MonoBehaviour
 
     private void Character_Swich()
     {
-        //if (GameManager.Instance.CharacterCode == CharType.Knight)
-            
+        if (GameManager.Instance.CharacterCode == CharType.Knight)
+            PlayerManager.Instance.Character_Swich(CharType.Gunner);
+        else if (GameManager.Instance.CharacterCode == CharType.Gunner)
+            PlayerManager.Instance.Character_Swich(CharType.Knight);
     }
 
     private void OnCollisionStay2D(Collision2D collision)

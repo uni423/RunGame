@@ -13038,13 +13038,13 @@ MonoBehaviour:
   Is_Attack: 1
   RangeDistance: 1000
   RangeEnemyObj: {fileID: 0}
+  Is_SkillA: 0
+  Is_SkillK: 0
   BG: {fileID: 1070519108}
   Enemy: {fileID: 0}
   UIM_2: {fileID: 99071341}
   JumpColli: {fileID: 319395182}
   RangeColli: {fileID: 835665265}
-  Is_Shild: 0
-  Is_Carge: 0
 --- !u!1 &176481614
 GameObject:
   m_ObjectHideFlags: 0
@@ -23082,6 +23082,87 @@ Transform:
   m_Father: {fileID: 1070519107}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &574822337
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 574822338}
+  - component: {fileID: 574822339}
+  m_Layer: 8
+  m_Name: Image
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &574822338
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 574822337}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 449, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4232251792288629310}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &574822339
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 574822337}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 123939717
+  m_SortingLayer: 4
+  m_SortingOrder: 0
+  m_Sprite: {fileID: 21300000, guid: 469eb64c03a98e349b93b129b2bd5995, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 10.12, y: 10}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
 --- !u!4 &597799581 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3747316790826526905, guid: e2372ecfb7d82564983cb5ec8bc5277a,
@@ -23170,6 +23251,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0e5167fc50ba163469e79c6dc75ea479, type: 2}
   StatSaves: []
   Player: {fileID: 0}
+  swith_MaxCollTime: 0
+  swith_NowCollTime: 0
+  Is_Invincibility: 0
 --- !u!1 &627191500
 GameObject:
   m_ObjectHideFlags: 0
@@ -23413,6 +23497,8 @@ MonoBehaviour:
   Is_Attack: 1
   RangeDistance: 1000
   RangeEnemyObj: {fileID: 0}
+  Is_SkillA: 0
+  Is_SkillK: 0
   BG: {fileID: 1070519108}
   Enemy: {fileID: 0}
   UIM_2: {fileID: 99071341}
@@ -28460,8 +28546,8 @@ EdgeCollider2D:
   m_Offset: {x: 0, y: 0}
   m_EdgeRadius: 0.5
   m_Points:
-  - {x: -23.68, y: -447.0738}
-  - {x: 103.1, y: -447.101}
+  - {x: -23.68, y: 0}
+  - {x: 103.1, y: 0}
 --- !u!4 &4232251790903092475
 Transform:
   m_ObjectHideFlags: 0
@@ -28489,7 +28575,7 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 25, y: -18.034922}
+  m_Offset: {x: 25, y: 390.8}
   m_Size: {x: 240, y: 681.0698}
   m_Direction: 0
 --- !u!50 &4232251792288629305
@@ -28541,11 +28627,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4232251792288629309}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -600, y: -165.3, z: 0}
+  m_LocalPosition: {x: -600, y: -300, z: 0}
   m_LocalScale: {x: 0.3, y: 0.3, z: 1}
   m_Children:
   - {fileID: 4232251790903092475}
   - {fileID: 4232251790737201684}
+  - {fileID: 574822338}
   m_Father: {fileID: 622363743}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -28588,7 +28675,7 @@ SpriteRenderer:
   m_SortingLayerID: 123939717
   m_SortingLayer: 4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 469eb64c03a98e349b93b129b2bd5995, type: 3}
+  m_Sprite: {fileID: 21300000, guid: fc8bb156c198af243971d0036f1921ad, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -28620,10 +28707,10 @@ MonoBehaviour:
   Is_Attack: 1
   RangeDistance: 1000
   RangeEnemyObj: {fileID: 0}
+  Is_SkillA: 0
+  Is_SkillK: 0
   BG: {fileID: 1070519108}
   Enemy: {fileID: 0}
   UIM_2: {fileID: 99071341}
   JumpColli: {fileID: 4232251790903092472}
   RangeColli: {fileID: 4232251790737201685}
-  Is_Shild: 0
-  Is_Carge: 0
