@@ -1,0 +1,48 @@
+
+KingSlime.png
+size: 791,634
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+CL
+  rotate: true
+  xy: 759, 492
+  size: 50, 22
+  orig: 52, 24
+  offset: 1, 1
+  index: -1
+CR
+  rotate: true
+  xy: 759, 434
+  size: 56, 18
+  orig: 58, 20
+  offset: 1, 1
+  index: -1
+L
+  rotate: false
+  xy: 759, 589
+  size: 30, 43
+  orig: 32, 45
+  offset: 1, 1
+  index: -1
+M
+  rotate: true
+  xy: 759, 396
+  size: 36, 18
+  orig: 38, 20
+  offset: 1, 1
+  index: -1
+R
+  rotate: false
+  xy: 759, 544
+  size: 30, 43
+  orig: 32, 45
+  offset: 1, 1
+  index: -1
+body
+  rotate: false
+  xy: 2, 2
+  size: 755, 630
+  orig: 756, 630
+  offset: 0, 0
+  index: -1

@@ -6,12 +6,14 @@ using DG.Tweening;
 
 public class Player_Knight : Player
 {
-    new void Start()
+    public void Init()
     {
-        base.Start();
+        base.init();
 
         skA = new Skill(1f, 0, 0, 3.5f);
+        skA.NowCoolTime = 0f;
         skK = new Skill(3f, 100, 300 + (2f * this.Stat.Speed), 20f);
+        skK.NowCoolTime = 0f;
     }
 
     new void Update()
@@ -32,17 +34,6 @@ public class Player_Knight : Player
         base.Update();
     }
 
-    public void Damage()
-    {
-        if (Is_SkillA)
-        {
-            Shild_Quit(true);
-            return;
-        }
-        if (Is_SkillK)
-            return;
-    }
-
     public void Shild() //캐릭터 방어기
     {
         //키다운 중인 '지속시간' 동안 무적
@@ -50,7 +41,6 @@ public class Player_Knight : Player
         if (skA.NowCoolTime > 0)
             return;
 
-        Debug.Log("Shild");
         Is_SkillA = true;
         StartCoroutine(Timer(skA.Time, (() => { if (Is_SkillA) Shild_Quit(); })));
     }
@@ -105,7 +95,7 @@ public class Player_Knight : Player
 
     public override void OnTriggerStay2D(Collider2D other)
     {
-        if (Is_SkillK && other.gameObject.CompareTag("Enemy") && !other.transform.GetComponent<Enemy>().IsDead)
+        if (Is_SkillK && other.gameObject.CompareTag("Enemy") && !other.transform.GetComponent<Enemy>().Is_Dead)
             Stat.NowExp += other.transform.GetComponent<Enemy>().Damage(skK.Damage);
 
         base.OnTriggerStay2D(other);

@@ -9,12 +9,12 @@ public class Enemy : MonoBehaviour
     public float NowHp;
     public Sprite dead;
 
-    public bool IsDead;
+    public bool Is_Dead;
 
     public void Start()
     {
         NowHp = stat.MaxHp;
-        IsDead = false;
+        Is_Dead = false;
     }
 
     public float Damage(float damage)
@@ -33,7 +33,7 @@ public class Enemy : MonoBehaviour
     
     public IEnumerator Dead()
     {
-        IsDead = true;
+        Is_Dead = true;
         transform.GetComponent<SpriteRenderer>().sprite = dead;
         yield return new WaitForSeconds(0.5f);
         Destroy(gameObject);
@@ -43,7 +43,7 @@ public class Enemy : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            if (!IsDead)
+            if (!Is_Dead)
                 PlayerManager.Instance.Damage(stat.Ad, this.name);
         }
     }

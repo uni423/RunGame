@@ -44,7 +44,7 @@ RenderSettings:
 LightmapSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 11
-  m_GIWorkflowMode: 1
+  m_GIWorkflowMode: 0
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -560,8 +560,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CharacterCode: 0
-  playerMG: {fileID: 0}
+  stage: 0
   uiMG: {fileID: 0}
+  playerMG: {fileID: 0}
+  bgMG: {fileID: 0}
   IsGamePlay: 0
 --- !u!4 &862603516
 Transform:

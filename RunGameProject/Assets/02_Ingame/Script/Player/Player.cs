@@ -13,6 +13,7 @@ public class Player : MonoBehaviour
 
     [Header("점프")]
     [Tooltip("점프가 가능한 상태인가?")] public bool Is_Jumping = false;
+    [Tooltip("스위치점프 중인 상태인가?")] public bool Is_SwichJumping = false;
     [Tooltip("하강하고 있는 상태인가?")] public bool Is_Down = false;
 
     [Header("대쉬")]
@@ -42,10 +43,18 @@ public class Player : MonoBehaviour
     public GameObject JumpColli;
     public GameObject RangeColli;
 
+    public bool Is_BossStage = false;
+
     #endregion
 
-    public void Start()
+    public void init()
     {
+        if ((int)GameManager.Instance.stage % 10 == 9)
+            Is_BossStage = true;
+
+        BG = GameManager.Instance.bgMG;
+        UIM_2 = GameManager.Instance.uiMG;
+
         myRigid = this.GetComponent<Rigidbody2D>();
 
         JumpColli.SetActive(true);
@@ -95,7 +104,8 @@ public class Player : MonoBehaviour
             Stat.NowExp = 0f;
             Stat.NowHp = Stat.MaxHp;
             Stat.NowSp = Stat.MaxSp;
-            BG.In_Speed(Stat.Speed);
+            //if ((int)GameManager.Instance.stage % 10 != 9)
+            GameManager.Instance.bgMG.In_Speed(Stat.Speed);
             Stat.Level = 1;
             return;
         }
@@ -128,18 +138,42 @@ public class Player : MonoBehaviour
     public void Damage(float damage, string Enemy)
     {
         Is_Damage = true;
-        StartCoroutine(Timer(2, () => { Is_Damage = false; }));
-
-        Dash_Quit();
         if (Stat.NowHp - damage <= 0)
         {
             GameManager.Instance.IsGamePlay = false;
             UIM_2.Game_Over(Enemy);
         }
+
+        StartCoroutine(Timer(0.5f, () => { Is_Damage = false; }));
+        Dash_Quit();
         DOTween.To(() => Stat.NowHp, x => Stat.NowHp = x, Stat.NowHp - damage, 0.2f).OnComplete(() => { });
         Camera.main.DOShakePosition(0.3f, 100);
         Camera.main.transform.DOMove(new Vector3(0, 0, -10), 0.1f).SetDelay(0.3f);
         BG.Move(Stat.Speed * 0.5f, 2f);
+    }
+
+    public float NowHpSp(int num)
+    {
+        switch(num)
+        {
+            case 1: return Stat.NowHp / Stat.MaxHp;
+            case 2: return Stat.NowSp / Stat.MaxSp;
+            default:
+                return 0;
+        }
+    }
+
+    public float SkillNowColl(int num)
+    {
+        switch(num)
+        {
+            case 1:
+                return (skA.MaxCoolTime - skA.NowCoolTime) / skA.MaxCoolTime;
+            case 2:
+                return (skK.MaxCoolTime - skK.NowCoolTime) / skK.MaxCoolTime;
+            default :
+                return 0;
+        }
     }
 
     #region Skills
@@ -152,11 +186,16 @@ public class Player : MonoBehaviour
             StopCoroutine(Lerp);
 
         if (swich)
-            myRigid.velocity = Vector2.up * (Stat.JumpPower * 0.5f) * 5.5f;
+        {
+            myRigid.velocity = Vector2.up * (Stat.JumpPower * 0.7f) * 5.5f;
+            Is_SwichJumping = true;
+        }
         else
+        {
             myRigid.velocity = Vector2.up * Stat.JumpPower * 5.5f;
-
-        Is_Jumping = false;
+            Is_SwichJumping = false;
+            Is_Jumping = false;
+        }
         Is_Down = true;
 
         if (!Is_Attack)
@@ -209,7 +248,9 @@ public class Player : MonoBehaviour
     private void Character_Swich()
     {
         if (GameManager.Instance.CharacterCode == CharType.Knight)
+        {
             PlayerManager.Instance.Character_Swich(CharType.Gunner);
+        }
         else if (GameManager.Instance.CharacterCode == CharType.Gunner)
             PlayerManager.Instance.Character_Swich(CharType.Knight);
     }
@@ -217,19 +258,28 @@ public class Player : MonoBehaviour
     private void OnCollisionStay2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
+        {
+            Is_SwichJumping = false;
             Is_Jumping = true;
+        }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
-            Is_Jumping = false;
+        {
+            if (Is_SwichJumping)
+                Is_Jumping = true;
+            else
+                Is_Jumping = false;
+        }
     }
 
     public virtual void OnTriggerStay2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("Drop"))
         {
+            Debug.Log(other.gameObject.name);
             PlayerManager.Instance.Damage(99999, "Drop");
             other.gameObject.SetActive(false);
             this.gameObject.SetActive(false);
@@ -242,7 +292,7 @@ public class Player : MonoBehaviour
             {
                 RangeDistance = other.gameObject.transform.position.x + 600;
                 RangeEnemyObj = other.gameObject.GetComponent<Enemy>();
-                if (RangeDistance < 0 || RangeEnemyObj.transform.GetComponent<Enemy>().IsDead)
+                if (RangeDistance < 0 || RangeEnemyObj.transform.GetComponent<Enemy>().Is_Dead)
                 {
                     RangeDistance = 10000f;
                     RangeEnemyObj = null;

@@ -7,7 +7,6 @@ using Coffee.UIExtensions;
 
 public class UIManager02 : MonoBehaviour
 {
-    public PlayerManager PlayerMgr;
     float time_Start;
     float time_Current;
 
@@ -17,15 +16,21 @@ public class UIManager02 : MonoBehaviour
 
     public GameObject Skill;
     public Transform UI_Skill1;
+    private Image Skill1_Filed;
     public Transform UI_Skill2;
+    private Image Skill2_Filed;
 
     [Header("GameOver UI")]
     public Transform Over_Obj;
     public Transform Over_Image;
     public Transform Over_UIs;
 
-    public void Init()
+    public Image GameClear;
+
+    public void Start()
     {
+        GameManager.Instance.Ingame_Init();
+
         DOTween.Init(false, true, LogBehaviour.ErrorsOnly);
 
         time_Start = Time.time;
@@ -33,41 +38,36 @@ public class UIManager02 : MonoBehaviour
 
         Over_Obj.gameObject.SetActive(false);
 
+        Skill1_Filed = UI_Skill1.Find("Filed").GetComponent<Image>();
+        Skill2_Filed = UI_Skill2.Find("Filed").GetComponent<Image>();
+
         UI_Shiny(1);
         UI_Shiny(2);
     }
 
     private void Update()
     {
-        if (GameManager.Instance.IsGamePlay)
-            time_Current = Time.time - time_Start;
+        if (!GameManager.Instance.IsGamePlay)
+            return;
+
+        time_Current = Time.time - time_Start;
 
         //Hp, Sp
-        UI_hp.fillAmount =
-            PlayerMgr.statSaves[(int)GameManager.Instance.CharacterCode].NowHp
-            / PlayerMgr.statSaves[(int)GameManager.Instance.CharacterCode].MaxHp;
-        UI_sp.fillAmount =
-            PlayerMgr.statSaves[(int)GameManager.Instance.CharacterCode].NowSp
-            / PlayerMgr.statSaves[(int)GameManager.Instance.CharacterCode].MaxSp;
+        UI_hp.fillAmount = PlayerManager.Instance.Player.GetComponent<Player>().NowHpSp(1);
+        UI_sp.fillAmount = PlayerManager.Instance.Player.GetComponent<Player>().NowHpSp(2);
 
         //Skill
         switch (GameManager.Instance.CharacterCode)
         {
             case Define.CharType.Knight:
-
-                UI_Skill1.Find("Filed").GetComponent<Image>().fillAmount =
-                    (PlayerMgr.Player.GetComponent<Player_Knight>().skA.MaxCoolTime - PlayerMgr.Player.GetComponent<Player_Knight>().skA.NowCoolTime)
-                    / PlayerMgr.Player.GetComponent<Player_Knight>().skA.MaxCoolTime;
-
-                UI_Skill2.Find("Filed").GetComponent<Image>().fillAmount =
-                    (PlayerMgr.Player.GetComponent<Player_Knight>().skK.MaxCoolTime - PlayerMgr.Player.GetComponent<Player_Knight>().skK.NowCoolTime)
-                    / PlayerMgr.Player.GetComponent<Player_Knight>().skK.MaxCoolTime;
+                Skill1_Filed.fillAmount = PlayerManager.Instance.Player.GetComponent<Player>().SkillNowColl(1);
+                Skill2_Filed.fillAmount = PlayerManager.Instance.Player.GetComponent<Player>().SkillNowColl(2);
                 break;
             case Define.CharType.Gunner:
+                Skill1_Filed.fillAmount = PlayerManager.Instance.Player.GetComponent<Player>().SkillNowColl(1);
+                Skill2_Filed.fillAmount = PlayerManager.Instance.Player.GetComponent<Player>().SkillNowColl(2);
                 break;
         }
-
-
     }
 
     public void UI_Shiny(int num, bool IsPlay = true)
@@ -79,12 +79,12 @@ public class UIManager02 : MonoBehaviour
             if (IsPlay)
             {
                 UI_Skill1.Find("SkillUI_1").transform.GetComponent<UIShiny>().Play();
-                UI_Skill1.Find("Filed").gameObject.SetActive(false);
+                Skill1_Filed.gameObject.SetActive(false);
             }
             else
             {
                 UI_Skill1.Find("SkillUI_1").transform.GetComponent<UIShiny>().Stop();
-                UI_Skill1.Find("Filed").gameObject.SetActive(true);
+                Skill1_Filed.gameObject.SetActive(true);
             }
         }
 
@@ -93,18 +93,14 @@ public class UIManager02 : MonoBehaviour
             if (IsPlay)
             {
                 UI_Skill2.Find("SkillUI_2").transform.GetComponent<UIShiny>().Play();
-                UI_Skill2.Find("Filed").gameObject.SetActive(false);
+                Skill2_Filed.gameObject.SetActive(false);
             }
             else
             {
                 UI_Skill2.Find("SkillUI_2").transform.GetComponent<UIShiny>().Stop();
-                UI_Skill2.Find("Filed").gameObject.SetActive(true);
+                Skill2_Filed.gameObject.SetActive(true);
             }
         }
-    }
-
-    public void Game_Clear()
-    {
     }
 
     #region GameOver
@@ -134,12 +130,14 @@ public class UIManager02 : MonoBehaviour
 
     public void ReStart()
     {
+        PlayerManager.Instance.ReleaseStat();
         LoadManager.Load(LoadManager.Scene.Ingame);
         LoadManager.LoaderCallback();
     }
 
     public void To_Title()
     {
+        PlayerManager.Instance.ReleaseStat();
         LoadManager.Load(LoadManager.Scene.Title);
         LoadManager.LoaderCallback();
     }

@@ -14,45 +14,63 @@ public class BGManager : MonoBehaviour
     public float Diff = 0f;
 
     public bool Is_InSpeed = false;
+    public bool Is_BossStage = false;
 
     public Transform BackGround;
 
     public List<Tilemap> Trees = new List<Tilemap>();
     public List<Grid> Tile = new List<Grid>();
 
-    private void Start()
+    public MeshRenderer groundRenderer;
+
+    public void Init()
     {
-        BSpeed = (10000 / Tile[0].transform.Find("Ground").GetComponent<TilemapCollider2D>().bounds.size.x) * Speed;
+        if ((int)GameManager.Instance.stage % 10 == 9)
+            Is_BossStage = true;
+
+        if (!Is_BossStage)
+            BSpeed = (10000 / Tile[0].transform.Find("Ground").GetComponent<TilemapCollider2D>().bounds.size.x) * Speed;
+        else
+        {
+            BSpeed = 50;
+            groundRenderer = transform.Find("Gound Quad").GetComponent<MeshRenderer>();
+        }
     }
 
     private void Update()
     {
         if (!GameManager.Instance.IsGamePlay)
             return;
-        if (Is_InSpeed)
-            In_Speed(Speed);
-
-        Offset += Time.deltaTime * (Speed * 1.5f);
-        BOffset += Time.deltaTime * BSpeed;
-
-        BackGround.position = new Vector3(-1 * BOffset, 0);
-
-        foreach (var grid in Tile)
-            grid.transform.position = new Vector3(-1 * Offset, 0);
-
-        int i = 0;
-        foreach (var tree in Trees)
+        if (Is_BossStage)
         {
-            TreeOffset[i] += Time.deltaTime * (Speed * (1.5f - (Diff * i)));
-            tree.transform.position = new Vector3(-1 * TreeOffset[i], 0);
-            i++;
+            Offset += Time.deltaTime * (Speed / 1000);
+            BOffset += Time.deltaTime * BSpeed;
+
+            groundRenderer.material.SetTextureOffset("_MainTex", new Vector2(Offset, 0));
+            BackGround.position = new Vector3(-1 * BOffset, 0);
+        }
+        else
+        {
+            Offset += Time.deltaTime * (Speed * 1.5f);
+            BOffset += Time.deltaTime * BSpeed;
+
+            BackGround.position = new Vector3(-1 * BOffset, 0);
+
+            foreach (var grid in Tile)
+                grid.transform.position = new Vector3(-1 * Offset, 0);
+
+            int i = 0;
+            foreach (var tree in Trees)
+            {
+                TreeOffset[i] += Time.deltaTime * (Speed * (1.5f - (Diff * i)));
+                tree.transform.position = new Vector3(-1 * TreeOffset[i], 0);
+                i++;
+            }
         }
     }
 
     public void In_Speed(float speed, bool DOKill = false)
     {
-        //int i = 0; 
-
         if (DOKill)
         {
             DOTween.Kill("MoveTW");
@@ -60,13 +78,8 @@ public class BGManager : MonoBehaviour
         }
 
         Speed = speed;
-        BSpeed = (10000 / Tile[0].transform.Find("Ground").GetComponent<TilemapCollider2D>().bounds.size.x) * Speed;
-
-        //foreach (var MG in MiddleGround)
-        //{
-        //    i++;
-        //    MG.Setsp(Speed - Diff * i);
-        //}
+        if (!Is_BossStage)
+            BSpeed = (10000 / Tile[0].transform.Find("Ground").GetComponent<TilemapCollider2D>().bounds.size.x) * Speed;
     }
 
     public void Move(float sp, float duration)

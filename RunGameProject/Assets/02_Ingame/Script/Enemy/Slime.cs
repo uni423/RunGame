@@ -12,7 +12,7 @@ public class Slime : Enemy
         if (!GameManager.Instance.IsGamePlay)
             return;
 
-        if (!IsAttack && transform.position.x <= 0 && !this.GetComponent<Enemy>().IsDead)
+        if (!IsAttack && transform.position.x <= 0 && !this.GetComponent<Enemy>().Is_Dead)
         {
             IsAttack = true;
             transform.DOLocalJump(new Vector3(transform.localPosition.x, transform.localPosition.y), 300f, 1, 0.7f)

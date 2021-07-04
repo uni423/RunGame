@@ -25,25 +25,27 @@ public class PlayerManager : Singleton<PlayerManager>
 
     public void Init()
     {
-        for(int i = 0; i < StatDatas.Count; i++)
+        for (int i = 0; i < StatDatas.Count; i++)
         {
             Player = transform.GetChild(i).gameObject;
             Player.SetActive(false);
-            Chars.Add(Player);
+            Player.transform.position = new Vector3(-600, -300);
 
-            StatSaves.Add(ScriptableObject.CreateInstance<PlayerStat>());
-            InitStat((CharType)i);
-
-            Chars[i].GetComponent<Player>().Stat = StatSaves[i];
-            Chars[i].GetComponent<Player>().StatUpgrade();
+            if (StatSaves.Count < i+1)
+            {
+                Chars.Add(Player);
+                StatSaves.Add(ScriptableObject.CreateInstance<PlayerStat>());
+                InitStat((CharType)i);
+                Chars[i].GetComponent<Player>().Stat = StatSaves[i];
+                Chars[i].GetComponent<Player>().StatUpgrade();
+            }
         }
+        Chars[0].GetComponent<Player_Knight>().Init();
+        Chars[1].GetComponent<Player_Gunner>().Init();
 
         Player = Chars[(int)GameManager.Instance.CharacterCode];
-        Debug.Log("PlayerManager Init 완료");
 
         Player.SetActive(true);
-
-        GameManager.Instance.IsGamePlay = true;
     }
 
     public void InitStat(CharType type)
@@ -72,6 +74,18 @@ public class PlayerManager : Singleton<PlayerManager>
         StatSaves[(int)type].Speed = StatDatas[(int)type].Speed;
         StatSaves[(int)type].Addspeed = StatDatas[(int)type].Addspeed;
         StatSaves[(int)type].JumpPower = StatDatas[(int)type].JumpPower;
+    }
+
+    public void ReleaseStat()
+    {
+        for (int i = 0; i < Chars.Count; i++)
+        {
+            Chars[i].SetActive(false);
+            Chars[i].GetComponent<Player>().Stat = null;
+        }
+        StatSaves.Clear();
+        Chars.Clear();
+        Debug.LogError("초기화 완료");
     }
 
     public void Character_Swich(CharType type)
@@ -110,6 +124,7 @@ public class PlayerManager : Singleton<PlayerManager>
             case CharType.Knight:
                 if (Player.GetComponent<Player_Knight>().Is_SkillA)
                 {
+                    Debug.Log("Shild");
                     Player.GetComponent<Player_Knight>().Shild_Quit(true);
                     return;
                 }
@@ -121,6 +136,7 @@ public class PlayerManager : Singleton<PlayerManager>
             case CharType.Gunner:
                 if (Player.GetComponent<Player_Gunner>().Is_SkillA)
                 {
+                    Debug.Log("Shild");
                     Player.GetComponent<Player_Gunner>().Shild_Quit(true);
                     return;
                 }

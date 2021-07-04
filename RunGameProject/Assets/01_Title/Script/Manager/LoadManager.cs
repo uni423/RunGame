@@ -12,6 +12,7 @@ public class LoadManager : MonoBehaviour
     {
         Title,
         Ingame,
+        Boss,
         Load
     }
 
@@ -40,6 +41,9 @@ public class LoadManager : MonoBehaviour
                 break;
             case Scene.Ingame :
                 asyncOperation = SceneManager.LoadSceneAsync("02_Ingame");
+                break;
+            case Scene.Boss :
+                asyncOperation = SceneManager.LoadSceneAsync("02_Ingame_1-Boss");
                 break;
         }
 

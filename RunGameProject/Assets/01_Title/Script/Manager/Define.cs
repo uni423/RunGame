@@ -22,5 +22,21 @@
         }
     }
 
+    public enum Stage
+    {
+        Stage1_1 = 0,
+        Stage1_2,
+        Stage1_3,
+        Stage1_Boss = 9,
+        Stage2_1 = 1,
+        Stage2_2,
+        Stage2_3,
+        Stage2_Boss = 19,
+        Stage3_1 = 2,
+        Stage3_2,
+        Stage3_3,
+        Stage3_Boss = 29,
+    }
+
     public enum CharType { Knight = 0, Gunner }
 }

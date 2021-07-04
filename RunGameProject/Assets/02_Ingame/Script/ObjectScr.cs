@@ -7,7 +7,7 @@ public class ObjectScr : MonoBehaviour
     public GameObject m_Player;
     void Start()
     {
-        m_Player = GameObject.FindGameObjectWithTag("Player");
+        m_Player = GameManager.Instance.playerMG.Player;
         gameObject.SetActive(false);
         InvokeRepeating("CheckRender", 0, Time.deltaTime * 20);
     }
