@@ -12,6 +12,7 @@ public class LoadManager : MonoBehaviour
     {
         Title,
         Ingame,
+        Story,
         Boss,
         Load
     }

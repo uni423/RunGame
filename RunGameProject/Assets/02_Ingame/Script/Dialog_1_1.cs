@@ -23,7 +23,10 @@ public class Dialog_1_1 : MonoBehaviour
 
         dialogTexts.Add(new DialogData("그럼 나도 합류하지", "Gn"));
 
-        dialogTexts.Add(new DialogData("네???", "Kn"));
+        dialogTexts.Add(new DialogData("네???", "Kn", () =>
+        {
+            GameManager.Instance.uiMG.Game_Clear();
+        } ) );
 
         DialogManager.Show(dialogTexts);
     }

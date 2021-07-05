@@ -8,6 +8,9 @@ public class GameClear : MonoBehaviour
 {
     public Image UI_gameClear;
 
+    public GameObject DialogAsset;
+    public GameObject DialogObject;
+
     public void Game_Clear()
     {
         if (GameManager.Instance.stage == Define.Stage.Stage1_1)
@@ -21,11 +24,19 @@ public class GameClear : MonoBehaviour
                 .From()
                 .OnComplete(() =>
                 {
-                    DOTween.Kill(PlayerManager.Instance.Player);
-                    LoadManager.Load(LoadManager.Scene.Boss);
-                    LoadManager.LoaderCallback();
+                    //DOTween.Kill(PlayerManager.Instance.Player);
+                    //LoadManager.Load(LoadManager.Scene.Boss);
+                    //LoadManager.LoaderCallback();
+                    Beta();
                 });
         }
+    }
+
+    public void Beta()
+    {
+        GameManager.Instance.playerMG.Player.SetActive(false);
+        DialogAsset.SetActive(true);
+        DialogObject.SetActive(true);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

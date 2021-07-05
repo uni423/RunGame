@@ -29,8 +29,15 @@ public class BGManager : MonoBehaviour
 
     public MeshRenderer groundRenderer;
 
+    public GameObject GameClear;
+
     [SerializeField]
-    public List<Level> LevePhaeton = new List<Level>();
+    public List<Level> LevelPhaeton = new List<Level>();
+
+    public GameObject PastPhaeton;
+    public GameObject NowPhaeton;
+    public GameObject FuturePhaeton;
+
     public int minLevel = 0;
     public int maxLevel = 1;
 
@@ -43,16 +50,34 @@ public class BGManager : MonoBehaviour
 
         if (!Is_BossStage)
         {
-            BSpeed = (10000 / Tile[0].transform.Find("Ground").GetComponent<TilemapCollider2D>().bounds.size.x) * Speed;
             minLevel = ((int)GameManager.Instance.stage % 10);
             maxLevel = ((int)GameManager.Instance.stage % 10) + 2;
-            maxDistance = ((int)GameManager.Instance.stage % 10);
+
+            switch ((int)GameManager.Instance.stage / 10)
+            {
+                case 0: maxDistance = 10000; break;
+                case 1: maxDistance = 12500; break;
+                case 2: maxDistance = 15000; break;
+            }
+
+            PastPhaeton = Instantiate(LevelPhaeton[0].Phaeton[0], Tile[0].gameObject.transform);
+            PastPhaeton.transform.position = new Vector3(0, -30);
+            PastPhaeton.SetActive(true);
+
+            NowPhaeton = Instantiate(LevelPhaeton[0].Phaeton[0], Tile[0].gameObject.transform);
+            NowPhaeton.transform.position = new Vector3(1280, -30);
+            NowPhaeton.SetActive(true);
+
+            FuturePhaeton = Instantiate(LevelPhaeton[0].Phaeton[0], Tile[0].gameObject.transform);
+            FuturePhaeton.transform.position = new Vector3(2560, -30);
+            FuturePhaeton.SetActive(true);
         }
         else
         {
             BSpeed = 50;
             groundRenderer = transform.Find("Gound Quad").GetComponent<MeshRenderer>();
         }
+        GameClear.SetActive(false);
     }
 
     private void Update()
@@ -84,12 +109,48 @@ public class BGManager : MonoBehaviour
                 tree.transform.position = new Vector3(-1 * TreeOffset[i], 0);
                 i++;
             }
+
+            if (PastPhaeton.transform.position.x < -1270)
+                GroundPhaetonUpdate();
         }
     }
 
     public void GroundPhaetonUpdate()
     {
+        if (maxDistance > 0)
+        {
+            int level = 0;
+            int phaeton = 0;
+            do
+            {
+                level = Random.Range(minLevel, maxLevel + 1);
+                phaeton = Random.Range(0, LevelPhaeton[level].Phaeton.Count);
+            }
+            while ((FuturePhaeton.name == LevelPhaeton[level].Phaeton[phaeton].name));
 
+            Destroy(PastPhaeton);
+
+            PastPhaeton = NowPhaeton;
+            NowPhaeton = FuturePhaeton;
+
+            FuturePhaeton = Instantiate(LevelPhaeton[level].Phaeton[phaeton], Tile[0].gameObject.transform);
+            FuturePhaeton.transform.position = new Vector3(2560, -30);
+            FuturePhaeton.SetActive(true);
+
+            maxDistance -= 1280;
+        }
+        else if (!GameClear.activeSelf)
+        {
+            GameObject goalin = Instantiate(LevelPhaeton[0].Phaeton[0], Tile[0].gameObject.transform);
+            goalin.transform.position = new Vector3(2560, -30);
+            goalin.SetActive(true); 
+            goalin = Instantiate(LevelPhaeton[0].Phaeton[0], Tile[0].gameObject.transform);
+            goalin.transform.position = new Vector3(3840, -30);
+            goalin.SetActive(true);
+
+            GameClear.transform.position = new Vector3(2560, -30);
+            GameClear.SetActive(true);
+        }
     }
 
     public void In_Speed(float speed, bool DOKill = false)
@@ -102,7 +163,8 @@ public class BGManager : MonoBehaviour
 
         Speed = speed;
         if (!Is_BossStage)
-            BSpeed = (10000 / Tile[0].transform.Find("Ground").GetComponent<TilemapCollider2D>().bounds.size.x) * Speed;
+            BSpeed = (30000 / (maxDistance + 500f));
+        //BSpeed = (10000 / Tile[0].transform.Find("Ground").GetComponent<TilemapCollider2D>().bounds.size.x) * Speed;
     }
 
     public void Move(float sp, float duration)

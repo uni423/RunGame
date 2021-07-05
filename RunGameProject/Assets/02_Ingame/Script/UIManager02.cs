@@ -120,11 +120,20 @@ public class UIManager02 : MonoBehaviour
             case "Drop":
                 enemyName = "낙사"; break;
             default:
-                enemyName = "원인불명"; break;
+                enemyName = Enemy; break;
         }
 
         Over_UIs.Find("Over Reason").GetChild(2).GetComponent<Text>().text = enemyName;
         Over_UIs.Find("Time").GetChild(2).GetComponent<Text>().text = time_Current.ToString("N2") + "초";
+        StartCoroutine(Game_Over_Anim());
+    }
+
+    public void Game_Clear()
+    {
+        Over_UIs.Find("Over Reason").GetChild(2).GetComponent<Text>().text = "탐험 성공";
+        Over_UIs.Find("Time").GetChild(2).GetComponent<Text>().text = time_Current.ToString("N2") + "초";
+        Over_UIs.Find("Journal").GetChild(2).GetComponent<Text>().text = "여기까지 베타테스트 였습니다. \n플레이해주셔서 감사합니다.";
+        GameClear.gameObject.SetActive(false);
         StartCoroutine(Game_Over_Anim());
     }
 

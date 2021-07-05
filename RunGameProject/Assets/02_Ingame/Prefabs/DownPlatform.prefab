@@ -12,8 +12,7 @@ GameObject:
   - component: {fileID: 4955248001426879327}
   - component: {fileID: 4955248001426879326}
   - component: {fileID: 4955248001426879297}
-  - component: {fileID: 4223250328125567310}
-  - component: {fileID: 4955248001426879325}
+  - component: {fileID: 2854397891734497137}
   m_Layer: 0
   m_Name: DownPlatform
   m_TagString: Ground
@@ -133,20 +132,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &4223250328125567310
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4955248001426879296}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb2dfb8d9b69e6b4a8ca385dc9612766, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Player: {fileID: 0}
---- !u!114 &4955248001426879325
+--- !u!114 &2854397891734497137
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

@@ -59,7 +59,6 @@ GameObject:
   - component: {fileID: 3569823408317487442}
   - component: {fileID: 3569823408317487443}
   - component: {fileID: 3569823408317487436}
-  - component: {fileID: 6714597027924295980}
   - component: {fileID: 3569823408317487438}
   - component: {fileID: 4675510059915793208}
   m_Layer: 0
@@ -149,7 +148,7 @@ BoxCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
+    border: {x: 21, y: 5, z: 17, w: 8}
     pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 384, y: 64}
     newSize: {x: 384, y: 64}
@@ -181,18 +180,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &6714597027924295980
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3569823408317487437}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb2dfb8d9b69e6b4a8ca385dc9612766, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &3569823408317487438
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -36,7 +36,8 @@ public class Enemy : MonoBehaviour
         Is_Dead = true;
         transform.GetComponent<SpriteRenderer>().sprite = dead;
         yield return new WaitForSeconds(0.5f);
-        Destroy(gameObject);
+        gameObject.SetActive(false);
+        Start();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

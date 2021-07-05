@@ -233,7 +233,6 @@ public class Player : MonoBehaviour
     {
         if (!Is_AttackRange || !Is_Jumping || !Is_Attack)
             return;
-        Debug.Log("Attack" + Stat.Ad);
 
         Stat.NowExp += RangeEnemyObj.Damage(Stat.Ad);
 
@@ -279,6 +278,8 @@ public class Player : MonoBehaviour
                 Is_Jumping = true;
             else
                 Is_Jumping = false;
+
+            if (transform.position.y > -300)
             {
                 Anim.SetBool("Jump_Down", true);
             }

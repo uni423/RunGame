@@ -98,7 +98,7 @@ MonoBehaviour:
   stat: {fileID: 11400000, guid: 2e663abb6326a6a40a7637f659836bee, type: 2}
   NowHp: 0
   dead: {fileID: 21300000, guid: 28260999aecde784098de467c56281e4, type: 3}
-  IsDead: 0
+  Is_Dead: 0
   IsAttack: 0
 --- !u!61 &353881492534031950
 BoxCollider2D:
