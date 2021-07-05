@@ -34,6 +34,8 @@ public class Player : MonoBehaviour
     private IEnumerator Lerp;
     public delegate void Delegate();
 
+    public Animator Anim;
+
     [Space(10f)]
     public BGManager BG;
     public EnemyData Enemy;
@@ -56,6 +58,7 @@ public class Player : MonoBehaviour
         UIM_2 = GameManager.Instance.uiMG;
 
         myRigid = this.GetComponent<Rigidbody2D>();
+        Anim = this.GetComponent<Animator>();
 
         JumpColli.SetActive(true);
         RangeColli.SetActive(true);
@@ -124,14 +127,16 @@ public class Player : MonoBehaviour
     public void PositionUpdate()
     {
         //지정된 위치 벗어나면 제자리로
-        if (transform.localPosition.x != -600)
-            lerp(transform.localPosition.x, 0.1f);
+        if (transform.position.x != -600)
+            lerp(transform.position.x, 0.1f);
 
         //점프 후 하강할때 가속도 추가
         if (!Is_Jumping && myRigid.velocity.y < 10 && Is_Down)
         {
             myRigid.velocity = Vector2.up * Physics2D.gravity.y * 8f;
             Is_Down = false;
+            Anim.SetBool("Jump_Up", false);
+            Anim.SetBool("Jump_Down", true);
         }
     }
 
@@ -154,7 +159,7 @@ public class Player : MonoBehaviour
 
     public float NowHpSp(int num)
     {
-        switch(num)
+        switch (num)
         {
             case 1: return Stat.NowHp / Stat.MaxHp;
             case 2: return Stat.NowSp / Stat.MaxSp;
@@ -165,13 +170,13 @@ public class Player : MonoBehaviour
 
     public float SkillNowColl(int num)
     {
-        switch(num)
+        switch (num)
         {
             case 1:
                 return (skA.MaxCoolTime - skA.NowCoolTime) / skA.MaxCoolTime;
             case 2:
                 return (skK.MaxCoolTime - skK.NowCoolTime) / skK.MaxCoolTime;
-            default :
+            default:
                 return 0;
         }
     }
@@ -197,6 +202,7 @@ public class Player : MonoBehaviour
             Is_Jumping = false;
         }
         Is_Down = true;
+        Anim.SetBool("Jump_Up", true);
 
         if (!Is_Attack)
             StartCoroutine(lerp(transform.position.x, 0.2f,
@@ -261,6 +267,7 @@ public class Player : MonoBehaviour
         {
             Is_SwichJumping = false;
             Is_Jumping = true;
+            Anim.SetBool("Jump_Down", false);
         }
     }
 
@@ -272,6 +279,9 @@ public class Player : MonoBehaviour
                 Is_Jumping = true;
             else
                 Is_Jumping = false;
+            {
+                Anim.SetBool("Jump_Down", true);
+            }
         }
     }
 
@@ -279,7 +289,6 @@ public class Player : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Drop"))
         {
-            Debug.Log(other.gameObject.name);
             PlayerManager.Instance.Damage(99999, "Drop");
             other.gameObject.SetActive(false);
             this.gameObject.SetActive(false);

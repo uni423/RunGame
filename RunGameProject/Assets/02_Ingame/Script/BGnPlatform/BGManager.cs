@@ -4,6 +4,12 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using DG.Tweening;
 
+[System.Serializable]
+public class Level
+{
+    public List<GameObject> Phaeton = new List<GameObject>();
+}
+
 public class BGManager : MonoBehaviour
 {
     public float Speed = 0f;
@@ -23,13 +29,25 @@ public class BGManager : MonoBehaviour
 
     public MeshRenderer groundRenderer;
 
+    [SerializeField]
+    public List<Level> LevePhaeton = new List<Level>();
+    public int minLevel = 0;
+    public int maxLevel = 1;
+
+    public int maxDistance = 0;
+
     public void Init()
     {
         if ((int)GameManager.Instance.stage % 10 == 9)
             Is_BossStage = true;
 
         if (!Is_BossStage)
+        {
             BSpeed = (10000 / Tile[0].transform.Find("Ground").GetComponent<TilemapCollider2D>().bounds.size.x) * Speed;
+            minLevel = ((int)GameManager.Instance.stage % 10);
+            maxLevel = ((int)GameManager.Instance.stage % 10) + 2;
+            maxDistance = ((int)GameManager.Instance.stage % 10);
+        }
         else
         {
             BSpeed = 50;
@@ -67,6 +85,11 @@ public class BGManager : MonoBehaviour
                 i++;
             }
         }
+    }
+
+    public void GroundPhaetonUpdate()
+    {
+
     }
 
     public void In_Speed(float speed, bool DOKill = false)
