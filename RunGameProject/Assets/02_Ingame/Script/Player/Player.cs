@@ -127,8 +127,11 @@ public class Player : MonoBehaviour
     public void PositionUpdate()
     {
         //지정된 위치 벗어나면 제자리로
-        if (transform.position.x != -600)
-            lerp(transform.position.x, 0.1f);
+        if (transform.position.x != -600 && Lerp == null)
+        {
+            Lerp = lerp(transform.position.x, 0.2f, () => Lerp = null) ;
+            StartCoroutine(Lerp);
+        }
 
         //점프 후 하강할때 가속도 추가
         if (!Is_Jumping && myRigid.velocity.y < 10 && Is_Down)
@@ -211,6 +214,7 @@ public class Player : MonoBehaviour
                     Is_Attack = true;
                     RangeDistance = 10000;
                     RangeEnemyObj = null;
+                    Lerp = null;
                 }));
     }
 
@@ -243,6 +247,7 @@ public class Player : MonoBehaviour
                 Is_Attack = true;
                 RangeDistance = 10000;
                 RangeEnemyObj = null;
+                Lerp = null;
             });
         StartCoroutine(Lerp);
 
@@ -318,16 +323,40 @@ public class Player : MonoBehaviour
     {
         transform.position = new Vector3(startvalue, transform.position.y);
 
-        myRigid.velocity += Vector2.left * 1500f;
-        while (transform.position.x > -590)
+        float vector;
+
+        if (startvalue > -600)
+            vector = Vector2.left.x;
+        else
+            vector = Vector2.right.x;
+
+        float i = duration;
+        float velocity = ((startvalue - (-600)) / duration) * 0.02f;
+
+        while(i > 0)
         {
-            yield return null;
+            yield return new WaitForSeconds(0.02f);
+            i -= 0.02f;
+
+            transform.position += vector * new Vector3(velocity, 0);
+            if (vector > 0)
+            {
+                if (transform.position.x >= -610)
+                    break;
+            }
+            else if (vector < 0)
+            {
+                if (transform.position.x <= -590)
+                    break;
+            }
         }
 
-        myRigid.velocity = new Vector2(0, myRigid.velocity.y);
+        yield return new WaitForSeconds(i);
         transform.position = new Vector3(-600, transform.position.y);
 
-        if (dele != null) StartCoroutine(Timer(duration, dele));
+        if (dele != null) dele();
+
+        yield return null;
     }
 
     protected virtual IEnumerator Timer(float time, Delegate dele)

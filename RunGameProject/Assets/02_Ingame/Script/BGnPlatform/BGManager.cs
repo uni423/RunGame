@@ -71,13 +71,13 @@ public class BGManager : MonoBehaviour
             FuturePhaeton = Instantiate(LevelPhaeton[0].Phaeton[0], Tile[0].gameObject.transform);
             FuturePhaeton.transform.position = new Vector3(2560, -30);
             FuturePhaeton.SetActive(true);
+            GameClear.SetActive(false);
         }
         else
         {
             BSpeed = 50;
             groundRenderer = transform.Find("Gound Quad").GetComponent<MeshRenderer>();
         }
-        GameClear.SetActive(false);
     }
 
     private void Update()
