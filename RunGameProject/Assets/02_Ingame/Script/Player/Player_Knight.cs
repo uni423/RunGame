@@ -42,12 +42,14 @@ public class Player_Knight : Player
             return;
 
         Is_SkillA = true;
+        Anim.SetBool("Is_Shild", true);
         StartCoroutine(Timer(skA.Time, (() => { if (Is_SkillA) Shild_Quit(); })));
     }
 
     public void Shild_Quit(bool Is_damage = false) //방어기 종료
     {
         Is_SkillA = false;
+        Anim.SetBool("Is_Shild", false);
         if (Is_damage)
         {
             skA.NowCoolTime = skA.MaxCoolTime;
