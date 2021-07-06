@@ -38,7 +38,6 @@ public class Player : MonoBehaviour
 
     [Space(10f)]
     public BGManager BG;
-    public EnemyData Enemy;
     public UIManager02 UIM_2;
 
     private Rigidbody2D myRigid;
@@ -129,8 +128,8 @@ public class Player : MonoBehaviour
         //지정된 위치 벗어나면 제자리로
         if (transform.position.x != -600 && Lerp == null)
         {
-            Lerp = lerp(transform.position.x, 0.2f, () => Lerp = null) ;
-            StartCoroutine(Lerp);
+            //Lerp = lerp(transform.position.x, 0.2f, () => Lerp = null) ;
+            //StartCoroutine(Lerp);
         }
 
         //점프 후 하강할때 가속도 추가
@@ -241,6 +240,7 @@ public class Player : MonoBehaviour
         Stat.NowExp += RangeEnemyObj.Damage(Stat.Ad);
 
         Is_Attack = false;
+        Anim.SetBool("Is_Attack", true);
         Lerp = lerp(RangeEnemyObj.gameObject.transform.position.x - 100, 1 / Stat.AdSpeed,
             () =>
             {
@@ -250,6 +250,8 @@ public class Player : MonoBehaviour
                 Lerp = null;
             });
         StartCoroutine(Lerp);
+
+        StartCoroutine(Timer(0.1f, () => Anim.SetBool("Is_Attack", false)));
 
         Camera.main.DOShakePosition(0.3f, 10)
             .OnComplete(() => Camera.main.transform.position = new Vector3(0, 0, -10));
