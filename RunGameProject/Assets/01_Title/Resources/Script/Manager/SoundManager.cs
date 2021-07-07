@@ -33,10 +33,14 @@ public class SoundManager : Singleton<SoundManager>
         bgmPlayer.Play();
     }
 
-    public void PlaySound(string clipname, float volume = 1f)
+    public void PlaySound(string clipname, bool stop = true, float volume = 1f)
     {
         if (!clipDic.ContainsKey(clipname))
         { Debug.Log("coludn't find sound"); return; }
+
+        if (stop)
+            StopSFX();
+
         sfxPlayer.PlayOneShot(clipDic[clipname], volume * sfxVolume);
     }
 
@@ -63,8 +67,22 @@ public class SoundManager : Singleton<SoundManager>
         StartCoroutine(Fade("out"));
         bgmPlayer.Stop();
     }
-    public void PlayBGM()
+    
+    public void StopSFX()
     {
+        StartCoroutine(Fade("out"));
+        sfxPlayer.Stop();
+    }
+
+    public void PlayBGM(string name = null)
+    {
+        if (name != null)
+        {
+            if (!clipDic.ContainsKey(name))
+                { Debug.Log("coludn't find sound"); return; }
+            else
+                bgmPlayer.clip = clipDic[name];
+        }   
         StartCoroutine(Fade("In"));
         bgmPlayer.Play();
     }
@@ -76,6 +94,7 @@ public class SoundManager : Singleton<SoundManager>
 
     public void SetBGM(float volume)
     {
+        bgmVolume = volume;
         bgmPlayer.volume = volume;
     }
 
@@ -83,9 +102,8 @@ public class SoundManager : Singleton<SoundManager>
     {
         // BGM Base
         float curVolume = 0f;
-        float volume = 1f;
 
-        while (curVolume <= volume)
+        while (curVolume <= bgmVolume)
         {
             if (fadekind == "In")
                 bgmPlayer.volume = curVolume;
@@ -96,7 +114,7 @@ public class SoundManager : Singleton<SoundManager>
             yield return null;
         }
 
-        bgmPlayer.volume = 1f;
+        bgmPlayer.volume = bgmVolume;
     }
 
 }

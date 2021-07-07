@@ -34,6 +34,54 @@ public class Player_Gunner : Player
         base.Update();
     }
 
+    public void Attack() //공격, 상호작용키
+    {
+        if (!Is_AttackRange || !Is_Jumping || !Is_Attack)
+            return;
+
+        Stat.NowExp += RangeEnemyObj.Damage(Stat.Ad);
+
+        Combo += 1;
+        switch (Combo)
+        {
+            case 1:
+                SoundManager.Instance.PlaySound("Gunner_1");
+                break;
+            case 2:
+                SoundManager.Instance.PlaySound("Gunner_2");
+                break;
+            case 3:
+                SoundManager.Instance.PlaySound("Gunner_3");
+                break;
+            case 4:
+                SoundManager.Instance.PlaySound("Gunner_4");
+                Combo = 0;
+                break;
+            default:
+                break;
+        }
+        SoundManager.Instance.PlaySound("SFX_Gunner_Attack");
+       ComboTimer = Timer(3f, () => { Debug.Log("Combo reset" + Combo); Combo = 0; });
+        StartCoroutine(ComboTimer);
+
+        Is_Attack = false;
+        Anim.SetBool("Is_Attack", true);
+        Lerp = lerp(RangeEnemyObj.gameObject.transform.position.x - 100, 1 / Stat.AdSpeed,
+            () =>
+            {
+                Is_Attack = true;
+                RangeDistance = 10000;
+                RangeEnemyObj = null;
+                Lerp = null;
+            });
+        StartCoroutine(Lerp);
+
+        StartCoroutine(Timer(0.1f, () => Anim.SetBool("Is_Attack", false)));
+
+        Camera.main.DOShakePosition(0.3f, 10)
+            .OnComplete(() => Camera.main.transform.position = new Vector3(0, 0, -10));
+    }
+
     public void Shild() //캐릭터 방어기
     {
         //키다운 중인 '지속시간' 동안 무적
@@ -51,6 +99,7 @@ public class Player_Gunner : Player
         Is_SkillA = false;
         if (Is_damage)
         {
+            SoundManager.Instance.PlaySound("Gunner_A");
             skA.NowCoolTime = skA.MaxCoolTime;
             UIM_2.UI_Shiny(1, false);
             DOTween.To(() => skA.NowCoolTime, x => skA.NowCoolTime = x, 0, skA.MaxCoolTime)
@@ -72,6 +121,8 @@ public class Player_Gunner : Player
         //'지속시간' 동안 무적, 1초마다 '사거리'만큼 돌진(이동), 닿는 적에겐 틱 1초마다 '대미지'만큼 입힌다
         Debug.Log("skSpecial");
 
+        SoundManager.Instance.PlaySound("SFX_Knight_Attack");
+        SoundManager.Instance.PlaySound("SFX_Gunner_K", false);
         Is_SkillK = true;
         StartCoroutine(Timer(skK.Time,
             (() =>

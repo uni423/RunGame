@@ -98,13 +98,16 @@ public class Boss : MonoBehaviour
             sk_Sequence = DOTween.Sequence();
             sk_Sequence
                 .SetAutoKill(false)
-                .Append(DOTween.To(() => Ani.speed, x => Ani.speed = x, 0f, 1.5f)
-                    .OnComplete(() => { DOTween.To(() => Ani.speed, x => Ani.speed = x, 1f, 0.5f); }))
-                .Join(this.transform.DOLocalMoveY(650f, 1f)
+                .AppendCallback(() => Ani.SetBool("Is_Jump_Press", true))
+                .AppendInterval(1f)
+                .Append(this.transform.DOJump(PlayerManager.Instance.Player.transform.position + new Vector3(0, 300f), 0f, 1, 1f)
                     .SetEase(sk2_Jump1))
-                .AppendCallback(() => { Ani.SetTrigger("Jumping"); myColl.enabled = false; skill2_Coll.gameObject.SetActive(true); })
-                .AppendInterval(0.5f)
-                .Append(this.transform.DOMove(PlayerManager.Instance.Player.transform.position + new Vector3(0, -50f), 0.5f)
+                .AppendCallback(() => 
+                { 
+                    Ani.SetBool("Is_Jump_Up", true); Ani.SetBool("Is_Jump_Press", false);
+                    myColl.enabled = false; skill2_Coll.gameObject.SetActive(true); 
+                })
+                .Append(this.transform.DOMoveY(-300f, 0.5f)
                     .SetEase(Ease.OutBack, 2f))
                 .Join(Camera.main.DOShakePosition(0.5f, 150))
                 .AppendInterval(0.2f)
@@ -130,17 +133,17 @@ public class Boss : MonoBehaviour
         dele();
     }
 
-    public void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.tag == "Player")
-        {
-            if (!Is_Dead)
-            {
-                if (skill2_Coll.gameObject.activeSelf)
-                    PlayerManager.Instance.Damage(sk2.Damage, this.name);
-                else
-                    PlayerManager.Instance.Damage(stat.TriAd, this.name);
-            }
-        }
-    }
+    //public void OnTriggerEnter2D(Collider2D collision)
+    //{
+    //    if (collision.gameObject.tag == "Player")
+    //    {
+    //        if (!Is_Dead)
+    //        {
+    //            if (skill2_Coll.gameObject.activeSelf)
+    //                PlayerManager.Instance.Damage(sk2.Damage, this.name);
+    //            else
+    //                PlayerManager.Instance.Damage(stat.TriAd, this.name);
+    //        }
+    //    }
+    //}
 }

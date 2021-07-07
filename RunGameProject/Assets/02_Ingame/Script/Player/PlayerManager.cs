@@ -122,7 +122,7 @@ public class PlayerManager : Singleton<PlayerManager>
         switch (GameManager.Instance.CharacterCode)
         {
             case CharType.Knight:
-                if (Player.GetComponent<Player_Knight>().Is_SkillA)
+                if (Player.GetComponent<Player_Knight>().Is_SkillA && Enemy != "Drop")
                 {
                     Debug.Log("Shild");
                     Player.GetComponent<Player_Knight>().Shild_Quit(true);
@@ -134,7 +134,7 @@ public class PlayerManager : Singleton<PlayerManager>
                 break;
 
             case CharType.Gunner:
-                if (Player.GetComponent<Player_Gunner>().Is_SkillA)
+                if (Player.GetComponent<Player_Gunner>().Is_SkillA && Enemy != "Drop")
                 {
                     Debug.Log("Shild");
                     Player.GetComponent<Player_Gunner>().Shild_Quit(true);

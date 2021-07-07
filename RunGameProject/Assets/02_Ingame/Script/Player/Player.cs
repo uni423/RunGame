@@ -31,7 +31,10 @@ public class Player : MonoBehaviour
     [Tooltip("나이트 K 스킬")] public Skill skK;
     [Tooltip("돌격스킬 상태인가?")] public bool Is_SkillK = false;
 
-    private IEnumerator Lerp;
+    public int Combo = 0;
+
+    public IEnumerator Lerp;
+    public IEnumerator ComboTimer;
     public delegate void Delegate();
 
     public Animator Anim;
@@ -106,7 +109,6 @@ public class Player : MonoBehaviour
             Stat.NowExp = 0f;
             Stat.NowHp = Stat.MaxHp;
             Stat.NowSp = Stat.MaxSp;
-            //if ((int)GameManager.Instance.stage % 10 != 9)
             GameManager.Instance.bgMG.In_Speed(Stat.Speed);
             Stat.Level = 1;
             return;
@@ -147,6 +149,11 @@ public class Player : MonoBehaviour
         Is_Damage = true;
         if (Stat.NowHp - damage <= 0)
         {
+            if (GameManager.Instance.CharacterCode == CharType.Knight)
+                SoundManager.Instance.PlaySound("Knight_Dead");
+            else if (GameManager.Instance.CharacterCode == CharType.Gunner)
+                SoundManager.Instance.PlaySound("Gunner_Dead");
+
             GameManager.Instance.IsGamePlay = false;
             UIM_2.Game_Over(Enemy);
         }
@@ -232,39 +239,18 @@ public class Player : MonoBehaviour
         Is_Dash = false;
     }
 
-    public void Attack() //공격, 상호작용키
-    {
-        if (!Is_AttackRange || !Is_Jumping || !Is_Attack)
-            return;
-
-        Stat.NowExp += RangeEnemyObj.Damage(Stat.Ad);
-
-        Is_Attack = false;
-        Anim.SetBool("Is_Attack", true);
-        Lerp = lerp(RangeEnemyObj.gameObject.transform.position.x - 100, 1 / Stat.AdSpeed,
-            () =>
-            {
-                Is_Attack = true;
-                RangeDistance = 10000;
-                RangeEnemyObj = null;
-                Lerp = null;
-            });
-        StartCoroutine(Lerp);
-
-        StartCoroutine(Timer(0.1f, () => Anim.SetBool("Is_Attack", false)));
-
-        Camera.main.DOShakePosition(0.3f, 10)
-            .OnComplete(() => Camera.main.transform.position = new Vector3(0, 0, -10));
-    }
-
     private void Character_Swich()
     {
         if (GameManager.Instance.CharacterCode == CharType.Knight)
         {
             PlayerManager.Instance.Character_Swich(CharType.Gunner);
+            SoundManager.Instance.PlaySound("Gunner_Swich");
         }
         else if (GameManager.Instance.CharacterCode == CharType.Gunner)
+        {
             PlayerManager.Instance.Character_Swich(CharType.Knight);
+            SoundManager.Instance.PlaySound("Knight_Swich");
+        }
     }
 
     private void OnCollisionStay2D(Collision2D collision)
@@ -321,7 +307,7 @@ public class Player : MonoBehaviour
     }
     #endregion
 
-    IEnumerator lerp(float startvalue, float duration, Delegate dele = null)
+    public IEnumerator lerp(float startvalue, float duration, Delegate dele = null)
     {
         transform.position = new Vector3(startvalue, transform.position.y);
 

@@ -31,6 +31,20 @@ public class UIManager02 : MonoBehaviour
     {
         GameManager.Instance.Ingame_Init();
 
+        switch(GameManager.Instance.stage)
+        {
+            case Define.Stage.Stage1_1:
+                SoundManager.Instance.PlayBGM("BGM_Stage_1");
+                break;
+            case Define.Stage.Stage1_Boss:
+                SoundManager.Instance.PlayBGM("BGM_Stage_1_Boss");
+                break;
+            default:
+                break;
+        }
+        SoundManager.Instance.SetBGM(0.5f);
+        SoundManager.Instance.SetSFX(0.5f);
+
         DOTween.Init(false, true, LogBehaviour.ErrorsOnly);
 
         time_Start = Time.time;

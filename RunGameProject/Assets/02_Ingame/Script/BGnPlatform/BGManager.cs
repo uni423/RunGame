@@ -55,11 +55,10 @@ public class BGManager : MonoBehaviour
 
             switch ((int)GameManager.Instance.stage / 10)
             {
-                case 0: maxDistance = 10000; break;
+                case 0: maxDistance = 20000; break;
                 case 1: maxDistance = 12500; break;
                 case 2: maxDistance = 15000; break;
             }
-
             PastPhaeton = Instantiate(LevelPhaeton[0].Phaeton[0], Tile[0].gameObject.transform);
             PastPhaeton.transform.position = new Vector3(0, -30);
             PastPhaeton.SetActive(true);
@@ -163,8 +162,7 @@ public class BGManager : MonoBehaviour
 
         Speed = speed;
         if (!Is_BossStage)
-            BSpeed = (30000 / (maxDistance + 500f));
-        //BSpeed = (10000 / Tile[0].transform.Find("Ground").GetComponent<TilemapCollider2D>().bounds.size.x) * Speed;
+            BSpeed = ((maxDistance + 500f) / 100);
     }
 
     public void Move(float sp, float duration)
