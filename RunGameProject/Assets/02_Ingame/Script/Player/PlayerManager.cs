@@ -88,10 +88,10 @@ public class PlayerManager : Singleton<PlayerManager>
         Debug.LogError("초기화 완료");
     }
 
-    public void Character_Swich(CharType type)
+    public bool Character_Swich(CharType type)
     {
         if (swith_NowCollTime > 0)
-            return;
+            return false;
 
         Player.SetActive(false);
         Vector3 vector = Player.transform.position;
@@ -112,6 +112,8 @@ public class PlayerManager : Singleton<PlayerManager>
 
         //점프
         Player.GetComponent<Player>().Jump(true);
+
+        return true;
     }
 
     public void Damage(float damage, string Enemy)
@@ -128,7 +130,7 @@ public class PlayerManager : Singleton<PlayerManager>
                     Player.GetComponent<Player_Knight>().Shild_Quit(true);
                     return;
                 }
-                else if (Player.GetComponent<Player_Knight>().Is_SkillK)
+                else if (Player.GetComponent<Player_Knight>().Is_SkillK && Enemy != "Drop")
                     return;
                 Player.GetComponent<Player>().Damage(damage, Enemy);
                 break;
@@ -140,7 +142,7 @@ public class PlayerManager : Singleton<PlayerManager>
                     Player.GetComponent<Player_Gunner>().Shild_Quit(true);
                     return;
                 }
-                else if (Player.GetComponent<Player_Gunner>().Is_SkillK)
+                else if (Player.GetComponent<Player_Gunner>().Is_SkillK && Enemy != "Drop")
                     return;
                 Player.GetComponent<Player>().Damage(damage, Enemy);
                 break;

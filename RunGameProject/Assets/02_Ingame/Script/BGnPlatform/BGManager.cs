@@ -133,7 +133,7 @@ public class BGManager : MonoBehaviour
             NowPhaeton = FuturePhaeton;
 
             FuturePhaeton = Instantiate(LevelPhaeton[level].Phaeton[phaeton], Tile[0].gameObject.transform);
-            FuturePhaeton.transform.position = new Vector3(2560, -30);
+            FuturePhaeton.transform.position = new Vector3(NowPhaeton.transform.position.x + 1280, -30);
             FuturePhaeton.SetActive(true);
 
             maxDistance -= 1280;

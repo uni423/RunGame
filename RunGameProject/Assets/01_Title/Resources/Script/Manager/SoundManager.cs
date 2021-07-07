@@ -33,15 +33,14 @@ public class SoundManager : Singleton<SoundManager>
         bgmPlayer.Play();
     }
 
-    public void PlaySound(string clipname, bool stop = true, float volume = 1f)
+    public void PlaySound(string clipname, bool stop = true)
     {
         if (!clipDic.ContainsKey(clipname))
         { Debug.Log("coludn't find sound"); return; }
 
-        if (stop)
-            StopSFX();
+        if (stop) StopSFX();
 
-        sfxPlayer.PlayOneShot(clipDic[clipname], volume * sfxVolume);
+        sfxPlayer.PlayOneShot(clipDic[clipname], sfxVolume);
     }
 
     public GameObject LoopSound(string clipname)
@@ -67,7 +66,7 @@ public class SoundManager : Singleton<SoundManager>
         StartCoroutine(Fade("out"));
         bgmPlayer.Stop();
     }
-    
+
     public void StopSFX()
     {
         StartCoroutine(Fade("out"));
@@ -79,10 +78,10 @@ public class SoundManager : Singleton<SoundManager>
         if (name != null)
         {
             if (!clipDic.ContainsKey(name))
-                { Debug.Log("coludn't find sound"); return; }
+            { Debug.Log("coludn't find sound"); return; }
             else
                 bgmPlayer.clip = clipDic[name];
-        }   
+        }
         StartCoroutine(Fade("In"));
         bgmPlayer.Play();
     }

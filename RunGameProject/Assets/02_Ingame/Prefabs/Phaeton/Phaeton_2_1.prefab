@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2351094906707560962}
   - component: {fileID: 2351094906707560961}
   - component: {fileID: 2351094906707560963}
+  - component: {fileID: -6020738858645934005}
   m_Layer: 0
   m_Name: Phaeton_2_1
   m_TagString: Ground
@@ -447,11 +448,30 @@ TilemapCollider2D:
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_UsedByEffector: 0
+  m_UsedByEffector: 1
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0.00001
+--- !u!251 &-6020738858645934005
+PlatformEffector2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2351094906707560967}
+  m_Enabled: 1
+  m_UseColliderMask: 1
+  m_ColliderMask:
+    serializedVersion: 2
+    m_Bits: 256
+  m_RotationalOffset: 0
+  m_UseOneWay: 1
+  m_UseOneWayGrouping: 0
+  m_SurfaceArc: 90
+  m_UseSideFriction: 0
+  m_UseSideBounce: 0
+  m_SideArc: 0
 --- !u!1001 &6964026950339875113
 PrefabInstance:
   m_ObjectHideFlags: 0

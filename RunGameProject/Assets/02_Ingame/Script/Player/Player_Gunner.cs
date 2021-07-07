@@ -45,6 +45,7 @@ public class Player_Gunner : Player
         switch (Combo)
         {
             case 1:
+                Debug.Log("1");
                 SoundManager.Instance.PlaySound("Gunner_1");
                 break;
             case 2:
@@ -60,8 +61,8 @@ public class Player_Gunner : Player
             default:
                 break;
         }
-        SoundManager.Instance.PlaySound("SFX_Gunner_Attack");
-       ComboTimer = Timer(3f, () => { Debug.Log("Combo reset" + Combo); Combo = 0; });
+        SoundManager.Instance.PlaySound("SFX_Gunner_Attack", false);
+       ComboTimer = Timer(3f, () => { Combo = 0; });
         StartCoroutine(ComboTimer);
 
         Is_Attack = false;

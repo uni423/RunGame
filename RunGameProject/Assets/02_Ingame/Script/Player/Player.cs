@@ -38,6 +38,7 @@ public class Player : MonoBehaviour
     public delegate void Delegate();
 
     public Animator Anim;
+    public Animator Effect_Anim;
 
     [Space(10f)]
     public BGManager BG;
@@ -243,13 +244,13 @@ public class Player : MonoBehaviour
     {
         if (GameManager.Instance.CharacterCode == CharType.Knight)
         {
-            PlayerManager.Instance.Character_Swich(CharType.Gunner);
-            SoundManager.Instance.PlaySound("Gunner_Swich");
+            if (PlayerManager.Instance.Character_Swich(CharType.Gunner))
+                SoundManager.Instance.PlaySound("Gunner_Swich");
         }
         else if (GameManager.Instance.CharacterCode == CharType.Gunner)
         {
-            PlayerManager.Instance.Character_Swich(CharType.Knight);
-            SoundManager.Instance.PlaySound("Knight_Swich");
+            if (PlayerManager.Instance.Character_Swich(CharType.Knight))
+                SoundManager.Instance.PlaySound("Knight_Swich");
         }
     }
 
@@ -274,6 +275,7 @@ public class Player : MonoBehaviour
 
             if (transform.position.y > -300)
             {
+                Anim.SetBool("Jump_Up", false);
                 Anim.SetBool("Jump_Down", true);
             }
         }
@@ -321,7 +323,7 @@ public class Player : MonoBehaviour
         float i = duration;
         float velocity = ((startvalue - (-600)) / duration) * 0.02f;
 
-        while(i > 0)
+        while (i > 0)
         {
             yield return new WaitForSeconds(0.02f);
             i -= 0.02f;

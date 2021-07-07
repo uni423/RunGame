@@ -60,11 +60,12 @@ public class Player_Knight : Player
             default:
                 break;
         }
-        SoundManager.Instance.PlaySound("SFX_Knight_Attack");
-        ComboTimer = Timer(3f, () => { Debug.Log("Combo reset" + Combo); Combo = 0; });
+        SoundManager.Instance.PlaySound("SFX_Knight_Attack", false);
+        ComboTimer = Timer(3f, () => { Combo = 0; });
         StartCoroutine(ComboTimer);
 
         Is_Attack = false;
+        Effect_Anim.SetTrigger("Is_Attack");
         Anim.SetBool("Is_Attack", true);
         Lerp = lerp(RangeEnemyObj.gameObject.transform.position.x - 100, 1 / Stat.AdSpeed,
             () =>
@@ -122,12 +123,15 @@ public class Player_Knight : Player
         //'지속시간' 동안 무적, 1초마다 '사거리'만큼 돌진(이동), 닿는 적에겐 틱 1초마다 '대미지'만큼 입힌다
         Debug.Log("skSpecial");
 
+        Effect_Anim.SetBool("Is_K", true);
         SoundManager.Instance.PlaySound("Knight_K");
         SoundManager.Instance.PlaySound("SFX_Knight_K", false);
         Is_SkillK = true;
         StartCoroutine(Timer(skK.Time,
             (() =>
             {
+                SoundManager.Instance.StopSFX();
+                Effect_Anim.SetBool("Is_K", false);
                 Is_SkillK = false;
                 BG.In_Speed(Stat.Speed);
                 RangeColli.SetActive(true);
