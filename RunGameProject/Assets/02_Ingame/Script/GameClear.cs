@@ -17,7 +17,7 @@ public class GameClear : MonoBehaviour
         {
             Debug.Log("GameClear");
             GameManager.Instance.IsGamePlay = false;
-            PlayerManager.Instance.Player.transform.DOMove(new Vector3(1000, -300), 1f)
+            GameManager.Instance.playerMG.Player.transform.DOMove(new Vector3(1000, -300), 1f)
                 .SetEase(Ease.Linear);
             UI_gameClear.gameObject.SetActive(true);
             UI_gameClear.DOFade(0f, 0.5f)

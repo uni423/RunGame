@@ -136,7 +136,6 @@ public class Player_Knight : Player
         StartCoroutine(Timer(skK.Time,
             (() =>
             {
-                SoundManager.Instance.StopSFX();
                 Effect_Anim.SetBool("Is_K", false);
                 Is_SkillK = false;
                 BG.In_Speed(Stat.Speed);

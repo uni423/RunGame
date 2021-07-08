@@ -4,7 +4,7 @@ using UnityEngine;
 using Define;
 using DG.Tweening;
 
-public class PlayerManager : Singleton<PlayerManager>
+public class PlayerManager : MonoBehaviour
 {
     [SerializeField]
     private List<GameObject> Chars = new List<GameObject>();
@@ -19,8 +19,6 @@ public class PlayerManager : Singleton<PlayerManager>
 
     public float swith_MaxCollTime;
     public float swith_NowCollTime = 0;
-
-    public delegate void Delegate();
 
     public void Init()
     {
@@ -84,7 +82,6 @@ public class PlayerManager : Singleton<PlayerManager>
         }
         StatSaves.Clear();
         Chars.Clear();
-        //Debug.LogError("초기화 완료");
     }
 
     public bool Character_Swich(CharType type)
@@ -138,12 +135,6 @@ public class PlayerManager : Singleton<PlayerManager>
                     return;
                 Player.GetComponent<Player>().Damage(damage, Enemy);
                 break;
-
         }
-    }
-    IEnumerator Timer(float time, Delegate dele)
-    {
-        yield return new WaitForSeconds(time);
-        dele();
     }
 }

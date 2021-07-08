@@ -53,6 +53,8 @@ public class BGManager : MonoBehaviour
             minLevel = ((int)GameManager.Instance.stage % 10);
             maxLevel = ((int)GameManager.Instance.stage % 10) + 2;
 
+            Debug.Log(GameManager.Instance.stage + " = " + minLevel + ", " + maxLevel);
+
             switch ((int)GameManager.Instance.stage / 10)
             {
                 case 0: maxDistance = 20000; break;

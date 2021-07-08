@@ -16,17 +16,14 @@ public class GameManager : Singleton<GameManager>
 
     public bool IsGamePlay = false;
 
-    //new void Awake()
-    //{
-    //    base.Awake();
-    //}
-     
     public void Ingame_Init()
     {
         Debug.Log("GameManager Init Start");
 
         if (SceneManager.GetActiveScene().name == "02_Ingame")
         {
+            stage = Stage.Stage1_1;
+
             playerMG = GameObject.FindObjectOfType<PlayerManager>();
             uiMG = GameObject.FindObjectOfType<UIManager02>();
             bgMG = GameObject.FindObjectOfType<BGManager>();
@@ -34,13 +31,13 @@ public class GameManager : Singleton<GameManager>
             bgMG.Init();
             playerMG.Init();
             //uiMG.Init();
-
-            stage = Stage.Stage1_1;
 
             IsGamePlay = true;
         }
         if (SceneManager.GetActiveScene().name == "02_Ingame_1-Boss")
         {
+            stage = Stage.Stage1_Boss;
+
             playerMG = GameObject.FindObjectOfType<PlayerManager>();
             uiMG = GameObject.FindObjectOfType<UIManager02>();
             bgMG = GameObject.FindObjectOfType<BGManager>();
@@ -48,8 +45,6 @@ public class GameManager : Singleton<GameManager>
             bgMG.Init();
             playerMG.Init();
             //uiMG.Init();
-
-            stage = Stage.Stage1_Boss;
 
             IsGamePlay = true;
         }

@@ -1,0 +1,139 @@
+
+Gunner.png
+size: 1596,1008
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+Layer 4
+  rotate: false
+  xy: 2, 6
+  size: 1000, 1000
+  orig: 1002, 1002
+  offset: 1, 1
+  index: -1
+뒷머리
+  rotate: false
+  xy: 1004, 511
+  size: 316, 183
+  orig: 316, 183
+  offset: 0, 0
+  index: -1
+상의망토
+  rotate: false
+  xy: 1438, 131
+  size: 138, 102
+  orig: 154, 108
+  offset: 0, 6
+  index: -1
+상체
+  rotate: false
+  xy: 1413, 235
+  size: 179, 252
+  orig: 179, 252
+  offset: 0, 0
+  index: -1
+앞머리
+  rotate: false
+  xy: 1004, 331
+  size: 279, 178
+  orig: 279, 201
+  offset: 0, 23
+  index: -1
+얼굴
+  rotate: false
+  xy: 1004, 696
+  size: 418, 310
+  orig: 418, 321
+  offset: 0, 11
+  index: -1
+옆머리
+  rotate: false
+  xy: 1424, 754
+  size: 170, 252
+  orig: 170, 252
+  offset: 0, 0
+  index: -1
+오른바깥팔
+  rotate: false
+  xy: 1285, 350
+  size: 126, 146
+  orig: 126, 146
+  offset: 0, 0
+  index: -1
+오른발
+  rotate: true
+  xy: 1322, 498
+  size: 105, 94
+  orig: 116, 95
+  offset: 0, 0
+  index: -1
+오른손가락
+  rotate: true
+  xy: 1413, 72
+  size: 57, 44
+  orig: 60, 46
+  offset: 2, 1
+  index: -1
+오른안쪽팔
+  rotate: true
+  xy: 1219, 2
+  size: 67, 103
+  orig: 67, 103
+  offset: 0, 0
+  index: -1
+오른종아리
+  rotate: true
+  xy: 1418, 489
+  size: 80, 174
+  orig: 80, 196
+  offset: 0, 22
+  index: -1
+오른허벅지
+  rotate: false
+  xy: 1116, 8
+  size: 101, 225
+  orig: 129, 225
+  offset: 0, 0
+  index: -1
+왼바깥팔
+  rotate: true
+  xy: 1422, 571
+  size: 102, 159
+  orig: 102, 159
+  offset: 0, 0
+  index: -1
+왼발
+  rotate: false
+  xy: 1322, 605
+  size: 98, 89
+  orig: 105, 90
+  offset: 7, 1
+  index: -1
+왼안쪽팔
+  rotate: true
+  xy: 1324, 10
+  size: 59, 112
+  orig: 59, 112
+  offset: 0, 0
+  index: -1
+왼종아리
+  rotate: true
+  xy: 1424, 675
+  size: 77, 170
+  orig: 97, 193
+  offset: 18, 19
+  index: -1
+왼허벅지
+  rotate: false
+  xy: 1004, 5
+  size: 110, 228
+  orig: 110, 228
+  offset: 0, 0
+  index: -1
+총
+  rotate: true
+  xy: 1219, 71
+  size: 258, 192
+  orig: 260, 195
+  offset: 1, 2
+  index: -1

@@ -100,7 +100,7 @@ public class Boss : MonoBehaviour
                 .SetAutoKill(false)
                 .AppendCallback(() => Ani.SetBool("Is_Jump_Press", true))
                 .AppendInterval(1f)
-                .Append(this.transform.DOJump(PlayerManager.Instance.Player.transform.position + new Vector3(0, 300f), 0f, 1, 1f)
+                .Append(this.transform.DOJump(GameManager.Instance.playerMG.Player.transform.position + new Vector3(0, 300f), 0f, 1, 1f)
                     .SetEase(sk2_Jump1))
                 .AppendCallback(() => 
                 { 

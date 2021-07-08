@@ -1,0 +1,237 @@
+
+Knight.png
+size: 2001,764
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+Qkdvo2
+  rotate: false
+  xy: 2, 123
+  size: 222, 639
+  orig: 222, 641
+  offset: 0, 1
+  index: -1
+겉망토
+  rotate: false
+  xy: 751, 3
+  size: 430, 309
+  orig: 430, 310
+  offset: 0, 0
+  index: -1
+더듬이
+  rotate: true
+  xy: 1948, 635
+  size: 127, 48
+  orig: 129, 49
+  offset: 1, 1
+  index: -1
+두상
+  rotate: true
+  xy: 1183, 48
+  size: 300, 292
+  orig: 300, 292
+  offset: 0, 0
+  index: -1
+뒷망토
+  rotate: true
+  xy: 1146, 350
+  size: 412, 240
+  orig: 412, 240
+  offset: 0, 0
+  index: -1
+머리끈 뒤
+  rotate: false
+  xy: 1730, 11
+  size: 89, 92
+  orig: 92, 95
+  offset: 2, 1
+  index: -1
+머리끈 앞
+  rotate: false
+  xy: 1821, 14
+  size: 88, 105
+  orig: 91, 107
+  offset: 2, 1
+  index: -1
+묶은머리1
+  rotate: true
+  xy: 1857, 418
+  size: 145, 142
+  orig: 145, 158
+  offset: 0, 15
+  index: -1
+묶은머리2
+  rotate: true
+  xy: 2, 2
+  size: 119, 240
+  orig: 119, 240
+  offset: 0, 0
+  index: -1
+묶은머리3
+  rotate: false
+  xy: 1388, 367
+  size: 167, 395
+  orig: 167, 395
+  offset: 0, 0
+  index: -1
+묶은머리4
+  rotate: false
+  xy: 977, 346
+  size: 167, 416
+  orig: 167, 416
+  offset: 0, 0
+  index: -1
+방패
+  rotate: true
+  xy: 226, 209
+  size: 553, 500
+  orig: 553, 500
+  offset: 0, 0
+  index: -1
+방패 손잡이
+  rotate: true
+  xy: 1619, 226
+  size: 141, 148
+  orig: 145, 148
+  offset: 4, 0
+  index: -1
+상체
+  rotate: false
+  xy: 436, 3
+  size: 137, 204
+  orig: 137, 204
+  offset: 0, 0
+  index: -1
+어깨갑주 앞
+  rotate: false
+  xy: 1849, 300
+  size: 74, 116
+  orig: 74, 116
+  offset: 0, 0
+  index: -1
+어꺠갑주 뒤
+  rotate: true
+  xy: 1557, 585
+  size: 59, 60
+  orig: 61, 60
+  offset: 0, 0
+  index: -1
+어꺠휘장
+  rotate: true
+  xy: 1557, 513
+  size: 70, 57
+  orig: 70, 57
+  offset: 0, 0
+  index: -1
+오른손
+  rotate: true
+  xy: 1607, 7
+  size: 94, 121
+  orig: 94, 121
+  offset: 0, 0
+  index: -1
+오른종아리
+  rotate: false
+  xy: 1619, 481
+  size: 109, 163
+  orig: 114, 165
+  offset: 1, 2
+  index: -1
+오른쪽 앞머리
+  rotate: false
+  xy: 575, 15
+  size: 174, 192
+  orig: 174, 192
+  offset: 0, 0
+  index: -1
+오른쪽 앞머리 안
+  rotate: true
+  xy: 1619, 105
+  size: 119, 154
+  orig: 119, 154
+  offset: 0, 0
+  index: -1
+오른쪽 옆머리
+  rotate: true
+  xy: 1769, 233
+  size: 65, 159
+  orig: 67, 161
+  offset: 1, 2
+  index: -1
+오른팔
+  rotate: true
+  xy: 1477, 6
+  size: 95, 128
+  orig: 95, 128
+  offset: 0, 0
+  index: -1
+오른허벅지
+  rotate: true
+  xy: 1730, 672
+  size: 90, 216
+  orig: 90, 216
+  offset: 0, 0
+  index: -1
+왼손
+  rotate: true
+  xy: 1557, 646
+  size: 116, 171
+  orig: 116, 171
+  offset: 0, 0
+  index: -1
+왼종아리
+  rotate: false
+  xy: 1770, 300
+  size: 77, 179
+  orig: 83, 179
+  offset: 0, 0
+  index: -1
+왼쪽 앞머리
+  rotate: true
+  xy: 244, 3
+  size: 204, 190
+  orig: 218, 190
+  offset: 8, 0
+  index: -1
+왼쪽 옆머리
+  rotate: false
+  xy: 1477, 103
+  size: 140, 262
+  orig: 150, 262
+  offset: 10, 0
+  index: -1
+왼팔
+  rotate: true
+  xy: 1730, 481
+  size: 82, 125
+  orig: 83, 125
+  offset: 0, 0
+  index: -1
+왼허벅지
+  rotate: true
+  xy: 1730, 565
+  size: 105, 214
+  orig: 106, 214
+  offset: 1, 0
+  index: -1
+치마
+  rotate: false
+  xy: 1775, 121
+  size: 208, 110
+  orig: 208, 110
+  offset: 0, 0
+  index: -1
+칼
+  rotate: true
+  xy: 728, 314
+  size: 448, 247
+  orig: 450, 247
+  offset: 2, 0
+  index: -1
+허리갑주
+  rotate: false
+  xy: 1557, 369
+  size: 211, 110
+  orig: 211, 111
+  offset: 0, 0
+  index: -1

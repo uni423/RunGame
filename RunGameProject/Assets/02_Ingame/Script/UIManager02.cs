@@ -13,6 +13,7 @@ public class UIManager02 : MonoBehaviour
     public GameObject HPnSP;
     public Image UI_hp;
     public Image UI_sp;
+    public Text UI_level;
 
     public GameObject Skill;
     public Transform UI_Skill1;
@@ -27,6 +28,8 @@ public class UIManager02 : MonoBehaviour
 
     public Image GameClear;
 
+    public PlayerManager playerMG;
+
     public void Start()
     {
         GameManager.Instance.Ingame_Init();
@@ -34,7 +37,7 @@ public class UIManager02 : MonoBehaviour
         switch(GameManager.Instance.stage)
         {
             case Define.Stage.Stage1_1:
-                SoundManager.Instance.PlayBGM("BGM_Stage_1");
+                //SoundManager.Instance.PlayBGM("BGM_Stage_1");
                 break;
             case Define.Stage.Stage1_Boss:
                 SoundManager.Instance.PlayBGM("BGM_Stage_1_Boss");
@@ -57,6 +60,8 @@ public class UIManager02 : MonoBehaviour
 
         UI_Shiny(1);
         UI_Shiny(2);
+
+        playerMG = GameManager.Instance.playerMG;
     }
 
     private void Update()
@@ -66,20 +71,23 @@ public class UIManager02 : MonoBehaviour
 
         time_Current = Time.time - time_Start;
 
+        //Level
+        UI_level.text = playerMG.Player.GetComponent<Player>().Stat.Level.ToString();
+
         //Hp, Sp
-        UI_hp.fillAmount = PlayerManager.Instance.Player.GetComponent<Player>().NowHpSp(1);
-        UI_sp.fillAmount = PlayerManager.Instance.Player.GetComponent<Player>().NowHpSp(2);
+        UI_hp.fillAmount = playerMG.Player.GetComponent<Player>().NowHpSp(1);
+        UI_sp.fillAmount = playerMG.Player.GetComponent<Player>().NowHpSp(2);
 
         //Skill
         switch (GameManager.Instance.CharacterCode)
         {
             case Define.CharType.Knight:
-                Skill1_Filed.fillAmount = PlayerManager.Instance.Player.GetComponent<Player>().SkillNowCool(1);
-                Skill2_Filed.fillAmount = PlayerManager.Instance.Player.GetComponent<Player>().SkillNowCool(2);
+                Skill1_Filed.fillAmount = playerMG.Player.GetComponent<Player>().SkillNowCool(1);
+                Skill2_Filed.fillAmount = playerMG.Player.GetComponent<Player>().SkillNowCool(2);
                 break;
             case Define.CharType.Gunner:
-                Skill1_Filed.fillAmount = PlayerManager.Instance.Player.GetComponent<Player>().SkillNowCool(1);
-                Skill2_Filed.fillAmount = PlayerManager.Instance.Player.GetComponent<Player>().SkillNowCool(2);
+                Skill1_Filed.fillAmount = playerMG.Player.GetComponent<Player>().SkillNowCool(1);
+                Skill2_Filed.fillAmount = playerMG.Player.GetComponent<Player>().SkillNowCool(2);
                 break;
         }
     }
@@ -153,14 +161,14 @@ public class UIManager02 : MonoBehaviour
 
     public void ReStart()
     {
-        PlayerManager.Instance.ReleaseStat();
+        GameManager.Instance.playerMG.ReleaseStat();
         LoadManager.Load(LoadManager.Scene.Ingame);
         LoadManager.LoaderCallback();
     }
 
     public void To_Title()
     {
-        PlayerManager.Instance.ReleaseStat();
+        GameManager.Instance.playerMG.ReleaseStat();
         LoadManager.Load(LoadManager.Scene.Title);
         LoadManager.LoaderCallback();
     }

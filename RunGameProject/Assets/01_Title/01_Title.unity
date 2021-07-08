@@ -654,7 +654,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CharacterCode: 0
-  stage: 0
+  stage: 1
   uiMG: {fileID: 0}
   playerMG: {fileID: 0}
   bgMG: {fileID: 0}

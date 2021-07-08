@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Gunner_SkeletonData
   m_EditorClassIdentifier: 
   atlasAssets:
-  - {fileID: 11400000, guid: 7ac6512b989f2b4459b5618cd9a82ac2, type: 2}
+  - {fileID: 11400000, guid: e8e19fc495db02c46a65ddc560d318a9, type: 2}
   scale: 1
-  skeletonJSON: {fileID: 4900000, guid: 75bdcbe54cf88484fa6acc903de3422e, type: 3}
+  skeletonJSON: {fileID: 4900000, guid: c0ca5a7c617efc340a7378b777032413, type: 3}
   isUpgradingBlendModeMaterials: 0
   blendModeMaterials:
     requiresBlendModeMaterials: 0

@@ -114,12 +114,16 @@ public class Player : MonoBehaviour
             Stat.Level = 1;
 
             Is_Damage = false;
+            RangeEnemyObj = null;
+            Is_SkillA = false;
+            Is_SkillK = false;
             return;
         }
 
         Stat.NowExp -= Stat.MaxExp;
         Stat.MaxExp += Stat.AddExp;
         Stat.MaxHp += Mathf.Round(Stat.MaxHp * Stat.AddHp);
+        Stat.NowHp += Mathf.Round(Stat.MaxHp * Stat.AddHp);
         Stat.MaxSp += Stat.AddSp;
         Stat.Ad += Stat.Addad;
         Stat.Speed += Mathf.Round(Stat.Speed * Stat.Addspeed);
@@ -140,7 +144,8 @@ public class Player : MonoBehaviour
         //점프 후 하강할때 가속도 추가
         if (!Is_Jumping && myRigid.velocity.y < 10 && Is_Down)
         {
-            myRigid.velocity = Vector2.up * Physics2D.gravity.y * 8f;
+            Vector2 vel = new Vector2(myRigid.velocity.x, (Physics2D.gravity * 8f).y);
+            myRigid.velocity = vel;
             Is_Down = false;
             Anim.SetBool("Jump_Up", false);
             Anim.SetBool("Jump_Down", true);
@@ -207,12 +212,14 @@ public class Player : MonoBehaviour
 
         if (swich)
         {
-            myRigid.velocity = Vector2.up * (Stat.JumpPower * 0.7f) * 5.5f;
+            Vector2 vel = new Vector2(myRigid.velocity.x, (Stat.JumpPower * 0.7f) * 5.5f);
+            myRigid.velocity = vel;
             Is_SwichJumping = true;
         }
         else
         {
-            myRigid.velocity = Vector2.up * Stat.JumpPower * 5.5f;
+            Vector2 vel = new Vector2(myRigid.velocity.x, Stat.JumpPower * 5.5f);
+            myRigid.velocity = vel;
             Is_SwichJumping = false;
             Is_Jumping = false;
         }
@@ -235,7 +242,6 @@ public class Player : MonoBehaviour
         if (Is_Damage)
             return;
 
-        Debug.Log("Dash");
         BG.In_Speed(Stat.Speed * 2.3f);
         Is_Dash = true;
     }
@@ -248,14 +254,17 @@ public class Player : MonoBehaviour
 
     private void Character_Swich()
     {
+        if (Is_SkillK)
+            return;
+
         if (GameManager.Instance.CharacterCode == CharType.Knight)
         {
-            if (PlayerManager.Instance.Character_Swich(CharType.Gunner))
+            if (GameManager.Instance.playerMG.Character_Swich(CharType.Gunner))
                 SoundManager.Instance.PlaySound("Gunner_Swich");
         }
         else if (GameManager.Instance.CharacterCode == CharType.Gunner)
         {
-            if (PlayerManager.Instance.Character_Swich(CharType.Knight))
+            if (GameManager.Instance.playerMG.Character_Swich(CharType.Knight))
                 SoundManager.Instance.PlaySound("Knight_Swich");
         }
     }
@@ -291,7 +300,7 @@ public class Player : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Drop"))
         {
-            PlayerManager.Instance.Damage(99999, "Drop");
+            GameManager.Instance.playerMG.Damage(99999, "Drop");
             other.gameObject.SetActive(false);
             this.gameObject.SetActive(false);
         }
@@ -319,36 +328,34 @@ public class Player : MonoBehaviour
     {
         transform.position = new Vector3(startvalue, transform.position.y);
 
-        float vector;
+        Vector2 vector;
 
         if (startvalue > -600)
-            vector = Vector2.left.x;
+            vector = Vector2.left;
         else
-            vector = Vector2.right.x;
+            vector = Vector2.right;
 
         float i = duration;
-        float velocity = ((startvalue - (-600)) / duration) * 0.01f;
+        //float velocity = ((startvalue - (-600)) / duration) * 0.01f;
+        float velocity = ((startvalue - (-600)) / duration) * 2.5f;
+
+        Vector2 vel = new Vector2(vector.x * velocity, myRigid.velocity.y/* + 500f*/);
+        myRigid.velocity = vel;
 
         while (i > 0)
         {
-            yield return new WaitForSeconds(0.01f);
-            i -= 0.01f;
+            yield return null;
+            i -= Time.deltaTime;
 
-            transform.position += vector * new Vector3(velocity, 0);
-            if (vector > 0)
-            {
-                if (transform.position.x >= -610)
-                    break;
-            }
-            else if (vector < 0)
-            {
-                if (transform.position.x <= -590)
-                    break;
-            }
+            //transform.position += vector * new Vector3(velocity, 0);
+            if ((vector.x > 0 && transform.position.x >= -600) ||
+                (vector.x < 0 && transform.position.x <= -600))
+                break;
         }
 
-        yield return new WaitForSeconds(i);
+        myRigid.velocity = new Vector2(0, myRigid.velocity.y);
         transform.position = new Vector3(-600, transform.position.y);
+        yield return new WaitForSeconds(i);
 
         if (dele != null) dele();
 
