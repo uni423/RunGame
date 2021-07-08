@@ -12,7 +12,7 @@ public class Player_Gunner : Player
 
         skA = new Skill(1f, 0, 0, 3.5f);
         skA.NowCoolTime = 0f;
-        skK = new Skill(3f, 100, 300 + (2f * this.Stat.Speed), 20f);
+        skK = new Skill(7f, 100, 300 + (2f * this.Stat.Speed), 20f);
         skK.NowCoolTime = 0f;
     }
 
@@ -45,7 +45,6 @@ public class Player_Gunner : Player
         switch (Combo)
         {
             case 1:
-                Debug.Log("1");
                 SoundManager.Instance.PlaySound("Gunner_1");
                 break;
             case 2:
@@ -90,7 +89,6 @@ public class Player_Gunner : Player
         if (skA.NowCoolTime > 0)
             return;
 
-        Debug.Log("Shild");
         Is_SkillA = true;
         StartCoroutine(Timer(skA.Time, (() => { if (Is_SkillA) Shild_Quit(); })));
     }
@@ -128,6 +126,7 @@ public class Player_Gunner : Player
         StartCoroutine(Timer(skK.Time,
             (() =>
             {
+                SoundManager.Instance.StopSFX();
                 Is_SkillK = false;
                 BG.In_Speed(Stat.Speed);
                 RangeColli.SetActive(true);

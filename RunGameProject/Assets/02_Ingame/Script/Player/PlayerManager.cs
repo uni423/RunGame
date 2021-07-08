@@ -19,7 +19,6 @@ public class PlayerManager : Singleton<PlayerManager>
 
     public float swith_MaxCollTime;
     public float swith_NowCollTime = 0;
-    public bool Is_Invincibility = false;
 
     public delegate void Delegate();
 
@@ -85,7 +84,7 @@ public class PlayerManager : Singleton<PlayerManager>
         }
         StatSaves.Clear();
         Chars.Clear();
-        Debug.LogError("초기화 완료");
+        //Debug.LogError("초기화 완료");
     }
 
     public bool Character_Swich(CharType type)
@@ -106,9 +105,6 @@ public class PlayerManager : Singleton<PlayerManager>
         swith_NowCollTime = swith_MaxCollTime;
         DOTween.To(() => swith_NowCollTime, x => swith_NowCollTime = x, 0, swith_MaxCollTime)
                      .SetEase(Ease.Linear);
-        //무적
-        Is_Invincibility = true;
-        StartCoroutine(Timer(0.5f, () => { Is_Invincibility = false; }));
 
         //점프
         Player.GetComponent<Player>().Jump(true);
@@ -118,15 +114,11 @@ public class PlayerManager : Singleton<PlayerManager>
 
     public void Damage(float damage, string Enemy)
     {
-        if (Is_Invincibility)
-            return;
-
         switch (GameManager.Instance.CharacterCode)
         {
             case CharType.Knight:
                 if (Player.GetComponent<Player_Knight>().Is_SkillA && Enemy != "Drop")
                 {
-                    Debug.Log("Shild");
                     Player.GetComponent<Player_Knight>().Shild_Quit(true);
                     return;
                 }

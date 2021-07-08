@@ -59,15 +59,23 @@ public class BGManager : MonoBehaviour
                 case 1: maxDistance = 12500; break;
                 case 2: maxDistance = 15000; break;
             }
+
             PastPhaeton = Instantiate(LevelPhaeton[0].Phaeton[0], Tile[0].gameObject.transform);
             PastPhaeton.transform.position = new Vector3(0, -30);
             PastPhaeton.SetActive(true);
 
-            NowPhaeton = Instantiate(LevelPhaeton[0].Phaeton[0], Tile[0].gameObject.transform);
+            int level = 0;
+            int phaeton = 0;
+
+            level = Random.Range(minLevel, maxLevel + 1);
+            phaeton = Random.Range(0, LevelPhaeton[level].Phaeton.Count);
+            NowPhaeton = Instantiate(LevelPhaeton[level].Phaeton[phaeton], Tile[0].gameObject.transform);
             NowPhaeton.transform.position = new Vector3(1280, -30);
             NowPhaeton.SetActive(true);
 
-            FuturePhaeton = Instantiate(LevelPhaeton[0].Phaeton[0], Tile[0].gameObject.transform);
+            level = Random.Range(minLevel, maxLevel + 1);
+            phaeton = Random.Range(0, LevelPhaeton[level].Phaeton.Count);
+            FuturePhaeton = Instantiate(LevelPhaeton[level].Phaeton[phaeton], Tile[0].gameObject.transform);
             FuturePhaeton.transform.position = new Vector3(2560, -30);
             FuturePhaeton.SetActive(true);
             GameClear.SetActive(false);
@@ -125,7 +133,7 @@ public class BGManager : MonoBehaviour
                 level = Random.Range(minLevel, maxLevel + 1);
                 phaeton = Random.Range(0, LevelPhaeton[level].Phaeton.Count);
             }
-            while ((FuturePhaeton.name == LevelPhaeton[level].Phaeton[phaeton].name));
+            while (FuturePhaeton.name == LevelPhaeton[level].Phaeton[phaeton].name);
 
             Destroy(PastPhaeton);
 

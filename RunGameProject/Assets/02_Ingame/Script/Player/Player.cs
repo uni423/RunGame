@@ -77,7 +77,7 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.D))
             if (!Is_SkillK) Dash();
         if (Input.GetKeyUp(KeyCode.D))
-            Dash_Quit();
+            if (Is_Dash) Dash_Quit();
         if (Input.GetKeyDown(KeyCode.L))
             Character_Swich();
 
@@ -112,6 +112,8 @@ public class Player : MonoBehaviour
             Stat.NowSp = Stat.MaxSp;
             GameManager.Instance.bgMG.In_Speed(Stat.Speed);
             Stat.Level = 1;
+
+            Is_Damage = false;
             return;
         }
 
@@ -147,6 +149,9 @@ public class Player : MonoBehaviour
 
     public void Damage(float damage, string Enemy)
     {
+        if (Lerp != null)
+            return;
+
         Is_Damage = true;
         if (Stat.NowHp - damage <= 0)
         {
@@ -178,7 +183,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    public float SkillNowColl(int num)
+    public float SkillNowCool(int num)
     {
         switch (num)
         {
@@ -194,7 +199,7 @@ public class Player : MonoBehaviour
     #region Skills
     public void Jump(bool swich = false) //점프
     {
-        if (!Is_Jumping && !swich)
+        if (!Is_Jumping && !swich && !Is_SkillK || (Is_SkillK && transform.position.y >= 400f))
             return;
 
         if (!Is_Attack)
@@ -230,6 +235,7 @@ public class Player : MonoBehaviour
         if (Is_Damage)
             return;
 
+        Debug.Log("Dash");
         BG.In_Speed(Stat.Speed * 2.3f);
         Is_Dash = true;
     }
@@ -321,12 +327,12 @@ public class Player : MonoBehaviour
             vector = Vector2.right.x;
 
         float i = duration;
-        float velocity = ((startvalue - (-600)) / duration) * 0.02f;
+        float velocity = ((startvalue - (-600)) / duration) * 0.01f;
 
         while (i > 0)
         {
-            yield return new WaitForSeconds(0.02f);
-            i -= 0.02f;
+            yield return new WaitForSeconds(0.01f);
+            i -= 0.01f;
 
             transform.position += vector * new Vector3(velocity, 0);
             if (vector > 0)

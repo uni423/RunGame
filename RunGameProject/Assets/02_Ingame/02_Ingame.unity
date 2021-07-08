@@ -44,7 +44,7 @@ RenderSettings:
 LightmapSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 11
-  m_GIWorkflowMode: 0
+  m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -22763,9 +22763,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0e5167fc50ba163469e79c6dc75ea479, type: 2}
   StatSaves: []
   Player: {fileID: 0}
-  swith_MaxCollTime: 1
+  swith_MaxCollTime: 3
   swith_NowCollTime: 0
-  Is_Invincibility: 0
 --- !u!1 &627191500
 GameObject:
   m_ObjectHideFlags: 0
@@ -26630,7 +26629,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!82 &1570450109
 AudioSource:
   m_ObjectHideFlags: 0

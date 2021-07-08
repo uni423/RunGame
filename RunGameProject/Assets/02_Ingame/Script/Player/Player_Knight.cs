@@ -39,6 +39,12 @@ public class Player_Knight : Player
         if (!Is_AttackRange || !Is_Jumping || !Is_Attack)
             return;
 
+        if (RangeEnemyObj == null)
+        {
+            Debug.Log("Null Object");
+            return;
+        }
+
         Stat.NowExp += RangeEnemyObj.Damage(Stat.Ad);
 
         Combo += 1;

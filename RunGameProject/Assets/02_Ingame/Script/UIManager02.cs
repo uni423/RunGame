@@ -74,12 +74,12 @@ public class UIManager02 : MonoBehaviour
         switch (GameManager.Instance.CharacterCode)
         {
             case Define.CharType.Knight:
-                Skill1_Filed.fillAmount = PlayerManager.Instance.Player.GetComponent<Player>().SkillNowColl(1);
-                Skill2_Filed.fillAmount = PlayerManager.Instance.Player.GetComponent<Player>().SkillNowColl(2);
+                Skill1_Filed.fillAmount = PlayerManager.Instance.Player.GetComponent<Player>().SkillNowCool(1);
+                Skill2_Filed.fillAmount = PlayerManager.Instance.Player.GetComponent<Player>().SkillNowCool(2);
                 break;
             case Define.CharType.Gunner:
-                Skill1_Filed.fillAmount = PlayerManager.Instance.Player.GetComponent<Player>().SkillNowColl(1);
-                Skill2_Filed.fillAmount = PlayerManager.Instance.Player.GetComponent<Player>().SkillNowColl(2);
+                Skill1_Filed.fillAmount = PlayerManager.Instance.Player.GetComponent<Player>().SkillNowCool(1);
+                Skill2_Filed.fillAmount = PlayerManager.Instance.Player.GetComponent<Player>().SkillNowCool(2);
                 break;
         }
     }
@@ -169,6 +169,8 @@ public class UIManager02 : MonoBehaviour
 
     public IEnumerator Game_Over_Anim()
     {
+        SoundManager.Instance.StopBGM();
+
         //Active 켜주기, UI투명
         Over_Obj.gameObject.SetActive(true);
         Over_UIs.GetComponent<CanvasGroup>().alpha = 0;

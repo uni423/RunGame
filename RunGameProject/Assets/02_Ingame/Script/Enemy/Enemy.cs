@@ -42,6 +42,8 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (!GameManager.Instance.IsGamePlay)
+            return;
         if (collision.gameObject.tag == "Player")
         {
             if (!Is_Dead)
