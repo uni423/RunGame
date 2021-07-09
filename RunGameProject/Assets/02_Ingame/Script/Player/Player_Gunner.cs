@@ -10,9 +10,9 @@ public class Player_Gunner : Player
     {
         base.init();
 
-        skA = new Skill(1f, 0, 0, 3.5f);
+        skA = new Skill(1.5f, 0, 100, 3.5f);
         skA.NowCoolTime = 0f;
-        skK = new Skill(7f, 100, 300 + (2f * this.Stat.Speed), 20f);
+        skK = new Skill(7f, 100 + (0.5f * Stat.Ad), 500, 25f);
         skK.NowCoolTime = 0f;
     }
 
@@ -66,7 +66,7 @@ public class Player_Gunner : Player
 
         Is_Attack = false;
         Anim.SetBool("Is_Attack", true);
-        Lerp = lerp(RangeEnemyObj.gameObject.transform.position.x - 100, 1 / Stat.AdSpeed,
+        Lerp = lerp(RangeEnemyObj.gameObject.transform.position.x - Stat.AdDistance, 1 / Stat.AdSpeed,
             () =>
             {
                 Is_Attack = true;

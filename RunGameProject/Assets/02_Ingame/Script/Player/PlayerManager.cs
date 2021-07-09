@@ -105,6 +105,7 @@ public class PlayerManager : MonoBehaviour
 
         //점프
         Player.GetComponent<Player>().Jump(true);
+        Player.GetComponent<Player>().Anim.SetTrigger("Is_Swich");
 
         return true;
     }

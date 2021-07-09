@@ -73,7 +73,7 @@ public class Player_Knight : Player
         Is_Attack = false;
         Effect_Anim.SetTrigger("Is_Attack");
         Anim.SetBool("Is_Attack", true);
-        Lerp = lerp(RangeEnemyObj.gameObject.transform.position.x - 100, 1 / Stat.AdSpeed,
+        Lerp = lerp(RangeEnemyObj.gameObject.transform.position.x - Stat.AdDistance, 1 / Stat.AdSpeed,
             () =>
             {
                 Is_Attack = true;

@@ -23608,8 +23608,8 @@ MonoBehaviour:
   translator:
     autoReset: 1
     useCustomMixMode: 1
-    layerMixModes: 01000000
-    layerBlendModes: 01000000
+    layerMixModes: 0100000000000000
+    layerBlendModes: 0100000003000000
 --- !u!95 &919458467
 Animator:
   serializedVersion: 3
@@ -26709,7 +26709,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!82 &1570450109
 AudioSource:
   m_ObjectHideFlags: 0
