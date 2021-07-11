@@ -172,6 +172,7 @@ public class BGManager : MonoBehaviour
             FuturePhaeton.SetActive(true);
 
             maxDistance -= 1280;
+            GameManager.Instance.score += 1280;
         }
         else if (!GameClear.activeSelf)
         {

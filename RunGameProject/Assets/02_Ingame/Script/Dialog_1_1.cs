@@ -68,7 +68,7 @@ public class Dialog_1_1 : MonoBehaviour
                 GameManager.Instance.stage = Define.Stage.Stage1_Boss;
 
                 DOTween.Kill(GameManager.Instance.playerMG.Player);
-                LoadManager.Load(LoadManager.Scene.Ingame);
+                LoadManager.Load(LoadManager.Scene.Boss);
                 LoadManager.LoaderCallback();
             }));
         }

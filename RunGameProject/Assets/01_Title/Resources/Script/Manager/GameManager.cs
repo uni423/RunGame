@@ -16,6 +16,8 @@ public class GameManager : Singleton<GameManager>
 
     public bool IsGamePlay = false;
 
+    public int score = 0;
+
     public void Ingame_Init()
     {
         Debug.Log("GameManager Init Start");

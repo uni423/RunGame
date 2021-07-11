@@ -543,6 +543,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   clips:
+  - {fileID: 8300000, guid: 4fc05de53d7787c48893b21f83812ea2, type: 3}
   - {fileID: 8300000, guid: ae73c0deb82625541b883ab712fb9036, type: 3}
   - {fileID: 8300000, guid: edc56a2b3c154e741a36782e97f338da, type: 3}
   - {fileID: 8300000, guid: 182a91e9687b1e84bb1d9e88c654a22f, type: 3}

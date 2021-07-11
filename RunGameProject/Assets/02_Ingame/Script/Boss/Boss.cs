@@ -1,37 +1,35 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using DG.Tweening;
 using Define;
 
-public class Boss : MonoBehaviour
+public class Boss : Enemy
 {
-    public EnemyData stat;
-    public float NowHp;
-    public bool Is_Dead;
     public bool Is_Damage;
 
     public bool Is_SkillPlay = true;
     public bool Is_Rage = false;
     public Skill sk1;
     public Skill sk2;
-    public Sequence sk_Sequence;
+    public Sequence sk1_Sequence;
+    public Sequence sk2_Sequence;
     [SerializeField] private AnimationCurve sk2_Jump1;
     [SerializeField] private AnimationCurve sk2_Jump2;
 
     public delegate void Delegate();
 
-    public MeshRenderer myren;
     public Collider2D myColl;
+    public Animator Ani;
 
     public GameObject sk1_Effect;
 
     public Collider2D skill2_Coll;
 
-    public Animator Ani;
+    public Image UI_Boss_Hp;
 
-
-    public void Start()
+    new void Start()
     {
         NowHp = stat.MaxHp;
         Is_Dead = false;
@@ -48,25 +46,30 @@ public class Boss : MonoBehaviour
     {
         if (!GameManager.Instance.IsGamePlay)
             return;
+
+        UI_Boss_Hp.fillAmount = NowHp / stat.MaxHp;
+
         if (!Is_SkillPlay)
         {
             int rand = Random.Range(0, 100);
             if (rand > 40)
                 Skill_1(); //60%확률로 발동
             else
-                Skill_2(); //40%확률로 발동
+                Skill_1(); //40%확률로 발동
 
             Is_SkillPlay = true;
         }
     }
 
-    public void Damage(float damage, string Enemy)
+    new public void Damage(float damage)
     {
-        Is_Damage = true;
-        myren.material.DOColor(Color.red, 0.5f)
-            .From();
-        Ani.SetTrigger("Hiting");
+        NowHp -= damage;
+        if (NowHp <= 0)
+            StartCoroutine(Dead());
+        if (sk1_Sequence == null && sk2_Sequence == null)
+            Ani.SetTrigger("Hit");
 
+        Is_Damage = true;
         StartCoroutine(Timer(0.5f, () => { Is_Damage = false; }));
     }
 
@@ -76,16 +79,32 @@ public class Boss : MonoBehaviour
         //충격파는 거리비례 크기가 커진다. 충격파의 초기 Y범위는 200이며, 거리 100당 y범위가 50씩 늘어난다
         //60%확률로 발동
 
-        Ani.SetTrigger("Jumping");
-        this.transform.DOLocalJump(this.transform.position, 500, 1, 1f)
-            .SetEase(Ease.Linear)
-            .SetDelay(0.3f);
-        StartCoroutine(Timer(1.3f, () =>
+        if (sk1_Sequence == null)
         {
-            Camera.main.DOShakePosition(0.5f, 150);
-            sk1_Effect.gameObject.SetActive(true);
-            StartCoroutine(Timer(1f, () => { Is_SkillPlay = false; }));
-        }));
+            sk1_Sequence = DOTween.Sequence();
+            sk1_Sequence
+                .SetAutoKill(false)
+                .AppendCallback(() => Ani.SetBool("Is_Jump_Press", true))
+                .AppendInterval(0.3f)
+                .AppendCallback(() => Ani.SetBool("Is_Jump_Up", true))
+                .Append(this.transform.DOLocalJump(this.transform.position, 500f, 1, 1f).SetEase(Ease.Linear))
+                .InsertCallback(1f, () =>
+                {
+                    Ani.SetBool("Is_Jump_Down", true);
+                    Ani.SetBool("Is_Jump_Press", false);
+                    Ani.SetBool("Is_Jump_Up", false);
+                })
+                .AppendCallback(() =>
+                {
+                    sk1_Effect.gameObject.SetActive(true);
+                    Ani.SetBool("Is_Jump_Down", false);
+                })
+                .Append(Camera.main.DOShakePosition(0.5f, 150))
+                .AppendInterval(1f)
+                .AppendCallback(() => Is_SkillPlay = false);
+        }
+        else
+            sk1_Sequence.Restart();
     }
 
     public void Skill_2()
@@ -93,10 +112,10 @@ public class Boss : MonoBehaviour
         //1.5초간 공중에 뜨고, 내려오는데 0.5초, 600 이라는 X범위를 가졌다.찍고 난 다음 0.5초간 경직, 다시 원래 자리로 점프한다.
         //40%확률로 발동
 
-        if (sk_Sequence == null)
+        if (sk2_Sequence == null)
         {
-            sk_Sequence = DOTween.Sequence();
-            sk_Sequence
+            sk2_Sequence = DOTween.Sequence();
+            sk2_Sequence
                 .SetAutoKill(false)
                 .AppendCallback(() => Ani.SetBool("Is_Jump_Press", true))
                 .AppendInterval(1f)
@@ -119,7 +138,7 @@ public class Boss : MonoBehaviour
                     StartCoroutine(Timer(1.5f, () => { Is_SkillPlay = false; })); });
         }
         else
-            sk_Sequence.Restart();
+            sk2_Sequence.Restart();
     }
 
     public void Skill_3()

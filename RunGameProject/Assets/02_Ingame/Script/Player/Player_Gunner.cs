@@ -37,7 +37,13 @@ public class Player_Gunner : Player
         if (!Is_AttackRange || !Is_Jumping || !Is_Attack)
             return;
 
-        Stat.NowExp += RangeEnemyObj.Damage(Stat.Ad);
+        if (!Is_BossStage)
+        {
+            Stat.NowExp += RangeEnemyObj.Damage(Stat.Ad);
+            GameManager.Instance.score += 100;
+        }
+        else
+            RangeEnemyObj.gameObject.GetComponent<Boss>().Damage(Stat.Ad);
 
         Combo += 1;
         switch (Combo)
@@ -53,19 +59,26 @@ public class Player_Gunner : Player
                 break;
             case 4:
                 SoundManager.Instance.PlaySound("Gunner_4");
+                break;
+            case 5:
+                SoundManager.Instance.PlaySound("Gunner_1");
                 Combo = 0;
                 break;
             default:
                 break;
         }
         SoundManager.Instance.PlaySound("SFX_Gunner_Attack", false);
-        ComboTimer = Timer(5f, () => { Combo = 0; });
+        if (ComboTimer != null) StopCoroutine(ComboTimer);
+        ComboTimer = Timer(5f, () => { Combo = 0; Debug.Log("Combo"); });
         StartCoroutine(ComboTimer);
 
         Is_Attack = false;
         Anim.SetBool("Is_Attack", true);
         Effect_Anim.SetTrigger("Is_Attack");
-        Effect_Hitting_Anim.SetTrigger("Is_Hitting");
+        if (Combo == 4)
+            Effect_Hitting_Anim.SetTrigger("Is_Charging");
+        else
+            Effect_Hitting_Anim.SetTrigger("Is_Hitting");
         Effect_Hitting_Anim.gameObject.transform.SetParent(RangeEnemyObj.gameObject.transform);
         Effect_Hitting_Anim.gameObject.transform.localPosition = new Vector3(0, 0);
         StartCoroutine(Timer(0.5f, () => Effect_Hitting_Anim.gameObject.transform.SetParent(this.transform)));
@@ -74,15 +87,30 @@ public class Player_Gunner : Player
         if (distance < -600)
             distance = -600;
 
-        Lerp = lerp(RangeEnemyObj.gameObject.transform.position.x - Stat.AdDistance, 1 / Stat.AdSpeed,
-            () =>
-            {
-                Is_Attack = true;
-                RangeDistance = 10000;
-                RangeEnemyObj = null;
-                Lerp = null;
-            });
-        StartCoroutine(Lerp);
+        if (!Is_BossStage)
+        {
+            Lerp = lerp_From(RangeEnemyObj.gameObject.transform.position.x - Stat.AdDistance, 1 / Stat.AdSpeed,
+                () =>
+                {
+                    Is_Attack = true;
+                    RangeDistance = 10000;
+                    RangeEnemyObj = null;
+                    Lerp = null;
+                });
+            StartCoroutine(Lerp);
+        }
+        else
+        {
+            Lerp = lerp(RangeEnemyObj.gameObject.transform.position.x - Stat.AdDistance, 1 / Stat.AdSpeed,
+                () =>
+                {
+                    Is_Attack = true;
+                    RangeDistance = 10000;
+                    RangeEnemyObj = null;
+                    Lerp = null;
+                });
+            StartCoroutine(Lerp);
+        }
 
         StartCoroutine(Timer(0.1f, () => Anim.SetBool("Is_Attack", false)));
 
@@ -104,7 +132,7 @@ public class Player_Gunner : Player
         transform.DOJump(new Vector3(transform.position.x - skA.Distance, -300), 100f, 1, 0.4f)
             .OnComplete(() =>
             {
-                Lerp = lerp(transform.position.x, 1.5f,
+                Lerp = lerp_From(transform.position.x, 1.5f,
                     () =>
                     {
                         BG.In_Speed(Stat.Speed, true);
@@ -128,13 +156,15 @@ public class Player_Gunner : Player
     {
         if (Is_SkillK || skK.NowCoolTime > 0)
             return;
-        if (Is_Dash)
+        if (Is_Dash && !Is_BossStage)
             Dash_Quit();
 
         //'지속시간'동안 '사거리'안에 들어오는 적에게 틱 0.5초마다 '대미지'만큼 입힌다
         Debug.Log("skSpecial");
 
         Effect_Anim.SetBool("Is_K", true);
+        Effect_Hitting_Anim.SetBool("Is_K_Hitting", true);
+        Effect_Anim.gameObject.transform.Find("Skill Effector2").gameObject.SetActive(true);
         SoundManager.Instance.PlaySound("SFX_Gunner_Attack");
         SoundManager.Instance.PlaySound("SFX_Gunner_K", false);
         Is_SkillK = true;
@@ -143,6 +173,8 @@ public class Player_Gunner : Player
             {
                 Is_SkillK = false;
                 Effect_Anim.SetBool("Is_K", false);
+                Effect_Hitting_Anim.SetBool("Is_K_Hitting", false);
+                Effect_Anim.gameObject.transform.Find("Skill Effector2").gameObject.SetActive(false);
                 skK.NowCoolTime = skK.MaxCoolTime;
                 UIM_2.UI_Shiny(2, false);
                 DOTween.To(() => skK.NowCoolTime, x => skK.NowCoolTime = x, 0, skK.MaxCoolTime)
@@ -153,7 +185,8 @@ public class Player_Gunner : Player
                     });
             })
             ));
-        BG.In_Speed(Stat.Speed, true);
+        if(!Is_BossStage)
+            BG.In_Speed(Stat.Speed, true);
     }
 
     public override void OnTriggerStay2D(Collider2D other)

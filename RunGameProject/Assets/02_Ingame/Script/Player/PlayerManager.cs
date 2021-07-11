@@ -97,6 +97,7 @@ public class PlayerManager : MonoBehaviour
         Player.transform.position = vector;
 
         Player.SetActive(true);
+        GameManager.Instance.score += 50;
 
         //쿨타임
         swith_NowCollTime = swith_MaxCollTime;

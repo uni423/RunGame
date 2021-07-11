@@ -23,7 +23,7 @@ public class Player_Knight : Player
 
         //스킬 입력 확인
         if (Input.GetKeyDown(KeyCode.J))
-            Attack(); 
+            Attack();
         if (Input.GetKeyDown(KeyCode.A))
             Shild();
         if (Input.GetKeyUp(KeyCode.A))
@@ -44,8 +44,10 @@ public class Player_Knight : Player
             Debug.Log("Null Object");
             return;
         }
-
-        Stat.NowExp += RangeEnemyObj.Damage(Stat.Ad);
+        if (!Is_BossStage)
+            Stat.NowExp += RangeEnemyObj.Damage(Stat.Ad);
+        else
+            RangeEnemyObj.gameObject.GetComponent<Boss>().Damage(Stat.Ad);
 
         Combo += 1;
         switch (Combo)
@@ -61,32 +63,54 @@ public class Player_Knight : Player
                 break;
             case 4:
                 SoundManager.Instance.PlaySound("Knight_4");
+                break;
+            case 5:
+                SoundManager.Instance.PlaySound("Knight_1");
                 Combo = 0;
                 break;
             default:
                 break;
         }
         SoundManager.Instance.PlaySound("SFX_Knight_Attack", false);
-        ComboTimer = Timer(5f, () => { Combo = 0; });
+        if (ComboTimer != null) StopCoroutine(ComboTimer);
+        ComboTimer = Timer(3f, () => { Combo = 0; });
         StartCoroutine(ComboTimer);
 
         Is_Attack = false;
         Anim.SetBool("Is_Attack", true);
-        Effect_Anim.SetTrigger("Is_Attack");
+        if (Combo == 4)
+            Effect_Anim.SetTrigger("Is_Charging");
+        else
+            Effect_Anim.SetTrigger("Is_Attack");
 
         float distance = RangeEnemyObj.gameObject.transform.position.x - Stat.AdDistance;
         if (distance < -600)
             distance = -600;
 
-        Lerp = lerp(RangeEnemyObj.gameObject.transform.position.x - Stat.AdDistance, 1 / Stat.AdSpeed,
-            () =>
-            {
-                Is_Attack = true;
-                RangeDistance = 10000;
-                RangeEnemyObj = null;
-                Lerp = null;
-            });
-        StartCoroutine(Lerp);
+        if (!Is_BossStage)
+        {
+            Lerp = lerp_From(RangeEnemyObj.gameObject.transform.position.x - Stat.AdDistance, 1 / Stat.AdSpeed,
+                () =>
+                {
+                    Is_Attack = true;
+                    RangeDistance = 10000;
+                    RangeEnemyObj = null;
+                    Lerp = null;
+                });
+            StartCoroutine(Lerp);
+        }
+        else
+        {
+            Lerp = lerp(RangeEnemyObj.gameObject.transform.position.x - Stat.AdDistance, 1 / Stat.AdSpeed,
+                () =>
+                {
+                    Is_Attack = true;
+                    RangeDistance = 10000;
+                    RangeEnemyObj = null;
+                    Lerp = null;
+                });
+            StartCoroutine(Lerp);
+        }
 
         StartCoroutine(Timer(0.1f, () => Anim.SetBool("Is_Attack", false)));
 
@@ -113,6 +137,7 @@ public class Player_Knight : Player
         if (Is_damage)
         {
             SoundManager.Instance.PlaySound("Knight_A");
+            Effect_Anim.SetTrigger("Is_Shild");
             skA.NowCoolTime = skA.MaxCoolTime;
             UIM_2.UI_Shiny(1, false);
             DOTween.To(() => skA.NowCoolTime, x => skA.NowCoolTime = x, 0, skA.MaxCoolTime)
@@ -128,7 +153,7 @@ public class Player_Knight : Player
     {
         if (Is_SkillK || skK.NowCoolTime > 0)
             return;
-        if (Is_Dash)
+        if (Is_Dash && !Is_BossStage)
             Dash_Quit();
 
         //'지속시간' 동안 무적, 1초마다 '사거리'만큼 돌진(이동), 닿는 적에겐 틱 1초마다 '대미지'만큼 입힌다
@@ -143,7 +168,8 @@ public class Player_Knight : Player
             {
                 Effect_Anim.SetBool("Is_K", false);
                 Is_SkillK = false;
-                BG.In_Speed(Stat.Speed);
+                if (!Is_BossStage)
+                    BG.In_Speed(Stat.Speed);
                 RangeColli.SetActive(true);
 
                 skK.NowCoolTime = skK.MaxCoolTime;
@@ -157,7 +183,8 @@ public class Player_Knight : Player
             })
             ));
         RangeColli.SetActive(false);
-        BG.In_Speed(skK.Distance, true);
+        if (!Is_BossStage)
+            BG.In_Speed(skK.Distance, true);
     }
 
     public override void OnTriggerStay2D(Collider2D other)

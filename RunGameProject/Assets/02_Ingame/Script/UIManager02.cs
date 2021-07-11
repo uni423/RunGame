@@ -134,7 +134,6 @@ public class UIManager02 : MonoBehaviour
     public void Game_Over(string Enemy)
     {
         string enemyName;
-
         switch (Enemy)
         {
             case "Slime":
@@ -149,8 +148,25 @@ public class UIManager02 : MonoBehaviour
                 enemyName = Enemy; break;
         }
 
-        Over_UIs.Find("Over Reason").GetChild(2).GetComponent<Text>().text = enemyName;
+        string stageName;
+        switch (GameManager.Instance.stage)
+        {
+            case Define.Stage.Stage1_1:
+                stageName = "숲 스테이지 1"; break;
+            case Define.Stage.Stage1_2:
+                stageName = "숲 스테이지 2"; break;
+            case Define.Stage.Stage1_3:
+                stageName = "숲 스테이지 3"; break;
+            case Define.Stage.Stage1_Boss:
+                stageName = "숲 스테이지 보스"; break;
+            default:
+                stageName = GameManager.Instance.stage.ToString(); break;
+        }
         Over_UIs.Find("Time").GetChild(2).GetComponent<Text>().text = time_Current.ToString("N2") + "초";
+        Over_UIs.Find("Map").GetChild(2).GetComponent<Text>().text = stageName;
+        Over_UIs.Find("Score").GetChild(2).GetComponent<Text>().text = GameManager.Instance.score.ToString();
+
+        Over_UIs.Find("Over Reason").GetChild(2).GetComponent<Text>().text = enemyName;
         StartCoroutine(Game_Over_Anim());
     }
 

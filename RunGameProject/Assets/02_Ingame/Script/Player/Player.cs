@@ -77,11 +77,25 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.Space))
             Jump();
         if (Input.GetKeyDown(KeyCode.D))
-            if (!Is_SkillK) Dash();
+            Dash();
         if (Input.GetKeyUp(KeyCode.D))
             if (Is_Dash) Dash_Quit();
         if (Input.GetKeyDown(KeyCode.L))
             Character_Swich();
+
+        if (Is_BossStage)
+        {
+            if (Is_Dash && transform.position.x <= 750)
+            {
+                Vector2 vel = new Vector2(Stat.Speed, myRigid.velocity.y);
+                myRigid.velocity = vel;
+            }
+            else if (!Is_Dash && transform.position.x >= -900)
+            {
+                Vector2 vel = new Vector2(-1 * Stat.Speed, myRigid.velocity.y);
+                myRigid.velocity = vel;
+            }
+        }
 
         StatUpdate();
         PositionUpdate();
@@ -94,7 +108,7 @@ public class Player : MonoBehaviour
             StatUpgrade();
         }
 
-        if (Is_Dash)
+        if (Is_Dash && !Is_BossStage)
         {
             Stat.NowSp -= Time.deltaTime;
             if (Stat.NowSp <= 0)
@@ -136,13 +150,6 @@ public class Player : MonoBehaviour
 
     public void PositionUpdate()
     {
-        //지정된 위치 벗어나면 제자리로
-        if (transform.position.x != -600 && Lerp == null)
-        {
-            //Lerp = lerp(transform.position.x, 0.2f, () => Lerp = null) ;
-            //StartCoroutine(Lerp);
-        }
-
         //점프 후 하강할때 가속도 추가
         if (!Is_Jumping && myRigid.velocity.y < 10 && Is_Down)
         {
@@ -165,7 +172,6 @@ public class Player : MonoBehaviour
             else if (GameManager.Instance.CharacterCode == CharType.Gunner)
             {
                 SoundManager.Instance.PlaySound("Gunner_Dead");
-                Debug.Log("으엥");
             }
 
             GameManager.Instance.IsGamePlay = false;
@@ -207,7 +213,10 @@ public class Player : MonoBehaviour
     #region Skills
     public void Jump(bool swich = false) //점프
     {
-        if (!Is_Jumping && !swich && !Is_SkillK || (Is_SkillK && transform.position.y >= 400f) && Is_CantJump)
+        if (!Is_Jumping && !swich && !Is_SkillK || 
+            (Is_SkillK && transform.position.y >= 400f) ||
+            (Is_SkillK && GameManager.Instance.CharacterCode == CharType.Gunner && !Is_Jumping) 
+            || Is_CantJump)
             return;
 
         if (!Is_Attack)
@@ -231,28 +240,51 @@ public class Player : MonoBehaviour
         }
 
         if (!Is_Attack)
-            StartCoroutine(lerp(transform.position.x, 0.2f,
-                () =>
-                {
-                    Is_Attack = true;
-                    RangeDistance = 10000;
-                    RangeEnemyObj = null;
-                    Lerp = null;
-                }));
+        {
+            if (Is_BossStage)
+            {
+                StartCoroutine(lerp(transform.position.x, 0.2f,
+                    () =>
+                    {
+                        Is_Attack = true;
+                        RangeDistance = 10000;
+                        RangeEnemyObj = null;
+                        Lerp = null;
+                    }));
+            }
+            else
+            {
+                StartCoroutine(lerp_From(transform.position.x, 0.2f,
+                    () =>
+                    {
+                        Is_Attack = true;
+                        RangeDistance = 10000;
+                        RangeEnemyObj = null;
+                        Lerp = null;
+                    }));
+            }
+        }
     }
 
     public void Dash() //대쉬
     {
         if (Is_Damage)
             return;
-
-        BG.In_Speed(Stat.Speed * 2.3f);
-        Is_Dash = true;
+        if (Is_BossStage)
+        {
+            Is_Dash = true;
+        }
+        else if (!Is_BossStage && !Is_SkillK)
+        {
+            BG.In_Speed(Stat.Speed * 2.3f);
+            Is_Dash = true;
+        }
     }
 
     public void Dash_Quit() //대쉬 끝
     {
-        BG.In_Speed(Stat.Speed);
+        if (!Is_BossStage)
+            BG.In_Speed(Stat.Speed);
         Is_Dash = false;
     }
 
@@ -311,24 +343,75 @@ public class Player : MonoBehaviour
 
         if (other.gameObject.CompareTag("Enemy"))
         {
-            Is_AttackRange = true;
-            if (RangeDistance > other.gameObject.transform.position.x + 600)
+            if (Is_BossStage)
             {
-                RangeDistance = other.gameObject.transform.position.x + 600;
+                Is_AttackRange = true;
                 RangeEnemyObj = other.gameObject.GetComponent<Enemy>();
-                if (RangeDistance < 0 || RangeEnemyObj.transform.GetComponent<Enemy>().Is_Dead)
+            }
+            else
+            {
+                Is_AttackRange = true;
+                if (RangeDistance > other.gameObject.transform.position.x + 600)
                 {
-                    RangeDistance = 10000f;
-                    RangeEnemyObj = null;
+                    Debug.Log(other.name);
+                    RangeDistance = other.gameObject.transform.position.x + 600;
+                    RangeEnemyObj = other.gameObject.GetComponent<Enemy>();
+                    if (RangeDistance < 0 || RangeEnemyObj.transform.GetComponent<Enemy>().Is_Dead)
+                    {
+                        RangeDistance = 10000f;
+                        RangeEnemyObj = null;
+                    }
                 }
             }
         }
         else if (RangeDistance >= 10000f)
             Is_AttackRange = false;
     }
+
+    public void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            if (Is_BossStage)
+            {
+                Is_AttackRange = false;
+                RangeEnemyObj = null;
+            }
+        }
+    }
     #endregion
 
-    public IEnumerator lerp(float startvalue, float duration, Delegate dele = null)
+    public IEnumerator lerp(float endvalue, float duration, Delegate dele = null)
+    {
+        Vector2 vector = (endvalue < transform.position.x) ? Vector2.left : Vector2.right;
+
+        float i = duration;
+        float velocity = Vector2.Distance(new Vector2(endvalue, 0), new Vector2(transform.position.x, 0));
+        velocity /= duration;
+        if (velocity < 0)
+            velocity = 0;
+
+        while (i > 0)
+        {
+            yield return null;
+            i -= Time.deltaTime;
+
+            Vector2 vel = new Vector2(vector.x * velocity, myRigid.velocity.y);
+            myRigid.velocity = vel;
+
+            if ((vector.x > 0 && transform.position.x >= -600) ||
+                (vector.x < 0 && transform.position.x <= -600))
+                break;
+        }
+
+        //myRigid.velocity = new Vector2(0, myRigid.velocity.y);
+        transform.position = new Vector3(endvalue, transform.position.y);
+        yield return new WaitForSeconds(i);
+
+        if (dele != null) dele();
+    }
+
+    public IEnumerator lerp_From(float startvalue, float duration, Delegate dele = null)
     {
         transform.position = new Vector3(startvalue, transform.position.y);
 
