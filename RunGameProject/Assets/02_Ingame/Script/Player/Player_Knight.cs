@@ -67,12 +67,17 @@ public class Player_Knight : Player
                 break;
         }
         SoundManager.Instance.PlaySound("SFX_Knight_Attack", false);
-        ComboTimer = Timer(3f, () => { Combo = 0; });
+        ComboTimer = Timer(5f, () => { Combo = 0; });
         StartCoroutine(ComboTimer);
 
         Is_Attack = false;
-        Effect_Anim.SetTrigger("Is_Attack");
         Anim.SetBool("Is_Attack", true);
+        Effect_Anim.SetTrigger("Is_Attack");
+
+        float distance = RangeEnemyObj.gameObject.transform.position.x - Stat.AdDistance;
+        if (distance < -600)
+            distance = -600;
+
         Lerp = lerp(RangeEnemyObj.gameObject.transform.position.x - Stat.AdDistance, 1 / Stat.AdSpeed,
             () =>
             {

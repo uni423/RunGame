@@ -60,6 +60,9 @@ TagManager:
   - name: Effect
     uniqueID: 4056244411
     locked: 0
+  - name: Animaiton
+    uniqueID: 2779371987
+    locked: 0
   - name: UI
     uniqueID: 4103107371
     locked: 0

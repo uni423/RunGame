@@ -22,8 +22,6 @@ public class GameManager : Singleton<GameManager>
 
         if (SceneManager.GetActiveScene().name == "02_Ingame")
         {
-            stage = Stage.Stage1_1;
-
             playerMG = GameObject.FindObjectOfType<PlayerManager>();
             uiMG = GameObject.FindObjectOfType<UIManager02>();
             bgMG = GameObject.FindObjectOfType<BGManager>();

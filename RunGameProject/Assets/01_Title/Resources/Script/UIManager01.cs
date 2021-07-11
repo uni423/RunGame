@@ -13,7 +13,9 @@ public class UIManager01 : MonoBehaviour
 
     public void To_Ingame()
     {
-        GameManager.Instance.CharacterCode = Define.CharType.Gunner;
+        GameManager.Instance.CharacterCode = Define.CharType.Knight;
+        GameManager.Instance.stage = Define.Stage.Stage1_1;
+
         LoadManager.Load(LoadManager.Scene.Ingame);
         LoadManager.LoaderCallback();
     }

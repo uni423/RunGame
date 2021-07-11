@@ -4,12 +4,12 @@ size: 2001,764
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-Qkdvo2
+Layer 2
   rotate: false
   xy: 2, 123
   size: 222, 639
-  orig: 222, 641
-  offset: 0, 1
+  orig: 224, 643
+  offset: 1, 2
   index: -1
 겉망토
   rotate: false

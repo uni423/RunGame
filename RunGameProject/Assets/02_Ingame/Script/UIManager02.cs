@@ -33,11 +33,15 @@ public class UIManager02 : MonoBehaviour
     public void Start()
     {
         GameManager.Instance.Ingame_Init();
+        SoundManager.Instance.StopBGM();
+        SoundManager.Instance.StopSFX();
 
         switch(GameManager.Instance.stage)
         {
             case Define.Stage.Stage1_1:
-                //SoundManager.Instance.PlayBGM("BGM_Stage_1");
+            case Define.Stage.Stage1_2:
+            case Define.Stage.Stage1_3:
+                SoundManager.Instance.PlayBGM("BGM_Stage_1");
                 break;
             case Define.Stage.Stage1_Boss:
                 SoundManager.Instance.PlayBGM("BGM_Stage_1_Boss");

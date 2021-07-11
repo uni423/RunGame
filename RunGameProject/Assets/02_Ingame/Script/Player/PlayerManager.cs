@@ -106,6 +106,7 @@ public class PlayerManager : MonoBehaviour
         //점프
         Player.GetComponent<Player>().Jump(true);
         Player.GetComponent<Player>().Anim.SetTrigger("Is_Swich");
+        Player.GetComponent<Player>().Combo = 0;
 
         return true;
     }
@@ -126,14 +127,6 @@ public class PlayerManager : MonoBehaviour
                 break;
 
             case CharType.Gunner:
-                if (Player.GetComponent<Player_Gunner>().Is_SkillA && Enemy != "Drop")
-                {
-                    Debug.Log("Shild");
-                    Player.GetComponent<Player_Gunner>().Shild_Quit(true);
-                    return;
-                }
-                else if (Player.GetComponent<Player_Gunner>().Is_SkillK && Enemy != "Drop")
-                    return;
                 Player.GetComponent<Player>().Damage(damage, Enemy);
                 break;
         }

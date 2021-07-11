@@ -20,7 +20,7 @@ public class Enemy : MonoBehaviour
     public float Damage(float damage)
     {
         NowHp -= damage;
-        DOTween.Kill(this);
+        DOTween.Kill(this.gameObject);
         transform.position = new Vector3(transform.position.x, -256);
         transform.DOMoveX(transform.position.x + 100, 0.2f);
         if (NowHp <= 0)
@@ -37,7 +37,6 @@ public class Enemy : MonoBehaviour
         transform.GetComponent<SpriteRenderer>().sprite = dead;
         yield return new WaitForSeconds(0.5f);
         gameObject.SetActive(false);
-        Start();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

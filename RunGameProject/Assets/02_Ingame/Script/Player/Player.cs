@@ -39,6 +39,7 @@ public class Player : MonoBehaviour
 
     public Animator Anim;
     public Animator Effect_Anim;
+    public Animator Effect_Hitting_Anim;
 
     [Space(10f)]
     public BGManager BG;
@@ -49,6 +50,7 @@ public class Player : MonoBehaviour
     public GameObject RangeColli;
 
     public bool Is_BossStage = false;
+    public bool Is_CantJump = false;
 
     #endregion
 
@@ -60,7 +62,7 @@ public class Player : MonoBehaviour
         BG = GameManager.Instance.bgMG;
         UIM_2 = GameManager.Instance.uiMG;
 
-        myRigid = this.GetComponent<Rigidbody2D>();
+        myRigid = transform.GetComponent<Rigidbody2D>();
         Anim = this.GetComponent<Animator>();
 
         JumpColli.SetActive(true);
@@ -154,16 +156,17 @@ public class Player : MonoBehaviour
 
     public void Damage(float damage, string Enemy)
     {
-        if (Lerp != null)
-            return;
-
         Is_Damage = true;
         if (Stat.NowHp - damage <= 0)
         {
+
             if (GameManager.Instance.CharacterCode == CharType.Knight)
                 SoundManager.Instance.PlaySound("Knight_Dead");
             else if (GameManager.Instance.CharacterCode == CharType.Gunner)
+            {
                 SoundManager.Instance.PlaySound("Gunner_Dead");
+                Debug.Log("으엥");
+            }
 
             GameManager.Instance.IsGamePlay = false;
             UIM_2.Game_Over(Enemy);
@@ -204,7 +207,7 @@ public class Player : MonoBehaviour
     #region Skills
     public void Jump(bool swich = false) //점프
     {
-        if (!Is_Jumping && !swich && !Is_SkillK || (Is_SkillK && transform.position.y >= 400f))
+        if (!Is_Jumping && !swich && !Is_SkillK || (Is_SkillK && transform.position.y >= 400f) && Is_CantJump)
             return;
 
         if (!Is_Attack)
@@ -222,9 +225,10 @@ public class Player : MonoBehaviour
             myRigid.velocity = vel;
             Is_SwichJumping = false;
             Is_Jumping = false;
+            Is_Down = true;
+
+            Anim.SetBool("Jump_Up", true);
         }
-        Is_Down = true;
-        Anim.SetBool("Jump_Up", true);
 
         if (!Is_Attack)
             StartCoroutine(lerp(transform.position.x, 0.2f,
@@ -254,7 +258,7 @@ public class Player : MonoBehaviour
 
     private void Character_Swich()
     {
-        if (Is_SkillK)
+        if (Is_SkillK || GameManager.Instance.stage == Stage.Stage1_1)
             return;
 
         if (GameManager.Instance.CharacterCode == CharType.Knight)
@@ -328,26 +332,22 @@ public class Player : MonoBehaviour
     {
         transform.position = new Vector3(startvalue, transform.position.y);
 
-        Vector2 vector;
-
-        if (startvalue > -600)
-            vector = Vector2.left;
-        else
-            vector = Vector2.right;
+        Vector2 vector = (startvalue > -600) ? Vector2.left : Vector2.right;
 
         float i = duration;
-        //float velocity = ((startvalue - (-600)) / duration) * 0.01f;
-        float velocity = ((startvalue - (-600)) / duration) * 2.5f;
-
-        Vector2 vel = new Vector2(vector.x * velocity, myRigid.velocity.y/* + 500f*/);
-        myRigid.velocity = vel;
+        float velocity = Vector2.Distance(new Vector2(startvalue, 0), new Vector2(-600, 0));
+        velocity *= 3 - duration;
+        if (velocity < 0)
+            velocity = 0;
 
         while (i > 0)
         {
             yield return null;
             i -= Time.deltaTime;
 
-            //transform.position += vector * new Vector3(velocity, 0);
+            Vector2 vel = new Vector2(vector.x * velocity, myRigid.velocity.y/* + 500f*/);
+            myRigid.velocity = vel;
+
             if ((vector.x > 0 && transform.position.x >= -600) ||
                 (vector.x < 0 && transform.position.x <= -600))
                 break;
@@ -358,8 +358,6 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(i);
 
         if (dele != null) dele();
-
-        yield return null;
     }
 
     protected virtual IEnumerator Timer(float time, Delegate dele)

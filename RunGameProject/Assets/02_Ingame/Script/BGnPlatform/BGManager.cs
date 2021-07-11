@@ -43,8 +43,35 @@ public class BGManager : MonoBehaviour
 
     public int maxDistance = 0;
 
+    public bool Is_Debugging;
+
     public void Init()
     {
+        if (Is_Debugging)
+        {
+
+            minLevel = 0;
+            maxLevel = 0;
+
+            maxDistance = 3000; 
+
+            PastPhaeton = Instantiate(LevelPhaeton[0].Phaeton[0], Tile[0].gameObject.transform);
+            PastPhaeton.transform.position = new Vector3(0, -30);
+            PastPhaeton.SetActive(true);
+
+            NowPhaeton = Instantiate(LevelPhaeton[0].Phaeton[0], Tile[0].gameObject.transform);
+            NowPhaeton.transform.position = new Vector3(1280, -30);
+            NowPhaeton.SetActive(true);
+
+            FuturePhaeton = Instantiate(LevelPhaeton[0].Phaeton[0], Tile[0].gameObject.transform);
+            FuturePhaeton.transform.position = new Vector3(2560, -30);
+            FuturePhaeton.SetActive(true);
+
+            GameClear.SetActive(false);
+
+            return;
+        }
+
         if ((int)GameManager.Instance.stage % 10 == 9)
             Is_BossStage = true;
 
@@ -56,8 +83,8 @@ public class BGManager : MonoBehaviour
             switch ((int)GameManager.Instance.stage / 10)
             {
                 case 0: maxDistance = 20000; break;
-                case 1: maxDistance = 12500; break;
-                case 2: maxDistance = 15000; break;
+                case 1: maxDistance = 22500; break;
+                case 2: maxDistance = 25000; break;
             }
 
             PastPhaeton = Instantiate(LevelPhaeton[0].Phaeton[0], Tile[0].gameObject.transform);
@@ -89,7 +116,7 @@ public class BGManager : MonoBehaviour
 
     private void Update()
     {
-        if (!GameManager.Instance.IsGamePlay)
+        if (!GameManager.Instance.IsGamePlay || Speed == 0)
             return;
         if (Is_BossStage)
         {
