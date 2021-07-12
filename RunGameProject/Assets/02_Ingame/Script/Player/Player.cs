@@ -82,6 +82,16 @@ public class Player : MonoBehaviour
             if (Is_Dash) Dash_Quit();
         if (Input.GetKeyDown(KeyCode.L))
             Character_Swich();
+        if (Input.GetKeyDown(KeyCode.Escape))
+            Application.Quit();
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            GameManager.Instance.stage = Define.Stage.Stage1_Boss;
+
+            DOTween.Kill(GameManager.Instance.playerMG.Player);
+            LoadManager.Load(LoadManager.Scene.Boss);
+            LoadManager.LoaderCallback();
+        }
 
         if (Is_BossStage)
         {

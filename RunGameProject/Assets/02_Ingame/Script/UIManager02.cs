@@ -28,6 +28,8 @@ public class UIManager02 : MonoBehaviour
 
     public Image GameClear;
 
+    public GameObject UI_CutScene;
+
     public PlayerManager playerMG;
 
     public void Start()
@@ -129,6 +131,28 @@ public class UIManager02 : MonoBehaviour
         }
     }
 
+    public void CutScene()
+    {
+        switch(GameManager.Instance.CharacterCode)
+        {
+            case Define.CharType.Knight:
+                UI_CutScene.transform.Find("Character").Find("Knight").gameObject.SetActive(true);
+                UI_CutScene.transform.Find("Character").Find("Gunner").gameObject.SetActive(false);
+                break;
+            case Define.CharType.Gunner:
+                UI_CutScene.transform.Find("Character").Find("Knight").gameObject.SetActive(false);
+                UI_CutScene.transform.Find("Character").Find("Gunner").gameObject.SetActive(true);
+                break;
+        }
+
+        UI_CutScene.transform.Find("Character").position = new Vector3(0, 0, 0);
+        UI_CutScene.transform.position = new Vector3(-500, 400, 0);
+        UI_CutScene.gameObject.SetActive(true);
+        UI_CutScene.transform.DOMove(new Vector3(0, 0, 0), 1f);
+        //UI_CutScene.transform.Find("Character").DOMove(new Vector3(829, 376), 1f);
+        //UI_CutScene.transform.DOMove(new Vector3(-960, -540), 2f);
+    }
+
     #region GameOver
 
     public void Game_Over(string Enemy)
@@ -166,6 +190,8 @@ public class UIManager02 : MonoBehaviour
         Over_UIs.Find("Map").GetChild(2).GetComponent<Text>().text = stageName;
         Over_UIs.Find("Score").GetChild(2).GetComponent<Text>().text = GameManager.Instance.score.ToString();
 
+        Over_UIs.Find("Journal").GetChild(2).GetComponent<Text>().text 
+            = "몬스터들을 " + GameManager.Instance.DeadMonsters + "마리 잡았다.";
         Over_UIs.Find("Over Reason").GetChild(2).GetComponent<Text>().text = enemyName;
         StartCoroutine(Game_Over_Anim());
     }
@@ -181,6 +207,8 @@ public class UIManager02 : MonoBehaviour
 
     public void ReStart()
     {
+        GameManager.Instance.score = 0;
+        GameManager.Instance.DeadMonsters = 0;
         GameManager.Instance.playerMG.ReleaseStat();
         LoadManager.Load(LoadManager.Scene.Ingame);
         LoadManager.LoaderCallback();
@@ -188,6 +216,8 @@ public class UIManager02 : MonoBehaviour
 
     public void To_Title()
     {
+        GameManager.Instance.score = 0;
+        GameManager.Instance.DeadMonsters = 0;
         GameManager.Instance.playerMG.ReleaseStat();
         LoadManager.Load(LoadManager.Scene.Title);
         LoadManager.LoaderCallback();

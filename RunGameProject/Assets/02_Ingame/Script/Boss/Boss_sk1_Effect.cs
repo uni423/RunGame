@@ -24,12 +24,12 @@ public class Boss_sk1_Effect : MonoBehaviour
         } );
     }
 
-    //private void OnTriggerEnter2D(Collider2D collision)
-    //{
-    //    if (collision.gameObject.tag == "Player")
-    //    {
-    //        if (!boss.Is_Dead)
-    //            PlayerManager.Instance.Damage(boss.sk1.Damage, boss.gameObject.name);
-    //    }
-    //}
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {
+            if (!boss.Is_Dead)
+                GameManager.Instance.playerMG.Damage(boss.sk1.Damage, boss.gameObject.name);
+        }
+    }
 }

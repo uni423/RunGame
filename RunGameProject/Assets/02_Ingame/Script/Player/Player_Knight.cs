@@ -45,7 +45,11 @@ public class Player_Knight : Player
             return;
         }
         if (!Is_BossStage)
+        {
             Stat.NowExp += RangeEnemyObj.Damage(Stat.Ad);
+            GameManager.Instance.score += 100;
+            GameManager.Instance.DeadMonsters++;
+        }
         else
             RangeEnemyObj.gameObject.GetComponent<Boss>().Damage(Stat.Ad);
 
@@ -159,6 +163,7 @@ public class Player_Knight : Player
         //'지속시간' 동안 무적, 1초마다 '사거리'만큼 돌진(이동), 닿는 적에겐 틱 1초마다 '대미지'만큼 입힌다
         Debug.Log("skSpecial");
 
+        GameManager.Instance.uiMG.CutScene();
         Effect_Anim.SetBool("Is_K", true);
         SoundManager.Instance.PlaySound("Knight_K");
         SoundManager.Instance.PlaySound("SFX_Knight_K", false);

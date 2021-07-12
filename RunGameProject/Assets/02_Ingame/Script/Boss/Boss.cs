@@ -64,13 +64,17 @@ public class Boss : Enemy
     new public void Damage(float damage)
     {
         NowHp -= damage;
-        if (NowHp <= 0)
-            StartCoroutine(Dead());
+        if (NowHp <= 0) Dead();
         if (sk1_Sequence == null && sk2_Sequence == null)
             Ani.SetTrigger("Hit");
 
         Is_Damage = true;
         StartCoroutine(Timer(0.5f, () => { Is_Damage = false; }));
+    }
+
+    new public void Dead()
+    {
+        GameManager.Instance.uiMG.Game_Clear();
     }
 
     public void Skill_1()
@@ -152,17 +156,17 @@ public class Boss : Enemy
         dele();
     }
 
-    //public void OnTriggerEnter2D(Collider2D collision)
-    //{
-    //    if (collision.gameObject.tag == "Player")
-    //    {
-    //        if (!Is_Dead)
-    //        {
-    //            if (skill2_Coll.gameObject.activeSelf)
-    //                PlayerManager.Instance.Damage(sk2.Damage, this.name);
-    //            else
-    //                PlayerManager.Instance.Damage(stat.TriAd, this.name);
-    //        }
-    //    }
-    //}
+    public void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {
+            if (!Is_Dead)
+            {
+                if (skill2_Coll.gameObject.activeSelf)
+                    GameManager.Instance.playerMG.Damage(sk2.Damage, this.name);
+                else
+                    GameManager.Instance.playerMG.Damage(stat.TriAd, this.name);
+            }
+        }
+    }
 }

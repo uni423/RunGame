@@ -39,8 +39,9 @@ public class Player_Gunner : Player
 
         if (!Is_BossStage)
         {
-            Stat.NowExp += RangeEnemyObj.Damage(Stat.Ad);
+            Stat.NowExp += RangeEnemyObj.Damage(Stat.Ad); 
             GameManager.Instance.score += 100;
+            GameManager.Instance.DeadMonsters++;
         }
         else
             RangeEnemyObj.gameObject.GetComponent<Boss>().Damage(Stat.Ad);
@@ -69,7 +70,7 @@ public class Player_Gunner : Player
         }
         SoundManager.Instance.PlaySound("SFX_Gunner_Attack", false);
         if (ComboTimer != null) StopCoroutine(ComboTimer);
-        ComboTimer = Timer(5f, () => { Combo = 0; Debug.Log("Combo"); });
+        ComboTimer = Timer(3f, () => { Combo = 0;});
         StartCoroutine(ComboTimer);
 
         Is_Attack = false;
@@ -162,6 +163,7 @@ public class Player_Gunner : Player
         //'지속시간'동안 '사거리'안에 들어오는 적에게 틱 0.5초마다 '대미지'만큼 입힌다
         Debug.Log("skSpecial");
 
+        GameManager.Instance.uiMG.CutScene();
         Effect_Anim.SetBool("Is_K", true);
         Effect_Hitting_Anim.SetBool("Is_K_Hitting", true);
         Effect_Anim.gameObject.transform.Find("Skill Effector2").gameObject.SetActive(true);

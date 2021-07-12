@@ -17,6 +17,7 @@ public class GameManager : Singleton<GameManager>
     public bool IsGamePlay = false;
 
     public int score = 0;
+    public int DeadMonsters = 0;
 
     public void Ingame_Init()
     {

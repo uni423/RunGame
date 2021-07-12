@@ -8,9 +8,16 @@ public class UIManager01 : MonoBehaviour
 
     public void Awake()
     {
-        Screen.SetResolution(1920, 1080, false);
+        Screen.SetResolution(1920, 1080, true); 
+        Screen.fullScreen = true;
         SoundManager.Instance.PlayBGM("BGM_Title");
         SoundManager.Instance.SetBGM(0.5f);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+            Esc();
     }
 
     public void Esc()
