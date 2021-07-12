@@ -32,6 +32,8 @@ public class UIManager02 : MonoBehaviour
 
     public PlayerManager playerMG;
 
+    public Sequence cutSequence;
+
     public void Start()
     {
         GameManager.Instance.Ingame_Init();
@@ -144,13 +146,20 @@ public class UIManager02 : MonoBehaviour
                 UI_CutScene.transform.Find("Character").Find("Gunner").gameObject.SetActive(true);
                 break;
         }
+        cutSequence = DOTween.Sequence();
+        cutSequence
+            .AppendCallback(() =>
+            {
+                UI_CutScene.transform.Find("Character").GetComponent<RectTransform>().anchoredPosition = new Vector3(0, 0, 0);
+                UI_CutScene.GetComponent<RectTransform>().anchoredPosition = new Vector3(-500, 400, 0);
+                UI_CutScene.gameObject.SetActive(true);
+            })
+            .Append(UI_CutScene.transform.DOMove(new Vector3(0, 0, 0), 1f))
+            .AppendInterval(0.3f)
+            .Append(UI_CutScene.GetComponent<RectTransform>().DOMove(new Vector3(-500, 400, 0), 0.3f))
+            .AppendCallback(() =>
+                UI_CutScene.gameObject.SetActive(true));
 
-        UI_CutScene.transform.Find("Character").position = new Vector3(0, 0, 0);
-        UI_CutScene.transform.position = new Vector3(-500, 400, 0);
-        UI_CutScene.gameObject.SetActive(true);
-        UI_CutScene.transform.DOMove(new Vector3(0, 0, 0), 1f);
-        //UI_CutScene.transform.Find("Character").DOMove(new Vector3(829, 376), 1f);
-        //UI_CutScene.transform.DOMove(new Vector3(-960, -540), 2f);
     }
 
     #region GameOver

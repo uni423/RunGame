@@ -5,6 +5,7 @@ using UnityEngine;
 public class UIManager01 : MonoBehaviour
 {
     public GameObject Title;
+    public GameObject Key;
 
     public void Awake()
     {
@@ -32,5 +33,13 @@ public class UIManager01 : MonoBehaviour
 
         LoadManager.Load(LoadManager.Scene.Ingame);
         LoadManager.LoaderCallback();
+    }
+
+    public void Key_OnOff()
+    {
+        if (Key.activeSelf)
+            Key.SetActive(false);
+        else
+            Key.SetActive(true);
     }
 }
